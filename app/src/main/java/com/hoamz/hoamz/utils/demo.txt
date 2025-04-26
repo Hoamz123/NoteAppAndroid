@@ -1,0 +1,5 @@
+
+
+ContextWrapper wrapper = new ContextThemeWrapper(this,R.style.CustomPopupMenu);
+            PopupMenu popupMenu = new PopupMenu(wrapper,btnShowPopup);
+            popupMenu.getMenuInflater().inflate(R.menu.menu_action_mode, popupMenu.getMenu());

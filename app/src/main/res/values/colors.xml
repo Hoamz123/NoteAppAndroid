@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="color_1">#0D2526</color>
+    <color name="color_2">#38a199</color>
+    <color name="color_3">#7acec4</color>
+    <color name="color_4">#000000</color>
+    <color name="color_bg">#f8f8f8</color>
+    <color name="color_0">#cfa214</color>
+    <color name="hint">#BDBDBD</color>
+
+    <color name="color1">#00BCD4</color>   <!-- Cyan (sáng, nổi bật) -->
+    <color name="color2">#FFEB3B</color>   <!-- Vivid Yellow (sáng) -->
+    <color name="color3">#FFFFFF</color>   <!-- Pure White (sáng) -->
+    <color name="color4">#A4C3A2</color>   <!-- Neon Green (sáng) -->
+    <color name="color5">#FF7043</color>   <!-- Vibrant Orange (sáng) -->
+    <color name="color6">#9974FD</color>   <!-- Electric Purple (sáng) -->
+    <color name="color7">#D7F9FA</color>   <!-- Sky Blue Accent (sáng) -->
+    <color name="color8">#F48FB1</color>   <!-- Electric Pink (sáng) -->
+    <color name="color9">#FFC4A4</color>   <!-- Lively Orange (sáng) -->
+    <color name="color10">#B2FF59</color>  <!-- Lime Green (sáng) -->
+    <color name="color11">#C688EB</color>  <!-- Soft Lavender (sáng) -->
+
+    <color name="color12">#37474F</color>  <!-- Deep Blue Grey (tối) -->
+    <color name="color13">#0C5776</color>  <!-- Dark Indigo (tối) -->
+    <color name="color14">#9543A7</color>  <!-- Slate (tối) -->
+    <color name="color15">#13313D</color>  <!-- Carbon Black (tối) -->
+    <color name="color16">#4A148C</color>  <!-- Deep Purple Night (tối) -->
+
+</resources>

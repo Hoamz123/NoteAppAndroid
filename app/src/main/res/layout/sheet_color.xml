@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="80dp"
+    android:background="@drawable/back_ground_sheet"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:id="@+id/sheetLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/sheetLine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+       <com.google.android.material.card.MaterialCardView
+           android:id="@+id/colorCyan"
+           android:layout_width="60dp"
+           android:layout_height="60dp"
+           app:cardCornerRadius="200dp"
+           app:cardBackgroundColor="@color/color1"
+           app:layout_constraintTop_toTopOf="parent"
+           android:layout_marginStart="16dp"
+           android:elevation="-20dp"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintEnd_toStartOf="@id/colorVivid"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorVivid"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color2"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:elevation="-20dp"
+            app:layout_constraintStart_toEndOf="@id/colorCyan"
+            app:layout_constraintEnd_toStartOf="@id/colorPure"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorPure"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color3"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:elevation="-20dp"
+            app:layout_constraintStart_toEndOf="@id/colorVivid"
+            app:layout_constraintEnd_toStartOf="@id/colorNeon"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorNeon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color4"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:elevation="-20dp"
+            app:layout_constraintStart_toEndOf="@id/colorPure"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/line1"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorVibrant"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color5"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintEnd_toStartOf="@id/colorElectricPurple"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorElectricPurple"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color6"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintEnd_toStartOf="@id/colorSkyBlue"
+            app:layout_constraintStart_toEndOf="@id/colorVibrant" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorSkyBlue"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color7"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintEnd_toStartOf="@id/colorElectricPink"
+            app:layout_constraintStart_toEndOf="@id/colorElectricPurple" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorElectricPink"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color8"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintStart_toEndOf="@id/colorSkyBlue"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/line3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/line2"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorLively"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color9"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:elevation="-20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/colorLime"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorLime"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color10"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:elevation="-20dp"
+            app:layout_constraintStart_toEndOf="@id/colorLively"
+            app:layout_constraintEnd_toStartOf="@id/colorSoft"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorSoft"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color11"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:elevation="-20dp"
+            app:layout_constraintStart_toEndOf="@id/colorLime"
+            app:layout_constraintEnd_toStartOf="@id/colorDeepBlueGrey"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorDeepBlueGrey"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color12"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:elevation="-20dp"
+            app:layout_constraintStart_toEndOf="@id/colorSoft"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/line4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/line3"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorDarkIndigo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color13"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:elevation="-20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/colorSlate"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorSlate"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color14"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:elevation="-20dp"
+            app:layout_constraintStart_toEndOf="@id/colorDarkIndigo"
+            app:layout_constraintEnd_toStartOf="@id/colorCarbon"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorCarbon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color15"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:elevation="-20dp"
+            app:layout_constraintStart_toEndOf="@id/colorSlate"
+            app:layout_constraintEnd_toStartOf="@id/colorDeepPurpleNight"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorDeepPurpleNight"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="200dp"
+            app:cardBackgroundColor="@color/color16"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:elevation="-20dp"
+            app:layout_constraintStart_toEndOf="@id/colorCarbon"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

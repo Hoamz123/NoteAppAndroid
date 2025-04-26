@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:id="@+id/it_calender"
+        android:icon="@drawable/ic_calender"
+        android:title="Calender"/>
+
+    <item android:id="@+id/space1"
+        android:title=""/>
+
+    <item android:id="@+id/it_reminder"
+        android:icon="@drawable/ic_alarm"
+        android:title="Reminder"/>
+
+    <item android:id="@+id/space2"
+        android:title=""/>
+
+    <item android:id="@+id/it_categories"
+        android:icon="@drawable/ic_categories"
+        android:title="Categories"/>
+
+    <item android:id="@+id/space3"
+        android:title=""/>
+
+    <item android:id="@+id/it_favorites"
+        android:icon="@drawable/ic_love"
+        android:title="Favorites"/>
+
+    <item android:id="@+id/space4"
+        android:title=""/>
+
+    <item android:id="@+id/it_archive"
+        android:icon="@drawable/ic_archiver"
+        android:title="Archive"/>
+
+    <item android:id="@+id/space5"
+        android:title=""/>
+
+    <item android:id="@+id/it_deleted"
+        android:icon="@drawable/ic_bin"
+        android:title="Deleted"/>
+</menu>
