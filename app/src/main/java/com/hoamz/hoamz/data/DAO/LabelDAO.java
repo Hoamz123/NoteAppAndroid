@@ -7,6 +7,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.hoamz.hoamz.data.model.Label;
 
@@ -22,4 +23,9 @@ public interface LabelDAO {
     void insertNewLabel(Label label);
     @Delete
     void deleteLabel(Label label);
+    @Update
+    void updateLabel(Label label);
+
+    @Query("select * from label where label = :nameLabel")
+    LiveData<Label> getLabelByName(String nameLabel);
 }

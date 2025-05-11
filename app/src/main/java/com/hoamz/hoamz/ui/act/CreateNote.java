@@ -78,13 +78,14 @@ public class CreateNote extends AppCompatActivity {
     private int colorBackground = Color.WHITE;
     private String dateChoose;
     private BottomSheetColor sheetColor;
-    private Deque<String> undoSt = new ArrayDeque<>();
-    private Deque<String> redoSt = new ArrayDeque<>();
+    private final Deque<String> undoSt = new ArrayDeque<>();
+    private final Deque<String> redoSt = new ArrayDeque<>();
     private boolean isUndoRedoMode = false;
     private Calendar calendarAlarm;
     private static final int MAX_UNDO = 20;
     private ImageButton ivb_undo,ivb_redo;
     private long timeAlarm = 0;
+    private long timeRepeat = 0;
 
     //att in dialog
     /********************************/
@@ -187,7 +188,7 @@ public class CreateNote extends AppCompatActivity {
                 throw new RuntimeException(e);
             }
 
-            Note note = new Note(title,content,timestamp,timeAlarm,0,false,label,colorBackground);
+            Note note = new Note(title,content,timestamp,timeAlarm,timeRepeat,0,false,label,colorBackground);
             noteViewModel.insertNewNote(note);
             //back ve trang main
             finish();

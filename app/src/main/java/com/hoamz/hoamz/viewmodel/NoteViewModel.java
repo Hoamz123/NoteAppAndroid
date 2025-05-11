@@ -81,4 +81,8 @@ public class NoteViewModel extends AndroidViewModel {
     public LiveData<List<Note>> getAllHaveReminder(){
         return noteRepo.getListNotesAlarm();
     }
+
+    public void deleteNotesByLabel(String label){
+        noteRepo.deleteNotesByLabel(label);
+    }
 }

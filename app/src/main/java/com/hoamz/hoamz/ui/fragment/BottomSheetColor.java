@@ -103,7 +103,6 @@ public class BottomSheetColor extends BottomSheetDialogFragment {
             int color = ContextCompat.getColor(requireContext(), R.color.color16);
             onSelectedColor.onSelected(color);
         });
-
     }
 
     public interface onSelectedColor{

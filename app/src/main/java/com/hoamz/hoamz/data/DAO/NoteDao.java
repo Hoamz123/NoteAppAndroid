@@ -62,6 +62,9 @@ public interface NoteDao {
     LiveData<Integer> getCountAllNotes();
 
     //lay cac note co nhac nho
-    @Query("select * from note where timeAlarm > 0 order by isPin desc")
+    @Query("select * from note where `trigger` > 0 order by isPin desc")
     LiveData<List<Note>> getListNotesAlarm();
+
+    @Query("delete from note where label = :label")
+    void deleteNotesByLabel(String label);
 }

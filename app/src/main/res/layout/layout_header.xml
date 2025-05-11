@@ -24,7 +24,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-
+    <!--
         <LinearLayout
             android:id="@+id/item_notes"
             android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- reminder -->
+
         <LinearLayout
             android:id="@+id/item_reminder"
             android:layout_width="match_parent"
@@ -113,7 +113,6 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- Categories -->
         <LinearLayout
             android:id="@+id/item_categories"
             android:layout_width="match_parent"
@@ -143,7 +142,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- Favorites -->
+
         <LinearLayout
             android:id="@+id/item_favorites"
             android:layout_width="match_parent"
@@ -173,7 +172,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- Archiver -->
+
         <LinearLayout
             android:id="@+id/item_archiver"
             android:layout_width="match_parent"
@@ -203,7 +202,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- Deleted -->
+
         <LinearLayout
             android:id="@+id/item_deleted"
             android:layout_width="match_parent"
@@ -244,7 +243,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/item_deleted" />
 
-        <!-- setting -->
         <LinearLayout
             android:id="@+id/item_setting"
             android:layout_width="match_parent"
@@ -273,7 +271,8 @@
                 android:layout_weight="8"
                 android:text="Cài đặt"
                 android:textSize="14sp" />
-        </LinearLayout>
+        </LinearLayout> -->
+
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline5"

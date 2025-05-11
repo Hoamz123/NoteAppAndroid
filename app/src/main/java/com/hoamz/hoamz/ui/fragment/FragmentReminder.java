@@ -1,35 +1,34 @@
-package com.hoamz.hoamz.ui.act;
+package com.hoamz.hoamz.ui.fragment;
 
+import static androidx.core.content.res.ResourcesCompat.getColor;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.adapter.NoteAdapter;
 import com.hoamz.hoamz.data.model.Note;
+import com.hoamz.hoamz.ui.act.CreateNote;
+import com.hoamz.hoamz.ui.act.NoteDetail;
 import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.viewmodel.NoteViewModel;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReminderActivity extends AppCompatActivity {
+public class FragmentReminder extends Fragment {
 
     private RecyclerView rcViewReminder;
     private ConstraintLayout fadReminder;
@@ -39,29 +38,42 @@ public class ReminderActivity extends AppCompatActivity {
     private LiveData<List<Note>> listNoteCurrent;
     private NoteViewModel noteViewModel;
 
+    public FragmentReminder() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_reminder);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        if(getActivity() != null) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            getActivity().getWindow().setStatusBarColor(getColor(getResources(), R.color.color_bg, null));
+            getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+    }
 
-        //khoa dung man hinh
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        getWindow().setStatusBarColor(getColor(R.color.color_bg));
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
-        initView();
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view =  inflater.inflate(R.layout.fragment_reminder, container, false);
+        initView(view);
         loadDataToRecyclerView();
         onClickItems();
+        return view;
     }
 
     private void onClickItems() {
         noteAdapter.setOnClickItemListener(new NoteAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Note note) {
-                Intent intent = new Intent(ReminderActivity.this,NoteDetail.class);
+                Intent intent = new Intent(getActivity(),NoteDetail.class);
                 intent.putExtra(Constants.KEY_NOTE,note);
                 startActivity(intent);
             }
@@ -73,12 +85,12 @@ public class ReminderActivity extends AppCompatActivity {
         });
 
         fadReminder.setOnClickListener(v ->{
-            Intent intent = new Intent(ReminderActivity.this, CreateNote.class);
+            Intent intent = new Intent(getActivity(), CreateNote.class);
             startActivity(intent);
         });
 
         ivExitReminder.setOnClickListener(v ->{
-            finish();
+            requireActivity().getSupportFragmentManager().popBackStack();
         });
     }
 
@@ -88,7 +100,7 @@ public class ReminderActivity extends AppCompatActivity {
         }
 
         listNoteCurrent = Transformations.distinctUntilChanged(noteViewModel.getAllHaveReminder());//lay tat ca nhung ghi chu  co nhac nho
-        listNoteCurrent.observe(this, list -> {
+        listNoteCurrent.observe(getViewLifecycleOwner(), list -> {
             List<Note> noteList = new ArrayList<>(list);
             showOrHideEmptyImage(noteList);
             noteAdapter.setNoteList(noteList);
@@ -107,13 +119,14 @@ public class ReminderActivity extends AppCompatActivity {
         }
     }
 
-    private void initView() {
-        rcViewReminder = findViewById(R.id.rcViewReminder);
-        fadReminder = findViewById(R.id.fab_addReminder);
-        ivEmptyListReminder = findViewById(R.id.iv_emptyReminder);
+    private void initView(View view) {
+        rcViewReminder = view.findViewById(R.id.rcViewReminder);
+        fadReminder = view.findViewById(R.id.fab_addReminder);
+        ivEmptyListReminder = view.findViewById(R.id.iv_emptyReminder);
         noteAdapter = new NoteAdapter();
         rcViewReminder.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         noteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
-        ivExitReminder = findViewById(R.id.icExitReminder);
+        ivExitReminder = view.findViewById(R.id.icExitReminder);
     }
+
 }

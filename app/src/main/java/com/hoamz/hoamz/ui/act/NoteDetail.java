@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -549,6 +550,7 @@ public class NoteDetail extends AppCompatActivity {
         if(intent != null){
             noteEdit = intent.getParcelableExtra(Constants.KEY_NOTE);
             if(noteEdit != null){
+                tvChooseLabel.setText(noteEdit.getLabel());
                 edtTitle.setText(noteEdit.getTitle());
                 edtContent.setText(noteEdit.getContent());
                 Date date = new Date(noteEdit.getDate());
@@ -557,6 +559,7 @@ public class NoteDetail extends AppCompatActivity {
                 isPin = (noteEdit.isPin() == 1);//bien nay true hay false se phu thuoc vao dk isPin() co = 1 hay khong
                 tvDate.setText(sdf.format(date));
                 colorBackground = noteEdit.getColorBgID();
+                Log.e("Error",colorBackground + "");
                 viewMainDetail.setBackgroundColor(colorBackground);
                 setColorDetail(colorBackground);
             }

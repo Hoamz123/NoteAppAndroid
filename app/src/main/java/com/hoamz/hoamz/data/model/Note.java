@@ -16,11 +16,12 @@ public class Note implements Parcelable {
     private int isPin;//1 la gim : 0 la khong gim -> order by -> gim nen dau
     private boolean isFavorite;
     private long date;
-    private long timeAlarm;
+    private long trigger;
+    private long timeRepeat;
     private String label;
     private int colorBgID;//mac dinh ban dau la mau trang
 
-    public Note(String title, String content,long date,long timeAlarm, int isPin, boolean isFavorite,String label,int colorBgID) {
+    public Note(String title, String content,long date,long trigger,long timeRepeat, int isPin, boolean isFavorite,String label,int colorBgID) {
         this.title = title;
         this.content = content;
         this.isPin = isPin;
@@ -28,8 +29,10 @@ public class Note implements Parcelable {
         this.date = date;
         this.label = label;
         this.colorBgID = colorBgID;
-        this.timeAlarm = timeAlarm;
+        this.trigger = trigger;
+        this.timeRepeat = timeRepeat;
     }
+
 
     protected Note(Parcel in) {
         id = in.readInt();
@@ -38,7 +41,8 @@ public class Note implements Parcelable {
         isPin = in.readInt();
         isFavorite = in.readByte() != 0;
         date = in.readLong();
-        timeAlarm = in.readLong();
+        trigger = in.readLong();
+        timeRepeat = in.readLong();
         label = in.readString();
         colorBgID = in.readInt();
     }
@@ -60,11 +64,27 @@ public class Note implements Parcelable {
     }
 
     public void setTimeAlarm(long timeAlarm) {
-        this.timeAlarm = timeAlarm;
+        this.trigger = timeAlarm;
     }
 
     public long getTimeAlarm() {
-        return timeAlarm;
+        return trigger;
+    }
+
+    public void setRepeat(long timeRepeat) {
+        this.timeRepeat = timeRepeat;
+    }
+
+    public void setTrigger(long trigger) {
+        this.trigger = trigger;
+    }
+
+    public long getTrigger() {
+        return trigger;
+    }
+
+    public long getTimeRepeat() {
+        return timeRepeat;
     }
 
     public int getColorBgID() {
@@ -125,7 +145,6 @@ public class Note implements Parcelable {
         this.id = id;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -139,7 +158,8 @@ public class Note implements Parcelable {
         dest.writeInt(isPin);
         dest.writeByte((byte) (isFavorite ? 1 : 0));
         dest.writeLong(date);
-        dest.writeLong(timeAlarm);
+        dest.writeLong(trigger);
+        dest.writeLong(timeRepeat);
         dest.writeString(label);
         dest.writeInt(colorBgID);
     }

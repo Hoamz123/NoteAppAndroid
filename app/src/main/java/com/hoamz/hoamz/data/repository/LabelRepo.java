@@ -32,4 +32,12 @@ public class LabelRepo {
         executorService.execute(() -> labelDAO.deleteLabel(label));
     }
 
+    public void updateLabel(Label label){
+        executorService.execute(() -> labelDAO.updateLabel(label));
+    }
+
+    public LiveData<Label> getLabelByName(String nameLabel){
+        return labelDAO.getLabelByName(nameLabel);
+    }
+
 }

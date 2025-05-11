@@ -12,6 +12,8 @@ import java.util.Set;
 public class Constants {
     //luu cac hang ko doi
     public static final String sortAToZ = "a_z";
+    public static final String TitleCreateNewLabel = "Tạo danh mục mới";
+    public static final String TitleEditLabel = "Sửa tên danh mục";
     public static final String sortZToA = "z_a";
     public static final String sortOldToNew = "asc";
     public static final String sortNewToOld = "desc";

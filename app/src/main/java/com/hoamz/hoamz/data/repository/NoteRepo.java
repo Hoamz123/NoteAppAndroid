@@ -21,7 +21,6 @@ public class NoteRepo {
     private final ExecutorService executorService;
     private LiveData<List<Note>> listLiveData = new MutableLiveData<>();
     private LiveData<List<Note>> listLiveDataBySearch = new MutableLiveData<>();
-    private int count = 0;
 
     public NoteRepo(Application application){
         noteDao = NoteDatabase.getInstance(application).noteDao();
@@ -104,5 +103,11 @@ public class NoteRepo {
     }
     public LiveData<List<Note>> getListNotesAlarm(){
         return noteDao.getListNotesAlarm();
+    }
+
+    public void deleteNotesByLabel(String label){
+        executorService.execute(() ->{
+            noteDao.deleteNotesByLabel(label);
+        });
     }
 }

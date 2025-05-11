@@ -29,4 +29,14 @@ public class LabelViewModel extends AndroidViewModel {
     public void deleteLabel(Label label){
         labelRepo.deleteLabel(label);
     }
+
+    //update
+    public void updateLabel(Label label){
+        labelRepo.updateLabel(label);
+    }
+
+    public LiveData<Label> getLabelByName(String nameLabel){
+        return labelRepo.getLabelByName(nameLabel);
+    }
+
 }

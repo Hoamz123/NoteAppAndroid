@@ -1,7 +1,7 @@
-package com.hoamz.hoamz.ui.act;
+package com.hoamz.hoamz.ui.fragment;
 
+import static androidx.core.content.res.ResourcesCompat.getColor;
 import static java.util.Calendar.DAY_OF_MONTH;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -9,24 +9,26 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.TextView;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.TextView;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.adapter.NoteAdapter;
 import com.hoamz.hoamz.data.model.Note;
+import com.hoamz.hoamz.ui.act.CreateNote;
+import com.hoamz.hoamz.ui.act.NoteDetail;
 import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.utils.EvenDecor;
 import com.hoamz.hoamz.utils.SelectedDayCustom;
@@ -34,7 +36,6 @@ import com.hoamz.hoamz.utils.TodayCustom;
 import com.hoamz.hoamz.viewmodel.NoteViewModel;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,7 +44,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class CalenderViewDetail extends AppCompatActivity {
+
+public class FragmentCalenderView extends Fragment {
+
     private ConstraintLayout fabAddNote;
     private MaterialCalendarView materialCalendarView;
     private long startOfDay = 0,endOfDay = 0;
@@ -58,27 +61,34 @@ public class CalenderViewDetail extends AppCompatActivity {
     private String dateSelected;
     private SimpleDateFormat sdf;
 
+    public FragmentCalenderView() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_calender_view);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        if(getActivity() != null) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            getActivity().getWindow().setStatusBarColor(getColor(getResources(), R.color.color_bg, null));
+            getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+    }
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        getWindow().setStatusBarColor(getColor(R.color.color_bg));
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
-        initView();
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view =  inflater.inflate(R.layout.fragment_calender_view, container, false);
+        initView(view);
         initData();
         onClick();
+        return view;
     }
 
     private void onClick() {
         fabAddNote.setOnClickListener(v ->{
-            Intent intent = new Intent(this, CreateNote.class);
+            Intent intent = new Intent(getActivity(), CreateNote.class);
             intent.putExtra(Constants.DATE_SELECTED,dateSelected);
             startActivity(intent);
         });
@@ -87,7 +97,7 @@ public class CalenderViewDetail extends AppCompatActivity {
             @Override
             public void onItemClick(Note note) {
                 //gui du lieu sang act edit de chinh sua
-                Intent intent = new Intent(CalenderViewDetail.this,NoteDetail.class);
+                Intent intent = new Intent(getActivity(), NoteDetail.class);
                 intent.putExtra(Constants.KEY_NOTE,note);
                 startActivity(intent);
             }
@@ -96,8 +106,8 @@ public class CalenderViewDetail extends AppCompatActivity {
             public void onItemLongClick(Note note) {
                 //an li de xoa
                 //hien thi log thong bao xoa
-                AlertDialog.Builder builder = new AlertDialog.Builder(CalenderViewDetail.this);
-                View viewDialog = View.inflate(CalenderViewDetail.this,R.layout.dialog_delete,null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View viewDialog = View.inflate(getActivity(),R.layout.dialog_delete,null);
                 builder.setView(viewDialog);
                 AlertDialog dialog = builder.create();
                 dialog.setCancelable(true);
@@ -127,7 +137,7 @@ public class CalenderViewDetail extends AppCompatActivity {
         }
 
         listTimestamp = Transformations.distinctUntilChanged(noteViewModel.getAllDate());
-        listTimestamp.observe(this, timestamps -> {
+        listTimestamp.observe(getViewLifecycleOwner(), timestamps -> {
 
             CalendarDay calendarDay;
             for(long time : timestamps){
@@ -139,8 +149,8 @@ public class CalenderViewDetail extends AppCompatActivity {
             }
         });
 
-        //materialCalendarView.removeDecorators();
-        materialCalendarView.addDecorator(new TodayCustom(CalenderViewDetail.this,CalendarDay.today()));
+        materialCalendarView.removeDecorators();
+        materialCalendarView.addDecorator(new TodayCustom(getActivity(),CalendarDay.today()));
 
         int currentDay = CalendarDay.today().getDay();
         int currentMonth = CalendarDay.today().getMonth();
@@ -159,7 +169,7 @@ public class CalenderViewDetail extends AppCompatActivity {
             if(selectedDayCustom != null){
                 materialCalendarView.removeDecorator(selectedDayCustom);
             }
-            selectedDayCustom = new SelectedDayCustom(this,date);
+            selectedDayCustom = new SelectedDayCustom(getActivity(),date);
             materialCalendarView.addDecorator(selectedDayCustom);
             loadData();
         });
@@ -171,7 +181,7 @@ public class CalenderViewDetail extends AppCompatActivity {
         return CalendarDay.from(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(DAY_OF_MONTH));
     }
 
-    private Date getDate(int day,int month,int year){
+    private Date getDate(int day, int month, int year){
         Calendar calendar = Calendar.getInstance();
         calendar.set(DAY_OF_MONTH,day);
         calendar.set(Calendar.MONTH,month);
@@ -186,7 +196,7 @@ public class CalenderViewDetail extends AppCompatActivity {
             listNotes.removeObservers(this);
         }
         listNotes = Transformations.distinctUntilChanged(noteViewModel.getNotesByTime(startOfDay,endOfDay));//chi khi du lieu thay doi thi moi update
-        listNotes.observe(this, notes -> {
+        listNotes.observe(getViewLifecycleOwner(), notes -> {
             if (notes != null) {
                 noteAdapter.setNoteList(notes);
                 tvSumNotesADay.setText("Total : " + notes.size());
@@ -219,17 +229,18 @@ public class CalenderViewDetail extends AppCompatActivity {
         endOfDay = calendar.getTimeInMillis();//cuoi ngay
     }
 
-    private void initView() {
-        fabAddNote = findViewById(R.id.fab_add_calender);
-        materialCalendarView = findViewById(R.id.materialCalender);
-        rcViewByDate = findViewById(R.id.rcViewByDate);
+    private void initView(View view) {
+        fabAddNote = view.findViewById(R.id.fab_add_calender);
+        materialCalendarView = view.findViewById(R.id.materialCalender);
+        rcViewByDate = view.findViewById(R.id.rcViewByDate);
         noteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
         noteAdapter = new NoteAdapter();
-        rcViewByDate.setLayoutManager(new GridLayoutManager(this,1));
+        rcViewByDate.setLayoutManager(new GridLayoutManager(getActivity(),1));
         listNotes = new MutableLiveData<>();
         listTimestamp = new MutableLiveData<>();
         calendarDayList = new ArrayList<>();
-        tvSumNotesADay = findViewById(R.id.tvSumNote);
+        tvSumNotesADay = view.findViewById(R.id.tvSumNote);
         sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
     }
+
 }

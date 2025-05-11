@@ -1,43 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:id="@+id/idCardNote"
+        android:title="Thẻ ghi nhớ"
+        android:icon="@drawable/ic_note"/>
 
-    <item android:id="@+id/it_calender"
-        android:icon="@drawable/ic_calender"
-        android:title="Calender"/>
+    <item android:id="@+id/idCalender"
+        android:title="Lịch"
+        android:icon="@drawable/ic_calender"/>
 
-    <item android:id="@+id/space1"
-        android:title=""/>
+    <item android:id="@+id/idReminder"
+        android:title="Lời nhắc"
+        android:icon="@drawable/ic_alarm"/>
 
-    <item android:id="@+id/it_reminder"
-        android:icon="@drawable/ic_alarm"
-        android:title="Reminder"/>
+    <item android:id="@+id/idCategories"
+        android:title="Thể loại"
+        android:icon="@drawable/ic_categories"/>
 
-    <item android:id="@+id/space2"
-        android:title=""/>
+    <item android:id="@+id/idFavorites"
+        android:title="Yêu thích"
+        android:icon="@drawable/ic_favorites"/>
 
-    <item android:id="@+id/it_categories"
-        android:icon="@drawable/ic_categories"
-        android:title="Categories"/>
+    <item android:id="@+id/idArchiver"
+        android:title="Lưu trữ"
+        android:icon="@drawable/ic_archiver"/>
 
-    <item android:id="@+id/space3"
-        android:title=""/>
+    <item android:id="@+id/idBin"
+        android:title="Thùng rác"
+        android:icon="@drawable/ic_bin"/>
 
-    <item android:id="@+id/it_favorites"
-        android:icon="@drawable/ic_love"
-        android:title="Favorites"/>
-
-    <item android:id="@+id/space4"
-        android:title=""/>
-
-    <item android:id="@+id/it_archive"
-        android:icon="@drawable/ic_archiver"
-        android:title="Archive"/>
-
-    <item android:id="@+id/space5"
-        android:title=""/>
-
-    <item android:id="@+id/it_deleted"
-        android:icon="@drawable/ic_bin"
-        android:title="Deleted"/>
 </menu>

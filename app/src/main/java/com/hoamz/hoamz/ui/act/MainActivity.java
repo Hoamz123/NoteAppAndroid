@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -20,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -42,7 +44,9 @@ import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.Note;
 import com.hoamz.hoamz.ui.fragment.FragmentArchiver;
 import com.hoamz.hoamz.ui.fragment.FragmentBin;
+import com.hoamz.hoamz.ui.fragment.FragmentCalenderView;
 import com.hoamz.hoamz.ui.fragment.FragmentFavoriteNote;
+import com.hoamz.hoamz.ui.fragment.FragmentReminder;
 import com.hoamz.hoamz.ui.fragment.FragmentSetting;
 import com.hoamz.hoamz.ui.fragment.FragmentTypeNote;
 import com.hoamz.hoamz.utils.Constants;
@@ -148,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showAllNotes() {
-
         if (listNotesCurrent != null) {
             listNotesCurrent.removeObservers(this); // Hủy tất cả observer của Activity này trên LiveData cũ
         }
@@ -190,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
-
     private void onClickToolbar() {
         //hien thi edt de tim kiem
         iv_showSearch.setOnClickListener(v ->{
@@ -310,7 +312,6 @@ public class MainActivity extends AppCompatActivity {
             });
         });
 
-
         noteAdapter.setOnClickItemListener(new NoteAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Note note) {
@@ -319,7 +320,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(Constants.KEY_NOTE,note);
                 startActivity(intent);
             }
-
             @Override
             public void onItemLongClick(Note note) {
                 //hien thi log thong bao xoa
@@ -347,72 +347,81 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        View headerNav = navMenu.getHeaderView(0);
-
-        //man hinh lich
-        LinearLayout viewCalender = headerNav.findViewById(R.id.item_calender);
-        viewCalender.setOnClickListener(v ->{
-            drawerLayout.closeDrawer(GravityCompat.START);//an
-            Intent intent = new Intent(MainActivity.this, CalenderViewDetail.class);
-            startActivity(intent);
-        });
-
-        //man hinh reminder
-        LinearLayout viewReminder = headerNav.findViewById(R.id.item_reminder);
-        viewReminder.setOnClickListener(v ->{
-            drawerLayout.closeDrawer(GravityCompat.START);//an
-            Intent intent = new Intent(MainActivity.this, ReminderActivity.class);
-            startActivity(intent);
-        });
-
-        //man hinh typeNote
-        LinearLayout viewTypeNote = headerNav.findViewById(R.id.item_categories);
-        viewTypeNote.setOnClickListener(v ->{
-            drawerLayout.closeDrawer(GravityCompat.START);//an
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fagContainer,new FragmentTypeNote(),FragmentTypeNote.class.getName())
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-        //man hinh favorite
-        LinearLayout viewFavorite = headerNav.findViewById(R.id.item_favorites);
-        viewFavorite.setOnClickListener(v ->{
-            drawerLayout.closeDrawer(GravityCompat.START);//an
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fagContainer,new FragmentFavoriteNote(),FragmentFavoriteNote.class.getName())
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-        //man hinh archiver
-        LinearLayout viewArchiver = headerNav.findViewById(R.id.item_archiver);
-        viewArchiver.setOnClickListener(v ->{
-            drawerLayout.closeDrawer(GravityCompat.START);//an
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fagContainer,new FragmentArchiver(),FragmentArchiver.class.getName())
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-        //man hinh Bin
-        LinearLayout viewBin = headerNav.findViewById(R.id.item_deleted);
-        viewBin.setOnClickListener(v ->{
-            drawerLayout.closeDrawer(GravityCompat.START);//an
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fagContainer,new FragmentBin(),FragmentBin.class.getName())
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-        //man hinh cai dat
-        LinearLayout viewSetting = headerNav.findViewById(R.id.item_setting);
-        viewSetting.setOnClickListener(v ->{
-            drawerLayout.closeDrawer(GravityCompat.START);//an
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fagContainer,new FragmentSetting(),FragmentSetting.class.getName())
-                    .addToBackStack(null)
-                    .commit();
+        navMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                int idItem = item.getItemId();
+                if(idItem == R.id.idCardNote){
+                    //do something
+                }
+                else if(idItem == R.id.idCalender){
+                    //do something
+//                    Intent intent = new Intent(MainActivity.this, CalenderViewDetail.class);
+//                    startActivity(intent);
+//                    overridePendingTransition(0,0);
+                    new Handler().postDelayed(() ->{
+                        getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                                .replace(R.id.fagContainer,new FragmentCalenderView(),FragmentCalenderView.class.getName())
+                                .addToBackStack(null)
+                                .commit();
+                    },280);
+                }
+                else if(idItem == R.id.idReminder) {
+                    //do something
+//                    Intent intent = new Intent(MainActivity.this, ReminderActivity.class);
+//                    startActivity(intent);
+//                    overridePendingTransition(0,0);
+                    new Handler().postDelayed(() ->{
+                        getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                                .replace(R.id.fagContainer,new FragmentReminder(),FragmentReminder.class.getName())
+                                .addToBackStack(null)
+                                .commit();
+                    },250);
+                }
+                else if(idItem == R.id.idCategories){
+                    //do something
+                    new Handler().postDelayed(() ->{
+                        getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                                .replace(R.id.fagContainer,new FragmentTypeNote(),FragmentTypeNote.class.getName())
+                                .addToBackStack(null)
+                                .commit();
+                    },250);
+                }
+                else if(idItem == R.id.idFavorites) {
+                    //do something
+                    new Handler().postDelayed(() ->{
+                        getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                                .replace(R.id.fagContainer,new FragmentFavoriteNote(),FragmentFavoriteNote.class.getName())
+                                .addToBackStack(null)
+                                .commit();
+                    },250);
+                }
+                else if(idItem == R.id.idBin){
+                    //do something
+                    new Handler().postDelayed(() -> {
+                        getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                                .replace(R.id.fagContainer,new FragmentBin(),FragmentBin.class.getName())
+                                .addToBackStack(null)
+                                .commit();
+                    },250);
+                }
+                else if(idItem == R.id.idArchiver){
+                    new Handler().postDelayed(() -> {
+                        getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                                .replace(R.id.fagContainer,new FragmentArchiver(),FragmentArchiver.class.getName())
+                                .addToBackStack(null)
+                                .commit();
+                    },250);
+                }
+                return false;
+            }
         });
     }
 
@@ -456,7 +465,6 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(NoteViewModel.class);
 
         isType = SharePre.getInstance().getTypeShow();//ban dau mac dinh la false
-//        rcNotes.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
 
         displayType();
 

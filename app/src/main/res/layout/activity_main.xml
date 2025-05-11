@@ -236,6 +236,7 @@
         android:layout_gravity="start"
         app:itemSpacing = "50dp"
         android:background="@color/color_bg"
-        app:headerLayout="@layout/layout_header" />
+        app:headerLayout="@layout/layout_header"
+        app:menu="@menu/menu_nav_view"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
