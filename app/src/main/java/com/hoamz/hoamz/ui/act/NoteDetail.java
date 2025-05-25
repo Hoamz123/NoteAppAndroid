@@ -83,7 +83,8 @@ public class NoteDetail extends AppCompatActivity {
     private boolean isPin;
     private LiveData<List<Label>> listLabel;
     private LabelViewModel labelViewModel;
-    private long timeAlarm;
+    private long timeAlarm = 0;
+    private long timeRepeat = 0;
     private final Deque<String> undoSt = new ArrayDeque<>();
     private final Deque<String> redoSt = new ArrayDeque<>();
     private boolean isUndoRedoMode = false;
@@ -143,11 +144,13 @@ public class NoteDetail extends AppCompatActivity {
             //set lai mau -> save lai vao Room
             noteEdit.setColorBgID(colorBackground);
             noteViewModel.updateNote(noteEdit);
-
+            if(timeAlarm > System.currentTimeMillis()){
+                Constants.setUpAlarm(this,noteEdit,timeAlarm,timeRepeat);//set alarm
+            }
             //tat trang thai reading mode (trang thai chi nen tac dong den 1 note dang hien thi)
-            if (isReadingMode) {
-                isReadingMode = false;
-                SharePre.getInstance().saveReadingMode(false);
+            if (!isReadingMode) {
+                isReadingMode = true;
+                SharePre.getInstance(this).saveReadingMode(isReadingMode);
             }
             finish();
         });//back ve act gan nhat (tren dinh stack)
@@ -165,17 +168,11 @@ public class NoteDetail extends AppCompatActivity {
             if (isReadingMode) {
                 //->dat title la Reading mode
                 menuItem.setTitle(Constants.EDIT_MODE);
-                //khong cho user nhap
-                edtTitle.setEnabled(false);
-                edtContent.setEnabled(false);
+
             } else {
                 //-> dat title la Edit mode
                 menuItem.setTitle(Constants.READING_MODE);
-                //cho user nhap
-                edtTitle.setEnabled(true);
-                edtContent.setEnabled(true);
             }
-
             //bat vao item pin
             menuItem = menu.findItem(R.id.ac_pin);
             if(isPin){
@@ -201,19 +198,17 @@ public class NoteDetail extends AppCompatActivity {
                     if (!isReadingMode) {
                         // -> chuyen sang che do doc
                         item.setTitle(Constants.EDIT_MODE);
-                        //khong cho user nhap
-                        edtTitle.setEnabled(false);
                         edtContent.setEnabled(false);
-
+                        edtTitle.setEnabled(false);
                     } else {
                         // -> chuyen sang che do chinh sua
                         item.setTitle(Constants.READING_MODE);
-                        //cho user nhap
-                        edtTitle.setEnabled(true);
                         edtContent.setEnabled(true);
+                        edtTitle.setEnabled(true);
                     }
+                    //neu click se thay doi o day
                     isReadingMode = !isReadingMode;
-                    SharePre.getInstance().saveReadingMode(isReadingMode);
+                    SharePre.getInstance(this).saveReadingMode(isReadingMode);
                 }
 
                 //click share
@@ -273,7 +268,7 @@ public class NoteDetail extends AppCompatActivity {
                     //logic
                 }
 
-                return true;
+                return false;
             });
 
             popupMenu.show();
@@ -416,6 +411,9 @@ public class NoteDetail extends AppCompatActivity {
 
             btnSave.setOnClickListener(click ->{
                 timeAlarm = calendarAlarm.getTimeInMillis();
+                if(timeAlarm < System.currentTimeMillis()){
+                    timeAlarm = 0;
+                }
                 dialog.dismiss();
             });
 
@@ -554,12 +552,11 @@ public class NoteDetail extends AppCompatActivity {
                 edtTitle.setText(noteEdit.getTitle());
                 edtContent.setText(noteEdit.getContent());
                 Date date = new Date(noteEdit.getDate());
-                timeAlarm = noteEdit.getTimeAlarm();
+                timeAlarm = noteEdit.getTrigger();
                 isFavorite = noteEdit.isFavorite();
                 isPin = (noteEdit.isPin() == 1);//bien nay true hay false se phu thuoc vao dk isPin() co = 1 hay khong
                 tvDate.setText(sdf.format(date));
                 colorBackground = noteEdit.getColorBgID();
-                Log.e("Error",colorBackground + "");
                 viewMainDetail.setBackgroundColor(colorBackground);
                 setColorDetail(colorBackground);
             }
@@ -616,7 +613,7 @@ public class NoteDetail extends AppCompatActivity {
         tvChooseLabel = findViewById(R.id.choose_labelIndT);
         noteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
         //lay ra trang thai read/edit mode
-        isReadingMode = SharePre.getInstance().checkReadingMode();
+        isReadingMode = SharePre.getInstance(this).checkReadingMode();
         labelViewModel = new ViewModelProvider(this).get(LabelViewModel.class);
         ivb_redo = findViewById(R.id.ivbRedoInEdit);
         ivb_undo = findViewById(R.id.ivbUndoInEdit);

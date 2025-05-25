@@ -1,12 +1,14 @@
 package com.hoamz.hoamz.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,18 +20,22 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hoamz.hoamz.R;
+import com.hoamz.hoamz.adapter.LabelAdapter;
 import com.hoamz.hoamz.adapter.TypeNoteAdapter;
 import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.LabelDetail;
+import com.hoamz.hoamz.ui.act.MainActivity;
 import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.utils.DialogShow;
 import com.hoamz.hoamz.viewmodel.LabelViewModel;
 import com.hoamz.hoamz.viewmodel.NoteViewModel;
+import com.hoamz.hoamz.viewmodel.TypeModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FragmentTypeNote extends Fragment {
@@ -146,7 +152,11 @@ public class FragmentTypeNote extends Fragment {
 
         adapter.setOnClickTypeNote(new TypeNoteAdapter.onClickTypeNote() {
             @Override
-            public void onClickTypeLabel(LabelDetail labelDetail) {
+            public void onClickTypeLabel(LabelDetail labelDetail,int pos) {
+                TypeModel typeModel = new ViewModelProvider(requireActivity()).get(TypeModel.class);
+                typeModel.setType(labelDetail.getLabelName());
+                typeModel.setIndex(pos);
+                requireActivity().getSupportFragmentManager().popBackStack();
             }
 
             @Override

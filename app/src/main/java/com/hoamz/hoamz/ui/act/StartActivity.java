@@ -3,13 +3,14 @@ package com.hoamz.hoamz.ui.act;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.data.local.SharePre;
 import com.hoamz.hoamz.utils.MyAnimation;
@@ -43,9 +44,9 @@ public class StartActivity extends AppCompatActivity {
 
     private void next(){
         //check lan dau cua user o day
-        boolean isFirst = SharePre.getInstance().checkFirstRunApp();
+        boolean isFirst = SharePre.getInstance(this).checkFirstRunApp();
         Intent intent;
-        if(isFirst){
+        if(!isFirst){
             //neu lan dau -> sang act gioi thieu
             intent = new Intent(this, FirstRunAct.class);
         }

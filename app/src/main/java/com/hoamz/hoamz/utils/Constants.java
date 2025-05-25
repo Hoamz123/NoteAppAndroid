@@ -1,11 +1,13 @@
 package com.hoamz.hoamz.utils;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
-
+import android.content.Intent;
 import androidx.core.content.ContextCompat;
-
+import com.hoamz.hoamz.Broadcast.MyBroadCastReminder;
 import com.hoamz.hoamz.R;
-
+import com.hoamz.hoamz.data.model.Note;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,8 +28,10 @@ public class Constants {
     public static final String FAVORITE = "Favorite";
     public static final String KEY_NOTE = "note";
     public static final String DATE_SELECTED = "dateSelected";
-     public static final String LABEL_CURRENT = "labelCurrent";
-
+    public static final String LABEL_CURRENT = "labelCurrent";
+    public static final String KEY_TITLE = "title_notify";
+    public static final String KEY_CONTENT = "content_notify";
+    public static final String RQ_CODE_ALARM = "Alarm";
     public static Set<Integer> colorLightPicker = new HashSet<>();
     public static Set<Integer> colorDarkPicker = new HashSet<>();
 
@@ -52,4 +56,23 @@ public class Constants {
         colorDarkPicker.add(ContextCompat.getColor(context, R.color.color14));
         colorDarkPicker.add(ContextCompat.getColor(context, R.color.color8));
     }
+
+    public static void setUpAlarm(Activity act, Note note,long trigger,long repeat){
+        Intent intent = new Intent(act, MyBroadCastReminder.class);
+        intent.putExtra(Constants.KEY_CONTENT, note.getContent());
+        intent.putExtra(Constants.KEY_TITLE, note.getTitle());
+        intent.putExtra(Constants.RQ_CODE_ALARM, note.getId());
+        intent.putExtra(Constants.KEY_NOTE,note);
+        AlarmUtils.getInstance().setAlarmNotify(act,intent,note.getId(),trigger - 1000);//tru di 100 ms cho bo can
+    }
+
+    public static void CancelAlarm(Activity act, Note note){
+        Intent intent = new Intent(act, MyBroadCastReminder.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(act,
+                note.getId(),
+                intent,
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmUtils.getInstance().setCancelAlarm(act,pendingIntent);
+    }
+
 }

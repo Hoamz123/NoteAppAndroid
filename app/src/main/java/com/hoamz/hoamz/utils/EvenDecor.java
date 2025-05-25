@@ -23,6 +23,6 @@ public class EvenDecor implements DayViewDecorator {
 
     @Override
     public void decorate(DayViewFacade view) {
-        view.addSpan(new DotSpan(8, Color.RED));
+        view.addSpan(new DotSpan(3, Color.RED));
     }
 }

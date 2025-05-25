@@ -67,4 +67,7 @@ public interface NoteDao {
 
     @Query("delete from note where label = :label")
     void deleteNotesByLabel(String label);
+
+    @Query("select * from note where deleted = :deleted order by isPin desc")
+    LiveData<List<Note>> getListNoteDeleted(boolean deleted);
 }

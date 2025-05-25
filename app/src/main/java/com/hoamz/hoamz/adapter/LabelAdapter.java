@@ -12,6 +12,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.data.model.Label;
+import com.hoamz.hoamz.ui.act.MainActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,11 @@ public class LabelAdapter extends RecyclerView.Adapter<LabelAdapter.ViewHodel> {
 
     public LabelAdapter(){
         listLabel = new ArrayList<>();
+    }
+
+    public void setCurrPosition(int currPosition) {
+        this.currPosition = currPosition;
+        notifyDataSetChanged();
     }
 
     public void setListLabel(List<Label> listLabel) {

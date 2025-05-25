@@ -110,4 +110,8 @@ public class NoteRepo {
             noteDao.deleteNotesByLabel(label);
         });
     }
+
+    public LiveData<List<Note>> listNodeDeleted(boolean deleted){
+        return noteDao.getListNoteDeleted(deleted);
+    }
 }

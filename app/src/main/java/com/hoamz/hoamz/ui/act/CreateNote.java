@@ -1,10 +1,15 @@
 package com.hoamz.hoamz.ui.act;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
@@ -17,11 +22,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -35,12 +42,14 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.hoamz.hoamz.Broadcast.MyBroadCastReminder;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.adapter.SelectLabelAdapter;
 import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.LabelDetail;
 import com.hoamz.hoamz.data.model.Note;
 import com.hoamz.hoamz.ui.fragment.BottomSheetColor;
+import com.hoamz.hoamz.utils.AlarmUtils;
 import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.utils.CustomTextWatcher;
 import com.hoamz.hoamz.viewmodel.LabelViewModel;
@@ -50,6 +59,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Deque;
@@ -82,7 +92,7 @@ public class CreateNote extends AppCompatActivity {
     private final Deque<String> redoSt = new ArrayDeque<>();
     private boolean isUndoRedoMode = false;
     private Calendar calendarAlarm;
-    private static final int MAX_UNDO = 20;
+    private static final int MAX_UNDO = 100;
     private ImageButton ivb_undo,ivb_redo;
     private long timeAlarm = 0;
     private long timeRepeat = 0;
@@ -105,10 +115,8 @@ public class CreateNote extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_create_note);
-
         //khoa dung man hinh
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
 
         initViews();//set date luon khi vua chuyen sang man hinh create note
         onClickItems();
@@ -187,9 +195,12 @@ public class CreateNote extends AppCompatActivity {
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
-
-            Note note = new Note(title,content,timestamp,timeAlarm,timeRepeat,0,false,label,colorBackground);
+            Note note = new Note(title, content, timestamp, timeAlarm, timeRepeat, 0,false, false, label, colorBackground);
             noteViewModel.insertNewNote(note);
+            //set notify
+            if(timeAlarm > 0){
+                Constants.setUpAlarm(this,note,timeAlarm,timeRepeat);
+            }
             //back ve trang main
             finish();
         });
@@ -202,7 +213,12 @@ public class CreateNote extends AppCompatActivity {
 
         //su kien chon ngay h nhac nho
         ivSetAlarm.setOnClickListener(v ->{
-
+            //xin quyen
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if(ActivityCompat.checkSelfPermission(this, Arrays.toString(new String[]{Manifest.permission.POST_NOTIFICATIONS})) != PackageManager.PERMISSION_GRANTED){
+                    requirePermissionNotify();
+                }
+            }
             //hien thi alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             View viewDialog = View.inflate(this,R.layout.dialog_notification,null);
@@ -219,7 +235,7 @@ public class CreateNote extends AppCompatActivity {
             setDate.setText(dayChoose);
             TextView setTime = viewDialog.findViewById(R.id.acSetTime);
             setTime.setText(timeChoose);
-            TextView btnRepeat = viewDialog.findViewById(R.id.acRepeat);
+            TextView btnRepeat = viewDialog.findViewById(R.id.acRepeat);//xin no den tuan sau
             TextView btnSave = viewDialog.findViewById(R.id.acSave);
             TextView btnCancel = viewDialog.findViewById(R.id.acCancel);
 
@@ -232,9 +248,11 @@ public class CreateNote extends AppCompatActivity {
 
             btnSave.setOnClickListener(click ->{
                 timeAlarm = calendarAlarm.getTimeInMillis();
+                if(timeAlarm < System.currentTimeMillis()){
+                    timeAlarm = 0;//ko dc
+                }
                 dialog.dismiss();
             });
-
             dialog.show();
         });
 
@@ -349,6 +367,10 @@ public class CreateNote extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    private void requirePermissionNotify() {
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.POST_NOTIFICATIONS},1);
+    }
     //set color view
     private void setColorDetail(int colorBackground){
 
@@ -524,7 +546,6 @@ public class CreateNote extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
         tv_date.setText(sdf.format(calendar.getTime()));//(ok)
-
 
         //khoi tao calenderAlarm de luu time nhac nho
         calendarAlarm = Calendar.getInstance();

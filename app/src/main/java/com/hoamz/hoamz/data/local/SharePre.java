@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.hoamz.hoamz.utils.Constants;
-
 public  class SharePre {
     private static SharePre instance;
     private static final String name_save_label = "app_save";
@@ -20,38 +18,28 @@ public  class SharePre {
         sharedPreferences = context.getSharedPreferences(name_save_label,Context.MODE_PRIVATE);
     }
     //singleton
-    public static void init(Context context){
+    public static SharePre getInstance(Context context) {
         if(instance == null){
             instance = new SharePre(context);
         }
-    }
-
-    public static SharePre getInstance() {
         return instance;
     }
 
     @SuppressLint("CommitPrefEdits")
     public void saveSecondRunApp(){
-        sharedPreferences.edit().putBoolean(FIRST_RUN,false).apply();
+        sharedPreferences.edit().putBoolean(FIRST_RUN,true).apply();
     }
 
     public boolean checkFirstRunApp(){
-        return sharedPreferences.getBoolean(FIRST_RUN,true);
+        return sharedPreferences.getBoolean(FIRST_RUN,false);
     }
+
     public boolean checkReadingMode(){
-        return sharedPreferences.getBoolean(READING_MODE,true);//ban dau chua co gia tri that thi se tra ve true
+        return sharedPreferences.getBoolean(READING_MODE,false);//ban dau chua co gia tri that thi se tra ve false
     }
 
     public void saveReadingMode(boolean isReadingMode){
         sharedPreferences.edit().putBoolean(READING_MODE,isReadingMode).apply();
-    }
-
-    public void saveLabelCurrent(String label){
-        sharedPreferences.edit().putString(LABEL_CURRENT,label).apply();
-    }
-
-    public String getLabelCurrent(){
-        return sharedPreferences.getString(LABEL_CURRENT, Constants.labelAll);
     }
 
     public void saveTypeShow(boolean type){

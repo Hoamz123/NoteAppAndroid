@@ -26,7 +26,7 @@ public class TypeNoteAdapter extends RecyclerView.Adapter<TypeNoteAdapter.viewHo
     }
 
     public interface onClickTypeNote{
-        void onClickTypeLabel(LabelDetail labelDetail);
+        void onClickTypeLabel(LabelDetail labelDetail,int index);
 
         void onClickForShowMoreOption(LabelDetail labelDetail);
     }
@@ -56,10 +56,10 @@ public class TypeNoteAdapter extends RecyclerView.Adapter<TypeNoteAdapter.viewHo
         holder.tvNameLabel.setText(content);
 
         //bat su kien click
-        holder.tvNameLabel.setOnClickListener(v ->{
-            onClickTypeNote.onClickTypeLabel(labelDetail);
-        });
 
+        holder.tvNameLabel.setOnClickListener(v ->{
+            onClickTypeNote.onClickTypeLabel(labelDetail,position);
+        });
 
         holder.ivMore.setOnClickListener(v ->{
             onClickTypeNote.onClickForShowMoreOption(labelDetail);

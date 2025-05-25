@@ -24,6 +24,7 @@ public class FirstRunAct extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_first_run);
+        SharePre.getInstance(this).saveSecondRunApp();
 
         //khoa dung man hinh
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -44,11 +45,8 @@ public class FirstRunAct extends AppCompatActivity {
             model.insertLabel(new Label("All"));
             model.insertLabel(new Label("Home"));
             model.insertLabel(new Label("Work"));
-            SharePre.getInstance().saveSecondRunApp();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         });
-
-
     }
 }

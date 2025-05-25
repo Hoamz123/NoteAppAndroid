@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
-        android:name=".app.MyApplication"
+        android:name="com.hoamz.hoamz.app.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -32,23 +33,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.act.FirstRunAct"
             android:exported="false"
             android:launchMode="singleTop"
+            android:configChanges="uiMode|screenLayout|screenSize|smallestScreenSize"
             android:noHistory="true" />
+
         <activity
             android:name=".ui.act.CreateNote"
             android:configChanges="uiMode|screenLayout|screenSize|smallestScreenSize"
             android:exported="false"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.act.MainActivity"
             android:configChanges="uiMode|screenLayout|screenSize|smallestScreenSize"
             android:exported="true"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan" />
+        <receiver android:name=".Broadcast.MyBroadCastReminder"/>
     </application>
 
 </manifest>

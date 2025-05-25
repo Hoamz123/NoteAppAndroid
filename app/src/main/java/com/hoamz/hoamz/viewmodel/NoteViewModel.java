@@ -85,4 +85,8 @@ public class NoteViewModel extends AndroidViewModel {
     public void deleteNotesByLabel(String label){
         noteRepo.deleteNotesByLabel(label);
     }
+
+    public LiveData<List<Note>> listNodeDeleted(){
+        return noteRepo.listNodeDeleted(true);
+    }
 }

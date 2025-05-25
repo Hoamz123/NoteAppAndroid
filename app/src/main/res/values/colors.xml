@@ -25,7 +25,7 @@
     <color name="color12">#37474F</color>  <!-- Deep Blue Grey (tối) -->
     <color name="color13">#0C5776</color>  <!-- Dark Indigo (tối) -->
     <color name="color14">#9543A7</color>  <!-- Slate (tối) -->
-    <color name="color15">#13313D</color>  <!-- Carbon Black (tối) -->
-    <color name="color16">#4A148C</color>  <!-- Deep Purple Night (tối) -->
+    <color name="color15">#546E7A</color>  <!-- Carbon Black (tối) -->
+    <color name="color16">#00796B</color>  <!-- Deep Purple Night (tối) -->
 
 </resources>

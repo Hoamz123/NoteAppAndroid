@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +38,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.hoamz.hoamz.Broadcast.MyBroadCastReminder;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.adapter.LabelAdapter;
 import com.hoamz.hoamz.adapter.NoteAdapter;
@@ -49,10 +52,13 @@ import com.hoamz.hoamz.ui.fragment.FragmentFavoriteNote;
 import com.hoamz.hoamz.ui.fragment.FragmentReminder;
 import com.hoamz.hoamz.ui.fragment.FragmentSetting;
 import com.hoamz.hoamz.ui.fragment.FragmentTypeNote;
+import com.hoamz.hoamz.utils.AlarmUtils;
 import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.utils.CustomTextWatcher;
 import com.hoamz.hoamz.viewmodel.LabelViewModel;
 import com.hoamz.hoamz.viewmodel.NoteViewModel;
+import com.hoamz.hoamz.viewmodel.TypeModel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -77,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvEmptyList;
     private LiveData<List<Note>> listNotesCurrent;
     private LiveData<List<Label>> listLabelsCurrent;
-    private String labelCurrentClick;
+    private String labelCurrentClick = Constants.labelAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,9 +106,9 @@ public class MainActivity extends AppCompatActivity {
             labelCurrentClick = label;//luu lai label dang click
             showNotesByLabel(label);//bat su kien khi click vao label
         });
-
-        showAllNotes();
+        showNotesByLabel(labelCurrentClick);
         onClickToolbar();//bat su kien click toolbar
+        onReceiverData();
     }
 
     //show danh sach theo nhan
@@ -222,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
             edtSearchView.setVisibility(View.INVISIBLE);
             //hien thi icon search
             iv_showSearch.setVisibility(View.VISIBLE);
-
         });
 
         //thay doi bo cuc hien thi
@@ -236,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
                 rcNotes.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
             }
             isType = !isType;
-            SharePre.getInstance().saveTypeShow(isType);
+            SharePre.getInstance(this).saveTypeShow(isType);
             noteAdapter.notifyDataSetChanged();
         });
 
@@ -356,10 +361,7 @@ public class MainActivity extends AppCompatActivity {
                     //do something
                 }
                 else if(idItem == R.id.idCalender){
-                    //do something
-//                    Intent intent = new Intent(MainActivity.this, CalenderViewDetail.class);
-//                    startActivity(intent);
-//                    overridePendingTransition(0,0);
+
                     new Handler().postDelayed(() ->{
                         getSupportFragmentManager().beginTransaction()
                                 .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
@@ -369,10 +371,6 @@ public class MainActivity extends AppCompatActivity {
                     },280);
                 }
                 else if(idItem == R.id.idReminder) {
-                    //do something
-//                    Intent intent = new Intent(MainActivity.this, ReminderActivity.class);
-//                    startActivity(intent);
-//                    overridePendingTransition(0,0);
                     new Handler().postDelayed(() ->{
                         getSupportFragmentManager().beginTransaction()
                                 .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
@@ -464,7 +462,7 @@ public class MainActivity extends AppCompatActivity {
         //viewmodel cua ghi chu
         viewModel = new ViewModelProvider(this).get(NoteViewModel.class);
 
-        isType = SharePre.getInstance().getTypeShow();//ban dau mac dinh la false
+        isType = SharePre.getInstance(this).getTypeShow();//ban dau mac dinh la false
 
         displayType();
 
@@ -481,5 +479,21 @@ public class MainActivity extends AppCompatActivity {
         //an ban phim ao
         InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         manager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+    }
+
+    //nhan thong tin khi ben typeNote nhan chon theo chi muc
+    private void onReceiverData(){
+        TypeModel typeModel = new ViewModelProvider(this).get(TypeModel.class);
+        typeModel.getType().observe(this, s -> {
+            if(s != null){
+                labelCurrentClick = s;
+                showNotesByLabel(s);
+            }
+        });
+        typeModel.getIndex().observe(this, integer -> {
+            if (integer != null) {
+                adapter.setCurrPosition(integer);
+            }
+        });
     }
 }

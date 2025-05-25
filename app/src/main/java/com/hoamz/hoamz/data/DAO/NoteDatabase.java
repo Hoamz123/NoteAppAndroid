@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.Note;
 
-@Database(entities = {Note.class, Label.class},version = 2)
+@Database(entities = {Note.class, Label.class},version = 3)
 public abstract class NoteDatabase extends RoomDatabase {
     private static NoteDatabase instance;
     private static final String name_database = "notes_database";
