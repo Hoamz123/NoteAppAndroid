@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="80dp"
+    android:paddingBottom="30dp"
     android:background="@drawable/back_ground_sheet"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -25,8 +25,8 @@
 
        <com.google.android.material.card.MaterialCardView
            android:id="@+id/colorCyan"
-           android:layout_width="60dp"
-           android:layout_height="60dp"
+           android:layout_width="55dp"
+           android:layout_height="55dp"
            app:cardCornerRadius="200dp"
            app:cardBackgroundColor="@color/color1"
            app:layout_constraintTop_toTopOf="parent"
@@ -37,8 +37,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorVivid"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color2"
             app:layout_constraintTop_toTopOf="parent"
@@ -49,8 +49,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorPure"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color3"
             app:layout_constraintTop_toTopOf="parent"
@@ -61,8 +61,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorNeon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color4"
             app:layout_constraintTop_toTopOf="parent"
@@ -86,8 +86,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorVibrant"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color5"
             app:layout_constraintTop_toTopOf="parent"
@@ -97,8 +97,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorElectricPurple"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color6"
             app:layout_constraintTop_toTopOf="parent"
@@ -108,8 +108,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorSkyBlue"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color7"
             app:layout_constraintTop_toTopOf="parent"
@@ -119,8 +119,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorElectricPink"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color8"
             app:layout_constraintTop_toTopOf="parent"
@@ -143,8 +143,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorLively"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color9"
             app:layout_constraintTop_toTopOf="parent"
@@ -155,8 +155,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorLime"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color10"
             app:layout_constraintTop_toTopOf="parent"
@@ -167,8 +167,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorSoft"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color11"
             app:layout_constraintTop_toTopOf="parent"
@@ -179,8 +179,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorDeepBlueGrey"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color12"
             app:layout_constraintTop_toTopOf="parent"
@@ -204,8 +204,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorDarkIndigo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color13"
             app:layout_constraintTop_toTopOf="parent"
@@ -216,8 +216,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorSlate"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color14"
             app:layout_constraintTop_toTopOf="parent"
@@ -228,8 +228,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorCarbon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color15"
             app:layout_constraintTop_toTopOf="parent"
@@ -240,8 +240,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/colorDeepPurpleNight"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             app:cardCornerRadius="200dp"
             app:cardBackgroundColor="@color/color16"
             app:layout_constraintTop_toTopOf="parent"

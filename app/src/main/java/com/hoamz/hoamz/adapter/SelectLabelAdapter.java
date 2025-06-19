@@ -22,6 +22,12 @@ public class SelectLabelAdapter extends RecyclerView.Adapter<SelectLabelAdapter.
     public SelectLabelAdapter(){
         labelDetailList = new ArrayList<>();
     }
+
+    public void setSelectedPosition(int selectedPosition) {
+        this.selectedPosition = selectedPosition;
+        notifyDataSetChanged();
+    }
+
     public interface onClickToSelectLabel{
         void onClick(LabelDetail labelDetail);
     }

@@ -2,8 +2,6 @@ package com.hoamz.hoamz.ui.act;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -19,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.RequiresApi;
@@ -31,8 +28,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -42,19 +37,16 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
-import com.hoamz.hoamz.Broadcast.MyBroadCastReminder;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.adapter.SelectLabelAdapter;
 import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.LabelDetail;
 import com.hoamz.hoamz.data.model.Note;
 import com.hoamz.hoamz.ui.fragment.BottomSheetColor;
-import com.hoamz.hoamz.utils.AlarmUtils;
 import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.utils.CustomTextWatcher;
 import com.hoamz.hoamz.viewmodel.LabelViewModel;
 import com.hoamz.hoamz.viewmodel.NoteViewModel;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
@@ -97,6 +89,8 @@ public class CreateNote extends AppCompatActivity {
     private long timeAlarm = 0;
     private long timeRepeat = 0;
 
+    private String tmpDay,tmpTime;
+
     //att in dialog
     /********************************/
     private RecyclerView rcViewInDialog;
@@ -109,6 +103,7 @@ public class CreateNote extends AppCompatActivity {
     /********************************/
 
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -117,6 +112,11 @@ public class CreateNote extends AppCompatActivity {
         setContentView(R.layout.activity_create_note);
         //khoa dung man hinh
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        //check permission
+        if(ActivityCompat.checkSelfPermission(this, Arrays.toString(new String[]{Manifest.permission.POST_NOTIFICATIONS})) != PackageManager.PERMISSION_GRANTED){
+            requirePermissionNotify();
+        };
 
         initViews();//set date luon khi vua chuyen sang man hinh create note
         onClickItems();
@@ -174,7 +174,7 @@ public class CreateNote extends AppCompatActivity {
         });
     }
 
-    @SuppressLint({"ClickableViewAccessibility", "DefaultLocale"})
+    @SuppressLint({"ClickableViewAccessibility", "DefaultLocale", "NewApi"})
     private void onClickItems() {
         //back to main
         iv_backToMain.setOnClickListener(v -> finish());//back to main(ok)
@@ -195,11 +195,11 @@ public class CreateNote extends AppCompatActivity {
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
-            Note note = new Note(title, content, timestamp, timeAlarm, timeRepeat, 0,false, false, label, colorBackground);
+            Note note = new Note(title, content, timestamp, timeAlarm, timeRepeat, 0,false, label, colorBackground);
             noteViewModel.insertNewNote(note);
             //set notify
             if(timeAlarm > 0){
-                Constants.setUpAlarm(this,note,timeAlarm,timeRepeat);
+                Constants.setUpAlarm(this,note,timeAlarm);
             }
             //back ve trang main
             finish();
@@ -211,14 +211,8 @@ public class CreateNote extends AppCompatActivity {
             ShowKey();
         });
 
-        //su kien chon ngay h nhac nho
+        //alarm
         ivSetAlarm.setOnClickListener(v ->{
-            //xin quyen
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if(ActivityCompat.checkSelfPermission(this, Arrays.toString(new String[]{Manifest.permission.POST_NOTIFICATIONS})) != PackageManager.PERMISSION_GRANTED){
-                    requirePermissionNotify();
-                }
-            }
             //hien thi alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             View viewDialog = View.inflate(this,R.layout.dialog_notification,null);
@@ -228,14 +222,18 @@ public class CreateNote extends AppCompatActivity {
             Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.setCanceledOnTouchOutside(true);
 
-            timeChoose = getCurrentTime();
-            dayChoose = getCurrentDay();
+            if(Objects.equals(tmpTime, "") && Objects.equals(tmpDay, "")){
+                tmpTime = getCurrentTime();
+                tmpDay = getCurrentDay();
+            }
+
+            timeChoose = tmpTime;
+            dayChoose = tmpDay;
 
             TextView setDate = viewDialog.findViewById(R.id.acSetDay);
             setDate.setText(dayChoose);
             TextView setTime = viewDialog.findViewById(R.id.acSetTime);
             setTime.setText(timeChoose);
-            TextView btnRepeat = viewDialog.findViewById(R.id.acRepeat);//xin no den tuan sau
             TextView btnSave = viewDialog.findViewById(R.id.acSave);
             TextView btnCancel = viewDialog.findViewById(R.id.acCancel);
 
@@ -249,16 +247,12 @@ public class CreateNote extends AppCompatActivity {
             btnSave.setOnClickListener(click ->{
                 timeAlarm = calendarAlarm.getTimeInMillis();
                 if(timeAlarm < System.currentTimeMillis()){
-                    timeAlarm = 0;//ko dc
+                    timeAlarm = 0;
                 }
                 dialog.dismiss();
             });
+
             dialog.show();
-        });
-
-
-        tv_date.setOnClickListener(v ->{
-            setDateEdit(tv_date);
         });
 
         //su kien chon mau
@@ -293,7 +287,6 @@ public class CreateNote extends AppCompatActivity {
 
         ivb_undo.setOnClickListener(v -> undo());
         ivb_redo.setOnClickListener(v -> redo());
-
 
         //bat su kien click chon nhan
         tv_choose_label.setOnClickListener(v ->{
@@ -364,6 +357,10 @@ public class CreateNote extends AppCompatActivity {
                 dialogCreateNewLabel.show();
             });
             dialog.show();
+        });
+
+        tv_date.setOnClickListener(v ->{
+            setDateEdit(tv_date);
         });
     }
 
@@ -452,6 +449,7 @@ public class CreateNote extends AppCompatActivity {
                 .setMinute(minute)
                 .setTimeFormat(TimeFormat.CLOCK_24H)
                 .setTitleText("Chọn thời gian")
+                .setTheme(R.style.CustomTimePicker)
                 .build();
 
         picker.addOnPositiveButtonClickListener(new View.OnClickListener() {
@@ -467,8 +465,8 @@ public class CreateNote extends AppCompatActivity {
                 calendarAlarm.set(Calendar.MILLISECOND,0);
 
                 timeChoose = String.format("%02d:%02d",hour,minute);
+                tmpTime = timeChoose;
                 setTime.setText(timeChoose);
-                Toast.makeText(CreateNote.this, timeChoose, Toast.LENGTH_SHORT).show();
             }
         });
         picker.show(getSupportFragmentManager(),"timePicker");
@@ -492,6 +490,7 @@ public class CreateNote extends AppCompatActivity {
                 //set ngay thang vao calenderAlarm
                 calendarAlarm = calendar;
                 dayChoose = String.format("%02d/%02d/%04d", day, month, year);
+                tmpDay = dayChoose;
                 setDate.setText(dayChoose);
             }
         });
@@ -546,9 +545,10 @@ public class CreateNote extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
         tv_date.setText(sdf.format(calendar.getTime()));//(ok)
-
         //khoi tao calenderAlarm de luu time nhac nho
         calendarAlarm = Calendar.getInstance();
+        tmpDay = "";
+        tmpTime = "";
     }
     private void ShowKey(){
         //hien thi ban phim ao
@@ -592,7 +592,7 @@ public class CreateNote extends AppCompatActivity {
         iconUndoRedo();
     }
 
-    //add vao undoSt -> chi cho undo 20 lan
+    //add vao undoSt -> chi cho undo 100 lan
     private void addUndo(String text){
         if(undoSt.size() >= MAX_UNDO){
             undoSt.removeFirst();//xoa day duoi -> xoa trang thai cu nhat

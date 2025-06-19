@@ -11,7 +11,7 @@
     <color name="hint">#BDBDBD</color>
 
     <color name="color1">#00BCD4</color>   <!-- Cyan (sáng, nổi bật) -->
-    <color name="color2">#FFEB3B</color>   <!-- Vivid Yellow (sáng) -->
+    <color name="color2">#FDCC8A</color>   <!-- Vivid Yellow (sáng) -->
     <color name="color3">#FFFFFF</color>   <!-- Pure White (sáng) -->
     <color name="color4">#A4C3A2</color>   <!-- Neon Green (sáng) -->
     <color name="color5">#FF7043</color>   <!-- Vibrant Orange (sáng) -->

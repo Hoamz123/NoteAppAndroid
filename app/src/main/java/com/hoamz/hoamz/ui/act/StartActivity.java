@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.data.local.SharePre;
 import com.hoamz.hoamz.utils.MyAnimation;
@@ -19,6 +21,7 @@ public class StartActivity extends AppCompatActivity {
     //them animation cho start app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_start);
@@ -30,7 +33,6 @@ public class StartActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         //lam 1 cai gi do trong 3 s chang han
-
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.show_logo);
         animation.setAnimationListener(new MyAnimation() {
             @Override

@@ -2,7 +2,6 @@ package com.hoamz.hoamz.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -21,9 +20,7 @@ public class Note implements Parcelable {
     private String label;
     private int colorBgID;//mac dinh ban dau la mau trang
 
-    private boolean deleted;//luu trang thai da xoa hay chua
-
-    public Note(String title, String content,long date,long trigger,long timeRepeat, int isPin, boolean isFavorite,boolean deleted,String label,int colorBgID) {
+    public Note(String title, String content,long date,long trigger,long timeRepeat, int isPin, boolean isFavorite,String label,int colorBgID) {
         this.title = title;
         this.content = content;
         this.isPin = isPin;
@@ -33,9 +30,7 @@ public class Note implements Parcelable {
         this.colorBgID = colorBgID;
         this.trigger = trigger;
         this.timeRepeat = timeRepeat;
-        this.deleted = deleted;
     }
-
 
     protected Note(Parcel in) {
         id = in.readInt();
@@ -48,7 +43,6 @@ public class Note implements Parcelable {
         timeRepeat = in.readLong();
         label = in.readString();
         colorBgID = in.readInt();
-        deleted = in.readByte() != 0;
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
@@ -65,14 +59,6 @@ public class Note implements Parcelable {
 
     public void setColorBgID(int colorBgID) {
         this.colorBgID = colorBgID;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
     }
 
     public void setTimeAlarm(long timeAlarm) {
@@ -170,6 +156,5 @@ public class Note implements Parcelable {
         dest.writeLong(timeRepeat);
         dest.writeString(label);
         dest.writeInt(colorBgID);
-        dest.writeByte((byte) (deleted ? 1 : 0));
     }
 }

@@ -10,7 +10,6 @@ public  class SharePre {
     private final SharedPreferences sharedPreferences;
     private static final String FIRST_RUN = "first_run_app";
     private static final String READING_MODE = "reading_mode";
-    private static final String LABEL_CURRENT = "label_current";
     private static final String TYPE_SHOW = "type_show";
 
     @SuppressLint("CommitPrefEdits")

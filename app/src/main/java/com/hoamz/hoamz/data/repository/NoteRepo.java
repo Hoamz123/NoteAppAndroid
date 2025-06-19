@@ -111,7 +111,8 @@ public class NoteRepo {
         });
     }
 
-    public LiveData<List<Note>> listNodeDeleted(boolean deleted){
-        return noteDao.getListNoteDeleted(deleted);
+    public LiveData<List<Note>> getListNoteFavorite(boolean isFavorite){
+        return noteDao.getListNoteFavorite(isFavorite);
     }
+
 }

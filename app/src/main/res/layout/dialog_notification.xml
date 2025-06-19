@@ -52,7 +52,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1.2dp"
             app:layout_constraintTop_toBottomOf="@id/tvChooseDay"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +65,7 @@
             android:id="@+id/tvChooseTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             android:text="Chọn giờ :"
             app:layout_constraintStart_toStartOf="@id/tvChooseDay"
             app:layout_constraintTop_toBottomOf="@id/acSetDay" />
@@ -74,7 +74,7 @@
             android:id="@+id/acSetTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             android:drawablePadding="5dp"
             android:text="9:01"
             android:textSize="15sp"
@@ -84,7 +84,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1.2dp"
             app:layout_constraintTop_toBottomOf="@id/tvChooseTime"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -93,35 +93,13 @@
             android:layout_marginTop="5dp"
             android:background="#2D000000"/>
 
-        <TextView
-            android:id="@+id/acRepeat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:drawableEndCompat="@drawable/ic_more_item"
-            app:layout_constraintTop_toBottomOf="@id/tvChooseTime"
-            app:layout_constraintStart_toStartOf="@id/tvChooseTime"
-            android:layout_marginTop="40dp"
-            android:drawablePadding="5dp"
-            android:text="Không nhắc lại"
-            android:textSize="15sp"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            app:layout_constraintTop_toBottomOf="@id/acRepeat"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="5dp"
-            android:background="#2D000000"/>
 
 
         <TextView
             android:id="@+id/acSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/acRepeat"
+            app:layout_constraintTop_toBottomOf="@id/acSetTime"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="LƯU"
             android:layout_marginEnd="25dp"

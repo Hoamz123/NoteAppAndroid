@@ -32,6 +32,7 @@ public class Constants {
     public static final String KEY_TITLE = "title_notify";
     public static final String KEY_CONTENT = "content_notify";
     public static final String RQ_CODE_ALARM = "Alarm";
+    public static final String REPEAT = "repeat";
     public static Set<Integer> colorLightPicker = new HashSet<>();
     public static Set<Integer> colorDarkPicker = new HashSet<>();
 
@@ -57,22 +58,12 @@ public class Constants {
         colorDarkPicker.add(ContextCompat.getColor(context, R.color.color8));
     }
 
-    public static void setUpAlarm(Activity act, Note note,long trigger,long repeat){
+    public static void setUpAlarm(Activity act,Note note,long trigger){
         Intent intent = new Intent(act, MyBroadCastReminder.class);
         intent.putExtra(Constants.KEY_CONTENT, note.getContent());
         intent.putExtra(Constants.KEY_TITLE, note.getTitle());
         intent.putExtra(Constants.RQ_CODE_ALARM, note.getId());
         intent.putExtra(Constants.KEY_NOTE,note);
-        AlarmUtils.getInstance().setAlarmNotify(act,intent,note.getId(),trigger - 1000);//tru di 100 ms cho bo can
+        AlarmUtils.getInstance().setAlarmNotify(act,intent,note.getId(),trigger);//tru di 50000ms
     }
-
-    public static void CancelAlarm(Activity act, Note note){
-        Intent intent = new Intent(act, MyBroadCastReminder.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(act,
-                note.getId(),
-                intent,
-                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmUtils.getInstance().setCancelAlarm(act,pendingIntent);
-    }
-
 }

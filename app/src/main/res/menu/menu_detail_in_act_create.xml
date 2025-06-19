@@ -18,14 +18,11 @@
     <item android:id="@+id/ac_download"
         android:title="Download"/>
 
-    <item android:id="@+id/ac_archiver"
-        android:title="Archiver"/>
-
     <item android:id="@+id/ac_addFavorite"
         android:title="Favorite"/>
 
-    <item android:id="@+id/ac_Reminder"
-        android:title="Reminder"/>
+    <item android:id="@+id/acDetail"
+        android:title="Detail"/>
 
     <item android:id="@+id/ac_delete"
         android:title="Delete"/>

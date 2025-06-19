@@ -21,12 +21,12 @@
         android:title="Yêu thích"
         android:icon="@drawable/ic_favorites"/>
 
-    <item android:id="@+id/idArchiver"
-        android:title="Lưu trữ"
-        android:icon="@drawable/ic_archiver"/>
-
     <item android:id="@+id/idBin"
         android:title="Thùng rác"
         android:icon="@drawable/ic_bin"/>
+
+    <item android:id="@+id/idSetting"
+        android:title="Cài đặt"
+        android:icon="@drawable/ic_setting"/>
 
 </menu>

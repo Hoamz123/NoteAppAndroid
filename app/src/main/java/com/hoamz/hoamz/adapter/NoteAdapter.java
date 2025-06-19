@@ -40,6 +40,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHodel> {
 
     public interface OnItemClickListener{
         void onItemClick(Note note);
+
         void onItemLongClick(Note note);
     }
 
@@ -67,59 +68,56 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHodel> {
     @Override
     public void onBindViewHolder(@NonNull ViewHodel holder, int position) {
         Note note = noteList.get(position);
-        //chua o trang thai xoa
-        if(!note.isDeleted()) {
-            Date date = new Date(note.getDate());
-            SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:yyyy", Locale.getDefault());
+        Date date = new Date(note.getDate());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:yyyy", Locale.getDefault());
 
-            /* do la co hai kieu hien thi -> moi lan nhan icon type -> recycle se tai che view -> thay doi view */
-            //reset trang thai cu
-            holder.ivFavorite.setVisibility(View.GONE);
-            holder.ivPin.setVisibility(View.GONE);
+        /* do la co hai kieu hien thi -> moi lan nhan icon type -> recycle se tai che view -> thay doi view */
+        //reset trang thai cu
+        holder.ivFavorite.setVisibility(View.GONE);
+        holder.ivPin.setVisibility(View.GONE);
 
-            holder.cardNote.setCardBackgroundColor(note.getColorBgID());
+        holder.cardNote.setCardBackgroundColor(note.getColorBgID());
 
-            //xem xet doi mau chu (mac dinh la chu den -> chi can doi nhung cai thuoc nen dark)
-            int colorBackground = note.getColorBgID();
+        //xem xet doi mau chu (mac dinh la chu den -> chi can doi nhung cai thuoc nen dark)
+        int colorBackground = note.getColorBgID();
 
-            boolean isDark = false;
+        boolean isDark = false;
 
-            if (Constants.colorDarkPicker.contains(colorBackground)) {
-                //logic
-                holder.tvTitle.setTextColor(Color.WHITE);
-                holder.tvContent.setTextColor(Color.WHITE);
-                holder.tvDate.setTextColor(Color.WHITE);
-                isDark = true;
-            } else {
-                holder.tvTitle.setTextColor(Color.BLACK);
-                holder.tvContent.setTextColor(Color.BLACK);
-                holder.tvDate.setTextColor(Color.BLACK);
-                @SuppressLint("UseCompatLoadingForDrawables") Drawable iconCalender = holder.itemView.getContext().getDrawable(R.drawable.ic_calender);
-                holder.tvDate.setCompoundDrawablesWithIntrinsicBounds(iconCalender, null, null, null);
-            }
-
-            holder.tvTitle.setText(note.getTitle());
-            holder.tvContent.setText(note.getContent());
-            holder.tvDate.setText(sdf.format(date));
-
-            if (isDark) {
-                @SuppressLint("UseCompatLoadingForDrawables") Drawable iconCalender = holder.itemView.getContext().getDrawable(R.drawable.ic_calender_w);
-                holder.tvDate.setCompoundDrawablesWithIntrinsicBounds(iconCalender, null, null, null);
-            }
-
-            // cap nhat trang thai moi
-            if (note.isFavorite()) holder.ivFavorite.setVisibility(View.VISIBLE);
-            if (note.isPin() == 1) holder.ivPin.setVisibility(View.VISIBLE);
-
-            holder.cardNote.setOnClickListener(v -> {
-                listener.onItemClick(note);
-            });
-
-            holder.cardNote.setOnLongClickListener(v -> {
-                listener.onItemLongClick(note);
-                return true;
-            });
+        if (Constants.colorDarkPicker.contains(colorBackground)) {
+            //logic
+            holder.tvTitle.setTextColor(Color.WHITE);
+            holder.tvContent.setTextColor(Color.WHITE);
+            holder.tvDate.setTextColor(Color.WHITE);
+            isDark = true;
+        } else {
+            holder.tvTitle.setTextColor(Color.BLACK);
+            holder.tvContent.setTextColor(Color.BLACK);
+            holder.tvDate.setTextColor(Color.BLACK);
+            @SuppressLint("UseCompatLoadingForDrawables") Drawable iconCalender = holder.itemView.getContext().getDrawable(R.drawable.ic_calender);
+            holder.tvDate.setCompoundDrawablesWithIntrinsicBounds(iconCalender, null, null, null);
         }
+
+        holder.tvTitle.setText(note.getTitle());
+        holder.tvContent.setText(note.getContent());
+        holder.tvDate.setText(sdf.format(date));
+
+        if (isDark) {
+            @SuppressLint("UseCompatLoadingForDrawables") Drawable iconCalender = holder.itemView.getContext().getDrawable(R.drawable.ic_calender_w);
+            holder.tvDate.setCompoundDrawablesWithIntrinsicBounds(iconCalender, null, null, null);
+        }
+
+        // cap nhat trang thai moi
+        if (note.isFavorite()) holder.ivFavorite.setVisibility(View.VISIBLE);
+        if (note.isPin() == 1) holder.ivPin.setVisibility(View.VISIBLE);
+
+        holder.cardNote.setOnClickListener(v -> {
+            listener.onItemClick(note);
+        });
+
+        holder.cardNote.setOnLongClickListener(v -> {
+            listener.onItemLongClick(note);
+            return true;
+        });
     }
 
     @Override

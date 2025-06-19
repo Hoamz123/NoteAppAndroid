@@ -16,17 +16,18 @@ public class AlarmUtils {
         return instance;
     }
 
-    public void setAlarmNotify(Context context,Intent intent,int requestCode,long trigger){
+    @SuppressLint("MissingPermission")
+    public void setAlarmNotify(Context context, Intent intent, int requestCode, long trigger){
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode,
                 intent,
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         if(alarmManager != null){
-            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,trigger, pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,trigger, pendingIntent);
         }
     }
 
-    public void setCancelAlarm(Context context,PendingIntent pendingIntent){
+    public void setCancelAlarm(Context context, PendingIntent pendingIntent){
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
     }

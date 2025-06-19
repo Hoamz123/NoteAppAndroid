@@ -1,22 +1,30 @@
 package com.hoamz.hoamz.utils;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.data.model.Label;
+
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DialogShow {
     public static void showDialogLabel(Context context,String title,String hint, List<Label> listLabel, onDialogListener onDialogCreateLabel){
@@ -78,13 +86,10 @@ public class DialogShow {
     public interface onDialogListener{
         void onSaveNewLabel(String label);
     }
-
     //show dialog notify xoa du lieu
-
     public interface onDialogDeleteListener{
         void onDeleteLabel(boolean delete);
     }
-
     public static void showDialogNotifyDelete(Context context,onDialogDeleteListener onDeleteLabel){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.dialog_notify_delete,null);
@@ -104,6 +109,30 @@ public class DialogShow {
             dialog.dismiss();
         });
         dialog.show();
+    }
+
+    public static void showChooseRepeat(Context context,onChooseRepeatListener onChooseRepeatListener){
+        String [] list = {"Không lặp lại","15 phút","30 phút","Hàng ngày","Hàng tuần"};
+        long [] listTime = {0,15*60*1000,30*60*1000,24*60*60*1000,7*24*60*60*1000};//ms
+        AtomicInteger index = new AtomicInteger(0);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setCancelable(true);
+        builder.setTitle("Nhắc lại");
+        builder.setSingleChoiceItems(list, 0, (dialog, which) -> {
+            index.set(which);
+        });
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            onChooseRepeatListener.onChooseRepeat(listTime[index.get()]);
+            dialog.dismiss();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+    }
+    public interface onChooseRepeatListener{
+        void onChooseRepeat(long repeat);
     }
 
 }

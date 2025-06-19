@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -18,7 +17,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
@@ -29,30 +27,25 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.navigation.NavigationView;
-import com.hoamz.hoamz.Broadcast.MyBroadCastReminder;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.adapter.LabelAdapter;
 import com.hoamz.hoamz.adapter.NoteAdapter;
 import com.hoamz.hoamz.data.local.SharePre;
 import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.Note;
-import com.hoamz.hoamz.ui.fragment.FragmentArchiver;
 import com.hoamz.hoamz.ui.fragment.FragmentBin;
 import com.hoamz.hoamz.ui.fragment.FragmentCalenderView;
 import com.hoamz.hoamz.ui.fragment.FragmentFavoriteNote;
 import com.hoamz.hoamz.ui.fragment.FragmentReminder;
 import com.hoamz.hoamz.ui.fragment.FragmentSetting;
 import com.hoamz.hoamz.ui.fragment.FragmentTypeNote;
-import com.hoamz.hoamz.utils.AlarmUtils;
 import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.utils.CustomTextWatcher;
 import com.hoamz.hoamz.viewmodel.LabelViewModel;
@@ -171,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
             rcNotes.setAdapter(noteAdapter);
         }
     }
-
 
     private void showLabels() {
         listLabelsCurrent = Transformations.distinctUntilChanged(labelViewModel.getListLabels());
@@ -352,74 +344,72 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        navMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                drawerLayout.closeDrawer(GravityCompat.START);
-                int idItem = item.getItemId();
-                if(idItem == R.id.idCardNote){
-                    //do something
-                }
-                else if(idItem == R.id.idCalender){
-
-                    new Handler().postDelayed(() ->{
-                        getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
-                                .replace(R.id.fagContainer,new FragmentCalenderView(),FragmentCalenderView.class.getName())
-                                .addToBackStack(null)
-                                .commit();
-                    },280);
-                }
-                else if(idItem == R.id.idReminder) {
-                    new Handler().postDelayed(() ->{
-                        getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
-                                .replace(R.id.fagContainer,new FragmentReminder(),FragmentReminder.class.getName())
-                                .addToBackStack(null)
-                                .commit();
-                    },250);
-                }
-                else if(idItem == R.id.idCategories){
-                    //do something
-                    new Handler().postDelayed(() ->{
-                        getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
-                                .replace(R.id.fagContainer,new FragmentTypeNote(),FragmentTypeNote.class.getName())
-                                .addToBackStack(null)
-                                .commit();
-                    },250);
-                }
-                else if(idItem == R.id.idFavorites) {
-                    //do something
-                    new Handler().postDelayed(() ->{
-                        getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
-                                .replace(R.id.fagContainer,new FragmentFavoriteNote(),FragmentFavoriteNote.class.getName())
-                                .addToBackStack(null)
-                                .commit();
-                    },250);
-                }
-                else if(idItem == R.id.idBin){
-                    //do something
-                    new Handler().postDelayed(() -> {
-                        getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
-                                .replace(R.id.fagContainer,new FragmentBin(),FragmentBin.class.getName())
-                                .addToBackStack(null)
-                                .commit();
-                    },250);
-                }
-                else if(idItem == R.id.idArchiver){
-                    new Handler().postDelayed(() -> {
-                        getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
-                                .replace(R.id.fagContainer,new FragmentArchiver(),FragmentArchiver.class.getName())
-                                .addToBackStack(null)
-                                .commit();
-                    },250);
-                }
-                return false;
+        navMenu.setNavigationItemSelectedListener(item -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            int idItem = item.getItemId();
+            if(idItem == R.id.idCardNote){
+                //do something
             }
+            else if(idItem == R.id.idCalender){
+
+                new Handler().postDelayed(() ->{
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                            .replace(R.id.fagContainer,new FragmentCalenderView(),FragmentCalenderView.class.getName())
+                            .addToBackStack(null)
+                            .commit();
+                },280);
+            }
+            else if(idItem == R.id.idReminder) {
+                new Handler().postDelayed(() ->{
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                            .replace(R.id.fagContainer,new FragmentReminder(),FragmentReminder.class.getName())
+                            .addToBackStack(null)
+                            .commit();
+                },250);
+            }
+            else if(idItem == R.id.idCategories){
+                //do something
+                new Handler().postDelayed(() ->{
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                            .replace(R.id.fagContainer,new FragmentTypeNote(),FragmentTypeNote.class.getName())
+                            .addToBackStack(null)
+                            .commit();
+                },250);
+            }
+            else if(idItem == R.id.idFavorites) {
+                //do something
+                new Handler().postDelayed(() ->{
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                            .replace(R.id.fagContainer,new FragmentFavoriteNote(),FragmentFavoriteNote.class.getName())
+                            .addToBackStack(null)
+                            .commit();
+                },250);
+            }
+            else if(idItem == R.id.idBin){
+                //do something
+                new Handler().postDelayed(() -> {
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                            .replace(R.id.fagContainer,new FragmentBin(),FragmentBin.class.getName())
+                            .addToBackStack(null)
+                            .commit();
+                },250);
+            }
+            else if(idItem == R.id.idSetting){
+                //do st
+                new Handler().postDelayed(() -> {
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                            .replace(R.id.fagContainer,new FragmentSetting(),FragmentSetting.class.getName())
+                            .addToBackStack(null)
+                            .commit();
+                },250);
+            }
+            return false;
         });
     }
 

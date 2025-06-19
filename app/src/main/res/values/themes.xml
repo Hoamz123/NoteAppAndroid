@@ -22,5 +22,10 @@
     </style>
 
 
+    <style name="CustomTimePicker" parent="ThemeOverlay.Material3.MaterialTimePicker">
+        <item name="android:backgroundTint">@color/color_bg</item>
+        <item name="colorPrimary">@color/color_2</item>
+    </style>
+
     <style name="Theme.Hoamz" parent="Base.Theme.Hoamz" />
 </resources>

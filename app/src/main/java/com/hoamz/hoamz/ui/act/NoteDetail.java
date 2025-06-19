@@ -1,12 +1,15 @@
 package com.hoamz.hoamz.ui.act;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
@@ -22,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -29,6 +33,7 @@ import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -56,6 +61,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Deque;
@@ -88,11 +94,13 @@ public class NoteDetail extends AppCompatActivity {
     private final Deque<String> undoSt = new ArrayDeque<>();
     private final Deque<String> redoSt = new ArrayDeque<>();
     private boolean isUndoRedoMode = false;
-    private static final int MAX_UNDO = 20;
+    private static final int MAX_UNDO = 100;
     private ImageButton ivb_undo,ivb_redo;
     private String dateChoose;
     private String timeChoose,dayChoose;
     private Calendar calendarAlarm;
+    private String tmpTime,tmpDay;
+    private String edtPrevious = "";
 
     //att in dialog
     /********************************/
@@ -119,9 +127,11 @@ public class NoteDetail extends AppCompatActivity {
 
         initView();
         onLoadingData();
+        addUndo(edtPrevious);
         onClickListener();
     }
 
+    @SuppressLint("NewApi")
     private void onClickListener() {
         ivBackToMain.setOnClickListener(v -> {
             //cap nhat lai noi dung moi
@@ -132,6 +142,7 @@ public class NoteDetail extends AppCompatActivity {
             noteEdit.setTitle(titleUpdate);
             noteEdit.setLabel(labelUpdate);
             noteEdit.setTimeAlarm(timeAlarm);
+            noteEdit.setRepeat(timeRepeat);
             String date = tvDate.getText().toString();
             try {
                 Date date1 = sdf.parse(date);
@@ -145,7 +156,7 @@ public class NoteDetail extends AppCompatActivity {
             noteEdit.setColorBgID(colorBackground);
             noteViewModel.updateNote(noteEdit);
             if(timeAlarm > System.currentTimeMillis()){
-                Constants.setUpAlarm(this,noteEdit,timeAlarm,timeRepeat);//set alarm
+                Constants.setUpAlarm(this,noteEdit,timeAlarm);//set alarm
             }
             //tat trang thai reading mode (trang thai chi nen tac dong den 1 note dang hien thi)
             if (!isReadingMode) {
@@ -165,7 +176,7 @@ public class NoteDetail extends AppCompatActivity {
             MenuItem menuItem = menu.findItem(R.id.ac_onlyRead);
 
             //bat vao item chi doc
-            if (isReadingMode) {
+            if (!isReadingMode) {
                 //->dat title la Reading mode
                 menuItem.setTitle(Constants.EDIT_MODE);
 
@@ -195,7 +206,7 @@ public class NoteDetail extends AppCompatActivity {
                 //click read/edit mode
                 if (id == R.id.ac_onlyRead) {
                     //che do doc
-                    if (!isReadingMode) {
+                    if (isReadingMode) {
                         // -> chuyen sang che do doc
                         item.setTitle(Constants.EDIT_MODE);
                         edtContent.setEnabled(false);
@@ -221,8 +232,8 @@ public class NoteDetail extends AppCompatActivity {
                     //tai xuong
                 }
 
-                //them vao muc luu tru
-                else if (id == R.id.ac_archiver) {
+                //thong tin chi tiet ve (ngay tao,thoi gian nhac nho,trang thai(yeu thich,hay ko) so tu..)
+                else if (id == R.id.acDetail) {
                     //archiver
                 }
 
@@ -262,12 +273,6 @@ public class NoteDetail extends AppCompatActivity {
                         noteEdit.setPin(0);
                     }
                 }
-
-                //thong tin ve nhac nho
-                else if(id == R.id.ac_Reminder){
-                    //logic
-                }
-
                 return false;
             });
 
@@ -309,6 +314,7 @@ public class NoteDetail extends AppCompatActivity {
             acCancel = viewDialog.findViewById(R.id.acCancelInDialog);
             rcViewInDialog.setLayoutManager(new GridLayoutManager(this, 1));
             final String[] labelSelected = new String[1];
+            labelSelected[0] = noteEdit.getLabel();
 
             if (rcViewInDialog.getAdapter() == null) {
                 rcViewInDialog.setAdapter(selectLabelAdapter);
@@ -327,7 +333,9 @@ public class NoteDetail extends AppCompatActivity {
             });
 
             acSave.setOnClickListener(click -> {
-                tvChooseLabel.setText(labelSelected[0]);
+                if(!Objects.equals(noteEdit.getLabel(), labelSelected[0])){
+                    tvChooseLabel.setText(labelSelected[0]);
+                }
                 dialog.dismiss();
             });
 
@@ -391,14 +399,18 @@ public class NoteDetail extends AppCompatActivity {
             Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.setCanceledOnTouchOutside(true);
 
-            timeChoose = getCurrentTime();
-            dayChoose = getCurrentDay();
+            if(Objects.equals(tmpTime, "") && Objects.equals(tmpDay, "")){
+                tmpTime = getCurrentTime();
+                tmpDay = getCurrentDay();
+            }
+
+            timeChoose = tmpTime;
+            dayChoose = tmpDay;
 
             TextView setDate = viewDialog.findViewById(R.id.acSetDay);
             setDate.setText(dayChoose);
             TextView setTime = viewDialog.findViewById(R.id.acSetTime);
             setTime.setText(timeChoose);
-//            TextView btnRepeat = viewDialog.findViewById(R.id.acRepeat);
             TextView btnSave = viewDialog.findViewById(R.id.acSave);
             TextView btnCancel = viewDialog.findViewById(R.id.acCancel);
 
@@ -446,6 +458,7 @@ public class NoteDetail extends AppCompatActivity {
                 .setMinute(minute)
                 .setTimeFormat(TimeFormat.CLOCK_24H)
                 .setTitleText("Chọn thời gian")
+                .setTheme(R.style.CustomTimePicker)
                 .build();
 
         picker.addOnPositiveButtonClickListener(new View.OnClickListener() {
@@ -461,8 +474,8 @@ public class NoteDetail extends AppCompatActivity {
                 calendarAlarm.set(Calendar.MILLISECOND,0);
 
                 timeChoose = String.format("%02d:%02d",hour,minute);
+                tmpTime = timeChoose;
                 setTime.setText(timeChoose);
-                Toast.makeText(NoteDetail.this, timeChoose, Toast.LENGTH_SHORT).show();
             }
         });
         picker.show(getSupportFragmentManager(),"timePicker");
@@ -486,6 +499,7 @@ public class NoteDetail extends AppCompatActivity {
                 //set ngay thang vao calenderAlarm
                 calendarAlarm = calendar;
                 dayChoose = String.format("%02d/%02d/%04d", day, month, year);
+                tmpDay = dayChoose;
                 setDate.setText(dayChoose);
             }
         });
@@ -543,6 +557,7 @@ public class NoteDetail extends AppCompatActivity {
         }
          iconUndoRedo();
     }
+    @SuppressLint("DefaultLocale")
     private void onLoadingData() {
         Intent intent = getIntent();
         if(intent != null){
@@ -551,15 +566,31 @@ public class NoteDetail extends AppCompatActivity {
                 tvChooseLabel.setText(noteEdit.getLabel());
                 edtTitle.setText(noteEdit.getTitle());
                 edtContent.setText(noteEdit.getContent());
+                edtPrevious = noteEdit.getContent();
                 Date date = new Date(noteEdit.getDate());
                 timeAlarm = noteEdit.getTrigger();
                 isFavorite = noteEdit.isFavorite();
                 isPin = (noteEdit.isPin() == 1);//bien nay true hay false se phu thuoc vao dk isPin() co = 1 hay khong
                 tvDate.setText(sdf.format(date));
                 colorBackground = noteEdit.getColorBgID();
+                timeRepeat = noteEdit.getTimeRepeat();
                 viewMainDetail.setBackgroundColor(colorBackground);
                 setColorDetail(colorBackground);
             }
+
+            if(timeAlarm > 0) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(timeAlarm);
+
+                //luu lai du lieu ngay h da cai dat truoc do
+                tmpTime = String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+                tmpDay = String.format("%02d/%02d/%04d", calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendarAlarm.get(Calendar.YEAR));
+            }
+            else{
+                tmpTime = "";tmpDay = "";
+            }
+            timeChoose = tmpTime;
+            dayChoose = tmpDay;
         }
 
         //lay tat cac cac nhan dang co trong database
@@ -580,7 +611,6 @@ public class NoteDetail extends AppCompatActivity {
                 selectLabelAdapter.setLabelDetailList(labelDetailList);
                 return;
             }
-
             for (Label label : labels) {
                 noteViewModel.getCountNotes(label.getLabel()).observe(NoteDetail.this, integer -> {
                     labelCountMap.put(label.getLabel(), integer); // Lưu số lượng ghi chú
@@ -593,6 +623,11 @@ public class NoteDetail extends AppCompatActivity {
                             }
                         }
                         selectLabelAdapter.setLabelDetailList(labelDetailList);
+                        for(int i=0;i<labelDetailList.size();i++){
+                            if(Objects.equals(labelDetailList.get(i).getLabelName(), tvChooseLabel.getText().toString())){
+                                selectLabelAdapter.setSelectedPosition(i);
+                            }
+                        }
                     }
                 });
             }
@@ -617,10 +652,8 @@ public class NoteDetail extends AppCompatActivity {
         labelViewModel = new ViewModelProvider(this).get(LabelViewModel.class);
         ivb_redo = findViewById(R.id.ivbRedoInEdit);
         ivb_undo = findViewById(R.id.ivbUndoInEdit);
-
         calendarAlarm = Calendar.getInstance();
     }
-
     private void ShowKey(){
         //hien thi ban phim ao
         InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -634,7 +667,6 @@ public class NoteDetail extends AppCompatActivity {
             manager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
         }
     }
-
     private void undo(){
         if(undoSt.size() <= 1) return;
         String currentText = undoSt.removeLast();
@@ -649,7 +681,7 @@ public class NoteDetail extends AppCompatActivity {
     }
     //method redo
     private void redo(){
-        if(redoSt.isEmpty()) return;
+        if(redoSt.size() <= 1) return;
         String currentText = redoSt.removeLast();
         undoSt.addLast(currentText);
 
@@ -663,7 +695,7 @@ public class NoteDetail extends AppCompatActivity {
         iconUndoRedo();
     }
 
-    //add vao undoSt -> chi cho undo 20 lan
+    //add vao undoSt -> chi cho undo 100 lan
     private void addUndo(String text){
         if(undoSt.size() >= MAX_UNDO){
             undoSt.removeFirst();//xoa day duoi -> xoa trang thai cu nhat
@@ -673,7 +705,7 @@ public class NoteDetail extends AppCompatActivity {
 
     private void iconUndoRedo(){
         //icon undo
-        if(undoSt.size() <= 1){
+        if(undoSt.size() <= 1) {
             ivb_undo.setImageResource(R.drawable.ic_undo_none);
             ivb_undo.setEnabled(false);//khong bat su kien click
         }
@@ -682,7 +714,7 @@ public class NoteDetail extends AppCompatActivity {
             setIconUndoByColorBackground();
         }
         //icon redo
-        if(redoSt.isEmpty()){
+        if(redoSt.size() <= 1){
             ivb_redo.setImageResource(R.drawable.ic_redo_none);
             ivb_redo.setEnabled(false);//khong bat su kien click
         }
