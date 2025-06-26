@@ -7,7 +7,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Constants.init(getApplicationContext());
+        Constants.init();
     }
 
 }

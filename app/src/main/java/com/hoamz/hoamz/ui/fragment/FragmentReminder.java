@@ -101,7 +101,14 @@ public class FragmentReminder extends Fragment {
 
         listNoteCurrent = Transformations.distinctUntilChanged(noteViewModel.getAllHaveReminder());//lay tat ca nhung ghi chu  co nhac nho
         listNoteCurrent.observe(getViewLifecycleOwner(), list -> {
-            List<Note> noteList = new ArrayList<>(list);
+
+            List<Note> noteList = new ArrayList<>();
+            for(Note note : list){
+                //sau 30 ngay ko hien thi nua
+                if(System.currentTimeMillis() - note.getTrigger() <= Constants.time30Days || note.getTrigger() >= System.currentTimeMillis()){
+                    noteList.add(note);
+                }
+            }
             showOrHideEmptyImage(noteList);
             noteAdapter.setNoteList(noteList);
         });

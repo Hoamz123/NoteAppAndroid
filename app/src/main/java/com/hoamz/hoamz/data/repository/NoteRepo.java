@@ -9,21 +9,26 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.hoamz.hoamz.data.DAO.NoteDao;
 import com.hoamz.hoamz.data.DAO.NoteDatabase;
+import com.hoamz.hoamz.data.DAO.NoteDeletedDAO;
 import com.hoamz.hoamz.data.model.Note;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import com.hoamz.hoamz.data.model.NoteDeleted;
 import com.hoamz.hoamz.utils.Constants;
 
 public class NoteRepo {
     private final NoteDao noteDao;
+    private final NoteDeletedDAO noteDeletedDAO;
     private final ExecutorService executorService;
     private LiveData<List<Note>> listLiveData = new MutableLiveData<>();
     private LiveData<List<Note>> listLiveDataBySearch = new MutableLiveData<>();
 
     public NoteRepo(Application application){
         noteDao = NoteDatabase.getInstance(application).noteDao();
+        noteDeletedDAO = NoteDatabase.getInstance(application).noteDeletedDAO();
         executorService = Executors.newSingleThreadExecutor();//bat dong bo
     }
 
@@ -113,6 +118,20 @@ public class NoteRepo {
 
     public LiveData<List<Note>> getListNoteFavorite(boolean isFavorite){
         return noteDao.getListNoteFavorite(isFavorite);
+    }
+
+    //note deleted
+
+    public LiveData<List<NoteDeleted>> getAllNoteDeleted(){
+        return noteDeletedDAO.getAllNoteDeleted();
+    }
+
+    public void insertNoteDeleted(NoteDeleted noteDeleted){
+        executorService.execute(() -> noteDeletedDAO.insertNoteDeleted(noteDeleted));
+    }
+
+    public void deletedNoteAfter30Day(NoteDeleted noteDeleted){
+        executorService.execute(()-> noteDeletedDAO.deletedNoteAfter30Day(noteDeleted));
     }
 
 }

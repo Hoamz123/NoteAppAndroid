@@ -113,10 +113,6 @@ public class CreateNote extends AppCompatActivity {
         //khoa dung man hinh
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        //check permission
-        if(ActivityCompat.checkSelfPermission(this, Arrays.toString(new String[]{Manifest.permission.POST_NOTIFICATIONS})) != PackageManager.PERMISSION_GRANTED){
-            requirePermissionNotify();
-        };
 
         initViews();//set date luon khi vua chuyen sang man hinh create note
         onClickItems();
@@ -223,8 +219,8 @@ public class CreateNote extends AppCompatActivity {
             dialog.setCanceledOnTouchOutside(true);
 
             if(Objects.equals(tmpTime, "") && Objects.equals(tmpDay, "")){
-                tmpTime = getCurrentTime();
-                tmpDay = getCurrentDay();
+                tmpTime = Constants.getCurrentTime();
+                tmpDay = Constants.getCurrentDay();
             }
 
             timeChoose = tmpTime;
@@ -264,13 +260,13 @@ public class CreateNote extends AppCompatActivity {
 
         sheetColor.setOnSelectedColor(color -> {
             colorBackground = color;
-            if(Constants.colorLightPicker.contains(colorBackground)){
+            if(Constants.backGroundLight.contains(colorBackground)){
                 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             }
-            else if(Constants.colorDarkPicker.contains(colorBackground)){
+            else if(Constants.backGroundDark.contains(colorBackground)){
                 getWindow().getDecorView().setSystemUiVisibility(0);
             }
-            viewMain.setBackgroundColor(color);
+            viewMain.setBackgroundResource(color);
             setColorDetail(color);
         });//bat mau
 
@@ -363,15 +359,10 @@ public class CreateNote extends AppCompatActivity {
             setDateEdit(tv_date);
         });
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    private void requirePermissionNotify() {
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.POST_NOTIFICATIONS},1);
-    }
     //set color view
     private void setColorDetail(int colorBackground){
 
-         if(Constants.colorLightPicker.contains(colorBackground)){
+         if(Constants.backGroundLight.contains(colorBackground)){
             //set mau den
             iv_backToMain.setImageResource(R.drawable.ic_back_24);//nut back
             tv_done.setTextColor(Color.BLACK);//chu done
@@ -395,7 +386,7 @@ public class CreateNote extends AppCompatActivity {
 
         }
 
-         else if(Constants.colorDarkPicker.contains(colorBackground)){
+         else if(Constants.backGroundDark.contains(colorBackground)){
             //set mau trang
             iv_backToMain.setImageResource(R.drawable.ic_back_w);//nut back
             tv_done.setTextColor(Color.WHITE);//chu done
@@ -423,21 +414,6 @@ public class CreateNote extends AppCompatActivity {
 
          iconUndoRedo();
 
-    }
-    @SuppressLint("DefaultLocale")
-    private String getCurrentTime(){
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minutes = calendar.get(Calendar.MINUTE);
-        return String.format("%02d:%02d",hour,minutes);
-    }
-    @SuppressLint("DefaultLocale")
-    private String getCurrentDay(){
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int year = calendar.get(Calendar.YEAR);
-        return String.format("%02d/%02d/%04d",day,month,year);
     }
     private void showTimePickerAlarm(TextView setTime){
         Calendar calendar = Calendar.getInstance();
@@ -622,19 +598,19 @@ public class CreateNote extends AppCompatActivity {
     }
 
     private void setIconUndoByColorBackground(){
-        if(Constants.colorLightPicker.contains(colorBackground)){
+        if(Constants.backGroundLight.contains(colorBackground)){
             ivb_undo.setImageResource(R.drawable.ic_undo_b);
         }
-        else if(Constants.colorDarkPicker.contains(colorBackground)){
+        else if(Constants.backGroundDark.contains(colorBackground)){
             ivb_undo.setImageResource(R.drawable.ic_undo_w);
         }
     }
 
     private void setIconRedoByColorBackground(){
-        if(Constants.colorLightPicker.contains(colorBackground)){
+        if(Constants.backGroundLight.contains(colorBackground)){
             ivb_redo.setImageResource(R.drawable.ic_redo_b);
         }
-        else if(Constants.colorDarkPicker.contains(colorBackground)){
+        else if(Constants.backGroundDark.contains(colorBackground)){
             ivb_redo.setImageResource(R.drawable.ic_redo_w);
         }
     }

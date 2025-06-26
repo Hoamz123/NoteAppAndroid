@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hoamz.hoamz.data.model.Note;
+import com.hoamz.hoamz.data.model.NoteDeleted;
 import com.hoamz.hoamz.data.repository.NoteRepo;
 import com.hoamz.hoamz.utils.Constants;
 
@@ -88,6 +89,19 @@ public class NoteViewModel extends AndroidViewModel {
 
     public LiveData<List<Note>> getListNoteFavorite(){
         return noteRepo.getListNoteFavorite(true);
+    }
+
+    //note deleted
+    public LiveData<List<NoteDeleted>> getAllNoteDeleted(){
+        return noteRepo.getAllNoteDeleted();
+    }
+
+    public void insertNoteDeleted(NoteDeleted noteDeleted){
+        noteRepo.insertNoteDeleted(noteDeleted);
+    }
+
+    public void deletedNoteAfter30Day(NoteDeleted noteDeleted){
+        noteRepo.deletedNoteAfter30Day(noteDeleted);
     }
 
 }

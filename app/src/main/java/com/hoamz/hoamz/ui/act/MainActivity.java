@@ -1,11 +1,15 @@
 package com.hoamz.hoamz.ui.act;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.ContextThemeWrapper;
@@ -21,9 +25,12 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.LiveData;
@@ -32,6 +39,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.hoamz.hoamz.R;
@@ -40,12 +48,14 @@ import com.hoamz.hoamz.adapter.NoteAdapter;
 import com.hoamz.hoamz.data.local.SharePre;
 import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.Note;
+import com.hoamz.hoamz.data.model.NoteDeleted;
 import com.hoamz.hoamz.ui.fragment.FragmentBin;
 import com.hoamz.hoamz.ui.fragment.FragmentCalenderView;
 import com.hoamz.hoamz.ui.fragment.FragmentFavoriteNote;
 import com.hoamz.hoamz.ui.fragment.FragmentReminder;
 import com.hoamz.hoamz.ui.fragment.FragmentSetting;
 import com.hoamz.hoamz.ui.fragment.FragmentTypeNote;
+import com.hoamz.hoamz.ui.fragment.FragmentWidget;
 import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.utils.CustomTextWatcher;
 import com.hoamz.hoamz.viewmodel.LabelViewModel;
@@ -53,6 +63,7 @@ import com.hoamz.hoamz.viewmodel.NoteViewModel;
 import com.hoamz.hoamz.viewmodel.TypeModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -65,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private TextView tvCancel;
     private ImageView ivClearText,icFilter;
+    private SwipeRefreshLayout refreshLayout;
     private boolean isType;//kieu hien thi hai cot hoac 1 cot
     private LabelAdapter adapter;
     private RecyclerView rcListLabel;
@@ -102,6 +114,12 @@ public class MainActivity extends AppCompatActivity {
         showNotesByLabel(labelCurrentClick);
         onClickToolbar();//bat su kien click toolbar
         onReceiverData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        onReLoadData();
     }
 
     //show danh sach theo nhan
@@ -194,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
     private void onClickToolbar() {
         //hien thi edt de tim kiem
         iv_showSearch.setOnClickListener(v ->{
+            refreshLayout.setEnabled(false);
             //an icon search
             iv_showSearch.setVisibility(View.INVISIBLE);
             //hien thanh search
@@ -210,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
         //an thanh tim kiem
         tvCancel.setOnClickListener(v ->{
             //an  ban phim ao
+            refreshLayout.setEnabled(true);
             hideKey();
             edtSearchView.setText("");
             //an cancel
@@ -331,7 +351,11 @@ public class MainActivity extends AppCompatActivity {
                 TextView acDelete = viewDialog.findViewById(R.id.tvDelete);
                 acCancel.setOnClickListener(v -> dialog.dismiss());
                 acDelete.setOnClickListener(v -> {
+                    NoteDeleted noteDeleted = new NoteDeleted(note.getTitle()
+                            ,note.getContent(),note.getLabel(),
+                            note.getColorBgID(),System.currentTimeMillis());
                     viewModel.deleteNote(note);
+                    viewModel.insertNoteDeleted(noteDeleted);
                     dialog.dismiss();
                 });
 
@@ -347,8 +371,14 @@ public class MainActivity extends AppCompatActivity {
         navMenu.setNavigationItemSelectedListener(item -> {
             drawerLayout.closeDrawer(GravityCompat.START);
             int idItem = item.getItemId();
-            if(idItem == R.id.idCardNote){
-                //do something
+            if(idItem == R.id.idWidget){
+                new Handler().postDelayed(()->{
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left,R.anim.pop_enter_from_left,R.anim.pop_exit_to_right)
+                            .replace(R.id.fagContainer,FragmentWidget.getInstance(0,"MAIN"),FragmentWidget.class.getName())
+                            .addToBackStack(null)
+                            .commit();
+                },280);
             }
             else if(idItem == R.id.idCalender){
 
@@ -428,6 +458,10 @@ public class MainActivity extends AppCompatActivity {
 
     //anh xa view thong qua id
     private void initView() {
+        //check permission
+        if(ActivityCompat.checkSelfPermission(this, Arrays.toString(new String[]{Manifest.permission.POST_NOTIFICATIONS})) != PackageManager.PERMISSION_GRANTED){
+            requirePermissionNotify();
+        };
         iv_showSearch = findViewById(R.id.iv_show_search);
         edtSearchView = findViewById(R.id.edtSearch);
         iv_TypeShow = findViewById(R.id.ic_show_type);
@@ -441,6 +475,7 @@ public class MainActivity extends AppCompatActivity {
         rcListLabel = findViewById(R.id.rcListLabel);//danh sach nhan
         rcNotes = findViewById(R.id.rcListNotes);//danh sach ghi chu
         rcNotes.setItemAnimator(null);
+        refreshLayout = findViewById(R.id.id_swiper);
 
         //viewmodel cua label -> nhan
         labelViewModel = new ViewModelProvider(this).get(LabelViewModel.class);
@@ -486,4 +521,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    @SuppressLint("ResourceAsColor")
+    private void onReLoadData(){
+        refreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(this, R.color.color8)
+        );
+        refreshLayout.setOnRefreshListener(() -> {
+            refreshLayout.postDelayed(() -> {
+                refreshLayout.setRefreshing(false);
+                showNotesByLabel(labelCurrentClick);}, 600);
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    private void requirePermissionNotify() {
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.POST_NOTIFICATIONS},1);
+    }
+
 }

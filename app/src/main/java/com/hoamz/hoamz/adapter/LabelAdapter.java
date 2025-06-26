@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.data.model.Label;
-import com.hoamz.hoamz.ui.act.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;

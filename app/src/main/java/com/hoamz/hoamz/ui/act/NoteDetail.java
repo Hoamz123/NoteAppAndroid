@@ -90,6 +90,7 @@ public class NoteDetail extends AppCompatActivity {
     private LiveData<List<Label>> listLabel;
     private LabelViewModel labelViewModel;
     private long timeAlarm = 0;
+    private long timePrevious = 0;
     private long timeRepeat = 0;
     private final Deque<String> undoSt = new ArrayDeque<>();
     private final Deque<String> redoSt = new ArrayDeque<>();
@@ -131,7 +132,7 @@ public class NoteDetail extends AppCompatActivity {
         onClickListener();
     }
 
-    @SuppressLint("NewApi")
+    @SuppressLint({"NewApi", "ResourceAsColor"})
     private void onClickListener() {
         ivBackToMain.setOnClickListener(v -> {
             //cap nhat lai noi dung moi
@@ -155,9 +156,7 @@ public class NoteDetail extends AppCompatActivity {
             //set lai mau -> save lai vao Room
             noteEdit.setColorBgID(colorBackground);
             noteViewModel.updateNote(noteEdit);
-            if(timeAlarm > System.currentTimeMillis()){
-                Constants.setUpAlarm(this,noteEdit,timeAlarm);//set alarm
-            }
+
             //tat trang thai reading mode (trang thai chi nen tac dong den 1 note dang hien thi)
             if (!isReadingMode) {
                 isReadingMode = true;
@@ -281,7 +280,7 @@ public class NoteDetail extends AppCompatActivity {
 
         sheetColor.setOnSelectedColor(color -> {
             colorBackground = color;
-            viewMainDetail.setBackgroundColor(color);
+            viewMainDetail.setBackgroundResource(color);
             setColorDetail(colorBackground);
         });
 
@@ -399,9 +398,10 @@ public class NoteDetail extends AppCompatActivity {
             Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.setCanceledOnTouchOutside(true);
 
+            //truoc do chua tung set Alarm
             if(Objects.equals(tmpTime, "") && Objects.equals(tmpDay, "")){
-                tmpTime = getCurrentTime();
-                tmpDay = getCurrentDay();
+                tmpTime = Constants.getCurrentTime();
+                tmpDay = Constants.getCurrentDay();
             }
 
             timeChoose = tmpTime;
@@ -420,34 +420,46 @@ public class NoteDetail extends AppCompatActivity {
             btnCancel.setOnClickListener(click ->{
                 dialog.dismiss();
             });
+            //dung
+            //neu nhu thoi gian set bayh ma <= thoi gian hien tai thi khong the set
 
+            /*
+            nguyen nhan : khi nhan hai lan save ma ko thay doi thoi gian -> gay ra reset time TimeAlarm ve 0
+            -> cach khac phuc : thay vi gan truc tiep calendarAlarm.getTimeInMillis(); cho timeAlarm thi chi gan khi nao thoa man dk -> tranh case gan nham
+             */
             btnSave.setOnClickListener(click ->{
-                timeAlarm = calendarAlarm.getTimeInMillis();
-                if(timeAlarm < System.currentTimeMillis()){
-                    timeAlarm = 0;
+                long timeTMP = calendarAlarm.getTimeInMillis();
+                long timeNow = System.currentTimeMillis();
+                if(timeTMP > timeNow){
+                    if(timeTMP != timePrevious){
+                        timeAlarm = timeTMP;
+                        timePrevious = timeTMP;
+                        noteEdit.setTimeAlarm(timeAlarm);//set -> luc nhan back se cap nhat sau
+//                        Constants.setCancelAlarm(this,noteEdit);
+                        Constants.setUpAlarm(this,noteEdit,timeAlarm);
+                    }
                 }
                 dialog.dismiss();
             });
-
             dialog.show();
         });
     }
 
-    @SuppressLint("DefaultLocale")
-    private String getCurrentTime(){
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minutes = calendar.get(Calendar.MINUTE);
-        return String.format("%02d:%02d",hour,minutes);
-    }
-    @SuppressLint("DefaultLocale")
-    private String getCurrentDay(){
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int year = calendar.get(Calendar.YEAR);
-        return String.format("%02d/%02d/%04d",day,month,year);
-    }
+//    @SuppressLint("DefaultLocale")
+//    private String getCurrentTime(){
+//        Calendar calendar = Calendar.getInstance();
+//        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+//        int minutes = calendar.get(Calendar.MINUTE);
+//        return String.format("%02d:%02d",hour,minutes);
+//    }
+//    @SuppressLint("DefaultLocale")
+//    private String getCurrentDay(){
+//        Calendar calendar = Calendar.getInstance();
+//        int day = calendar.get(Calendar.DAY_OF_MONTH);
+//        int month = calendar.get(Calendar.MONTH) + 1;
+//        int year = calendar.get(Calendar.YEAR);
+//        return String.format("%02d/%02d/%04d",day,month,year);
+//    }
     private void showTimePickerAlarm(TextView setTime){
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -508,7 +520,7 @@ public class NoteDetail extends AppCompatActivity {
 
     //set color view
     private void setColorDetail(int colorBackground){
-         if(Constants.colorLightPicker.contains(colorBackground)){
+         if(Constants.backGroundLight.contains(colorBackground)){
             //set mau den
             ivBackToMain.setImageResource(R.drawable.ic_save_edit_b);//nut back
             iv_alarm.setImageResource(R.drawable.ic_alarm);//icon nhac nho
@@ -532,7 +544,7 @@ public class NoteDetail extends AppCompatActivity {
              tvChooseLabel.setCompoundDrawablesWithIntrinsicBounds(null,null,drawableMoreItem,null);
         }
 
-         else if(Constants.colorDarkPicker.contains(colorBackground)){
+         else if(Constants.backGroundDark.contains(colorBackground)){
             //set mau trang
             ivBackToMain.setImageResource(R.drawable.ic_save_edit_w);//nut back
             iv_alarm.setImageResource(R.drawable.ic_alarm_w);//icon nhac nho
@@ -574,14 +586,14 @@ public class NoteDetail extends AppCompatActivity {
                 tvDate.setText(sdf.format(date));
                 colorBackground = noteEdit.getColorBgID();
                 timeRepeat = noteEdit.getTimeRepeat();
-                viewMainDetail.setBackgroundColor(colorBackground);
+                viewMainDetail.setBackgroundResource(colorBackground);
                 setColorDetail(colorBackground);
+                timePrevious = timeAlarm;
             }
 
-            if(timeAlarm > 0) {
+            if(timeAlarm > 0 && timeAlarm > System.currentTimeMillis()) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(timeAlarm);
-
                 //luu lai du lieu ngay h da cai dat truoc do
                 tmpTime = String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
                 tmpDay = String.format("%02d/%02d/%04d", calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendarAlarm.get(Calendar.YEAR));
@@ -725,19 +737,19 @@ public class NoteDetail extends AppCompatActivity {
     }
 
     private void setIconUndoByColorBackground(){
-        if(Constants.colorLightPicker.contains(colorBackground)){
+        if(Constants.backGroundLight.contains(colorBackground)){
             ivb_undo.setImageResource(R.drawable.ic_undo_b);
         }
-        else if(Constants.colorDarkPicker.contains(colorBackground)){
+        else if(Constants.backGroundDark.contains(colorBackground)){
             ivb_undo.setImageResource(R.drawable.ic_undo_w);
         }
     }
 
     private void setIconRedoByColorBackground(){
-        if(Constants.colorLightPicker.contains(colorBackground)){
+        if(Constants.backGroundLight.contains(colorBackground)){
             ivb_redo.setImageResource(R.drawable.ic_redo_b);
         }
-        else if(Constants.colorDarkPicker.contains(colorBackground)){
+        else if(Constants.backGroundDark.contains(colorBackground)){
             ivb_redo.setImageResource(R.drawable.ic_redo_w);
         }
     }

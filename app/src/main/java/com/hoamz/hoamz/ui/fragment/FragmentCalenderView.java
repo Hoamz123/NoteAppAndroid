@@ -18,11 +18,15 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.adapter.NoteAdapter;
@@ -57,7 +61,7 @@ public class FragmentCalenderView extends Fragment {
     private LiveData<List<Note>> listNotes;
     private LiveData<List<Long>> listTimestamp;
     private List<CalendarDay> calendarDayList;
-    private TextView tvSumNotesADay;
+    private ImageView ivBack;
     private String dateSelected;
     private SimpleDateFormat sdf;
 
@@ -91,6 +95,11 @@ public class FragmentCalenderView extends Fragment {
             Intent intent = new Intent(getActivity(), CreateNote.class);
             intent.putExtra(Constants.DATE_SELECTED,dateSelected);
             startActivity(intent);
+        });
+
+        //back
+        ivBack.setOnClickListener(v ->{
+            requireActivity().getSupportFragmentManager().popBackStack();
         });
 
         noteAdapter.setOnClickItemListener(new NoteAdapter.OnItemClickListener() {
@@ -199,10 +208,6 @@ public class FragmentCalenderView extends Fragment {
         listNotes.observe(getViewLifecycleOwner(), notes -> {
             if (notes != null) {
                 noteAdapter.setNoteList(notes);
-                tvSumNotesADay.setText("Total : " + notes.size());
-            }
-            else{
-                tvSumNotesADay.setText("Total : 0");
             }
             if(rcViewByDate.getAdapter() == null){
                 rcViewByDate.setAdapter(noteAdapter);
@@ -239,7 +244,7 @@ public class FragmentCalenderView extends Fragment {
         listNotes = new MutableLiveData<>();
         listTimestamp = new MutableLiveData<>();
         calendarDayList = new ArrayList<>();
-        tvSumNotesADay = view.findViewById(R.id.tvSumNote);
+        ivBack = view.findViewById(R.id.icBackInCalenderView);
         sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
     }
 

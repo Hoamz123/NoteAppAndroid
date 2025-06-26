@@ -10,7 +10,7 @@
 
     <ImageView
         android:id="@+id/icExitReminder"
-        android:layout_width="30dp"
+        android:layout_width="40dp"
         android:layout_height="19dp"
         android:src="@drawable/ic_exit"
         android:layout_marginStart="16dp"
@@ -26,11 +26,10 @@
         android:drawablePadding="20dp"
         android:gravity="center"
         android:text="Nhắc nhở"
+        android:layout_marginStart="10dp"
         android:textColor="@color/color_2"
         android:textSize="20sp"
-        app:drawableEndCompat="@drawable/ic_notifiation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/icExitReminder"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView

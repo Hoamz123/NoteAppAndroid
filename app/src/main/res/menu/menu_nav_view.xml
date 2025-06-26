@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/idCardNote"
-        android:title="Thẻ ghi nhớ"
-        android:icon="@drawable/ic_note"/>
+    <item android:enabled="false"
+        android:title="" />
+
+    <item android:id="@+id/idWidget"
+        android:title="Tiện ích"
+        android:icon="@drawable/ic_app"/>
 
     <item android:id="@+id/idCalender"
         android:title="Lịch"

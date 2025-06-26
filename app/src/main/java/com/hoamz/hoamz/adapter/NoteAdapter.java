@@ -76,14 +76,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHodel> {
         holder.ivFavorite.setVisibility(View.GONE);
         holder.ivPin.setVisibility(View.GONE);
 
-        holder.cardNote.setCardBackgroundColor(note.getColorBgID());
+        holder.cardNote.setBackgroundResource(note.getColorBgID());
 
         //xem xet doi mau chu (mac dinh la chu den -> chi can doi nhung cai thuoc nen dark)
         int colorBackground = note.getColorBgID();
 
         boolean isDark = false;
 
-        if (Constants.colorDarkPicker.contains(colorBackground)) {
+        if (Constants.backGroundDark.contains(colorBackground)) {
             //logic
             holder.tvTitle.setTextColor(Color.WHITE);
             holder.tvContent.setTextColor(Color.WHITE);
@@ -126,7 +126,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHodel> {
     }
 
     public static class ViewHodel extends RecyclerView.ViewHolder{
-        private CardView cardNote;
+        private ConstraintLayout cardNote;
         private TextView tvTitle;
         private TextView tvContent;
         private TextView tvDate;

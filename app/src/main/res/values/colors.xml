@@ -13,8 +13,8 @@
     <color name="color1">#00BCD4</color>   <!-- Cyan (sáng, nổi bật) -->
     <color name="color2">#FDCC8A</color>   <!-- Vivid Yellow (sáng) -->
     <color name="color3">#FFFFFF</color>   <!-- Pure White (sáng) -->
-    <color name="color4">#A4C3A2</color>   <!-- Neon Green (sáng) -->
-    <color name="color5">#FF7043</color>   <!-- Vibrant Orange (sáng) -->
+    <color name="color4">#CAE5BC</color>   <!-- Neon Green (sáng) -->
+    <color name="color5">#70D6C5</color>   <!-- Vibrant Orange (sáng) -->
     <color name="color6">#9974FD</color>   <!-- Electric Purple (sáng) -->
     <color name="color7">#D7F9FA</color>   <!-- Sky Blue Accent (sáng) -->
     <color name="color8">#F48FB1</color>   <!-- Electric Pink (sáng) -->
@@ -24,7 +24,7 @@
 
     <color name="color12">#37474F</color>  <!-- Deep Blue Grey (tối) -->
     <color name="color13">#0C5776</color>  <!-- Dark Indigo (tối) -->
-    <color name="color14">#9543A7</color>  <!-- Slate (tối) -->
+    <color name="color14">#7C83ED</color>  <!-- Slate (tối) -->
     <color name="color15">#546E7A</color>  <!-- Carbon Black (tối) -->
     <color name="color16">#00796B</color>  <!-- Deep Purple Night (tối) -->
 

@@ -22,7 +22,6 @@ import com.hoamz.hoamz.utils.Constants;
 public class MyBroadCastReminder extends BroadcastReceiver {
     private final String ChannelID = "notifyChannel";
     private final String ChannelName = "Notify";
-
     @Override
     public void onReceive(Context context, Intent intent) {
         //xy ly neu nhu can nhac lai(tam thoi thi chua dong den )

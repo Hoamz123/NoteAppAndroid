@@ -19,8 +19,8 @@
         android:text="Đã xóa"
         android:textColor="@color/color_2"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@id/icExitBin"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView

@@ -49,4 +49,19 @@ public  class SharePre {
         return sharedPreferences.getBoolean(TYPE_SHOW,false);
     }
 
+    public void saveContentWidget(int idWidget,String content){
+        sharedPreferences.edit().putString(idWidget + "Content",content).apply();
+    }
+
+    public String getContentWidget(int idWidget){
+        return sharedPreferences.getString(idWidget + "Content","");
+    }
+
+    public void saveIdBackgroundWidget(int idWidget,int idBackground){
+        sharedPreferences.edit().putInt(idWidget + "background",idBackground).apply();
+    }
+
+    public int getIdBackgroundWidget(int idWidget) {
+        return sharedPreferences.getInt(idWidget + "background", 0);
+    }
 }

@@ -3,11 +3,9 @@ package com.hoamz.hoamz.ui.act;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,9 +13,11 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.data.local.SharePre;
+import com.hoamz.hoamz.ui.fragment.FragmentWidget;
+import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.utils.MyAnimation;
 
-public class StartActivity extends AppCompatActivity {
+public class Splash extends AppCompatActivity {
     //them animation cho start app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,22 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void next(){
+
+        Intent intentReceiver = getIntent();
+        if(intentReceiver != null){
+            if(Constants.EDIT.equals(intentReceiver.getAction())){
+                //gui id nhan duoc qua fgEdit
+                int idWidget = intentReceiver.getIntExtra(Constants.ID_WIDGET_CLICK,0);
+                if(idWidget != 0){
+                    //gui du lieu idWidget qua fgEdit
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fagContainerSplash,FragmentWidget.getInstance(idWidget,"SPLASH"),FragmentWidget.class.getName())
+                            .commit();
+                }
+                return;
+            }
+        }
+
         //check lan dau cua user o day
         boolean isFirst = SharePre.getInstance(this).checkFirstRunApp();
         Intent intent;
