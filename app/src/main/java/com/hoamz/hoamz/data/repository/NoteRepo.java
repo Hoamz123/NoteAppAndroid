@@ -2,7 +2,6 @@ package com.hoamz.hoamz.data.repository;
 
 
 import android.app.Application;
-import android.security.identity.EphemeralPublicKeyNotFoundException;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -15,6 +14,7 @@ import com.hoamz.hoamz.data.model.Note;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.hoamz.hoamz.data.model.NoteDeleted;
 import com.hoamz.hoamz.utils.Constants;
@@ -134,4 +134,11 @@ public class NoteRepo {
         executorService.execute(()-> noteDeletedDAO.deletedNoteAfter30Day(noteDeleted));
     }
 
+    Note getNoteById(int id){
+        AtomicReference<Note> noteTmp = new AtomicReference<>();
+        executorService.execute(() ->{
+            noteTmp.set(noteDao.getNoteById(id));
+        });
+        return noteTmp.get();
+    }
 }

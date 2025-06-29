@@ -131,6 +131,8 @@
                             android:textColor="@color/black"
                             android:textSize="21sp"
                             android:textStyle="bold"
+                            android:singleLine="true"
+                            android:inputType="text"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -216,5 +218,32 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="3dp">
+
+        <include layout="@layout/layout_setting_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/acShowMoreSetupEdit"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/transparent"
+            android:clickable = "true"
+            android:focusable = "true"
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@id/guideline_"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.05"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

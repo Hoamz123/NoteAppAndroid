@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/icExitEdit"
         android:layout_width="40dp"
-        android:layout_height="19dp"
+        android:layout_height="25dp"
         android:layout_marginStart="16dp"
         android:src="@drawable/ic_exit"
         app:layout_constraintBottom_toBottomOf="@id/title"
@@ -94,8 +94,8 @@
         android:textSize="18sp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toTopOf="@id/theme_1"
-        android:textColor="@color/black"/>
+        android:textColor="@color/color_2"
+        app:layout_constraintBottom_toTopOf="@id/theme_1" />
 
     <!-- theme -->
     <HorizontalScrollView
@@ -117,6 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:paddingVertical="5dp"
             android:layout_gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -159,6 +160,20 @@
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/bg_wg3"/>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ivWg_default"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:cardCornerRadius="16dp"
+                android:layout_marginStart="10dp"
+                android:elevation="-1dp">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/img_30"/>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -466,7 +481,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="26dp"
-        android:paddingVertical="20dp"
         android:layout_marginTop="40dp"
         android:text="LƯU"
         android:elevation="5dp"

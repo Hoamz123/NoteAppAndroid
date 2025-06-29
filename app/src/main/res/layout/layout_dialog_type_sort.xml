@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/bg_btn"
+        android:backgroundTint="@color/white"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:paddingBottom="20dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lọc theo"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"/>
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/acSortByA_Z"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:buttonTint="@color/color_2"
+                android:text="Tên A đến Z"
+                android:textSize="16sp"
+                android:layout_marginStart="25dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"/>
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/acSortByZ_A"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:buttonTint="@color/color_2"
+                android:text="Tên Z đến A"
+                android:textSize="16sp"
+                android:layout_marginStart="25dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"/>
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/acSortByTimeOldToNew"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:buttonTint="@color/color_2"
+                android:text="Theo thời gian tạo (Cũ nhất trước)"
+                android:textSize="16sp"
+                android:layout_marginStart="25dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"/>
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/acSortByTimeNewToOld"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:buttonTint="@color/color_2"
+                android:text="Theo thời gian tạo (Mới nhất trước)"
+                android:textSize="16sp"
+                android:layout_marginStart="25dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"/>
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/acSortDefault"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                app:buttonTint="@color/color_2"
+                android:text="Mặc định"
+                android:textSize="16sp"
+                android:layout_marginStart="25dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"/>
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/tvCancelSort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HỦY"
+            app:layout_constraintTop_toBottomOf="@id/radioGroup"
+            app:layout_constraintEnd_toStartOf="@id/tvOkSort"
+            android:textSize="20sp"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/color_2"/>
+
+        <TextView
+            android:id="@+id/tvOkSort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            app:layout_constraintTop_toBottomOf="@id/radioGroup"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="20sp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/color_2"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</LinearLayout>

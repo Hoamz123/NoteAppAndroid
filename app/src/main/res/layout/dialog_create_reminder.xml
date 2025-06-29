@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background_dialog"
-        android:layout_marginStart="46dp"
-        android:layout_marginEnd="46dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         android:paddingBottom="28dp">
 
         <TextView
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="40dp"
-            android:text="Chọn ngày :"
+            android:text="Chọn ngày "
             app:layout_constraintEnd_toStartOf="@+id/acSetDay"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title" />
@@ -45,7 +45,6 @@
             android:layout_marginTop="40dp"
             android:drawablePadding="5dp"
             android:text="05/04/2025"
-            android:textSize="15sp"
             app:drawableEndCompat="@drawable/ic_more_item"
             app:layout_constraintStart_toEndOf="@+id/tvChooseDay"
             app:layout_constraintTop_toBottomOf="@id/title" />
@@ -66,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:text="Chọn giờ :"
+            android:text="Chọn giờ "
             app:layout_constraintStart_toStartOf="@id/tvChooseDay"
             app:layout_constraintTop_toBottomOf="@id/acSetDay" />
 
@@ -77,10 +76,20 @@
             android:layout_marginTop="50dp"
             android:drawablePadding="5dp"
             android:text="9:01"
-            android:textSize="15sp"
             app:drawableEndCompat="@drawable/ic_more_item"
             app:layout_constraintStart_toStartOf="@id/acSetDay"
             app:layout_constraintTop_toBottomOf="@id/acSetDay" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toBottomOf="@id/tvChooseTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="5dp"
+            android:background="#2D000000"/>
 
         <View
             android:layout_width="match_parent"
@@ -99,7 +108,7 @@
             android:id="@+id/acSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/acSetTime"
+            app:layout_constraintTop_toBottomOf="@id/tvChooseTime"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="LƯU"
             android:layout_marginEnd="25dp"

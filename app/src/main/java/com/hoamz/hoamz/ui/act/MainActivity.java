@@ -23,6 +23,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -49,6 +51,7 @@ import com.hoamz.hoamz.data.local.SharePre;
 import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.Note;
 import com.hoamz.hoamz.data.model.NoteDeleted;
+import com.hoamz.hoamz.databinding.ActivityMainBinding;
 import com.hoamz.hoamz.ui.fragment.FragmentBin;
 import com.hoamz.hoamz.ui.fragment.FragmentCalenderView;
 import com.hoamz.hoamz.ui.fragment.FragmentFavoriteNote;
@@ -58,6 +61,7 @@ import com.hoamz.hoamz.ui.fragment.FragmentTypeNote;
 import com.hoamz.hoamz.ui.fragment.FragmentWidget;
 import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.utils.CustomTextWatcher;
+import com.hoamz.hoamz.utils.DialogShow;
 import com.hoamz.hoamz.viewmodel.LabelViewModel;
 import com.hoamz.hoamz.viewmodel.NoteViewModel;
 import com.hoamz.hoamz.viewmodel.TypeModel;
@@ -71,13 +75,14 @@ public class MainActivity extends AppCompatActivity {
     private ImageView iv_showSearch,iv_menuNav;
     private EditText edtSearchView;
     private ConstraintLayout fabAdd;
-    private ImageView iv_TypeShow;
+    private ImageView ivShowMoreSetup;
     private NavigationView navMenu;
     private DrawerLayout drawerLayout;
     private TextView tvCancel;
-    private ImageView ivClearText,icFilter;
+    private ImageView ivClearText;
     private SwipeRefreshLayout refreshLayout;
-    private boolean isType;//kieu hien thi hai cot hoac 1 cot
+    private boolean isGrid;//kieu hien thi hai cot hoac 1 cot
+    private boolean isShow = false;
     private LabelAdapter adapter;
     private RecyclerView rcListLabel;
     private LabelViewModel labelViewModel;
@@ -90,13 +95,15 @@ public class MainActivity extends AppCompatActivity {
     private LiveData<List<Label>> listLabelsCurrent;
     private String labelCurrentClick = Constants.labelAll;
 
+    private ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         //khoa dung man hinh
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -114,12 +121,49 @@ public class MainActivity extends AppCompatActivity {
         showNotesByLabel(labelCurrentClick);
         onClickToolbar();//bat su kien click toolbar
         onReceiverData();
+        onClickMenu();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         onReLoadData();
+    }
+
+    private void onClickMenu(){
+
+        //bat su kien
+        //sort
+        binding.layoutMoreSetup.tvSort.setOnClickListener(click ->{
+
+            //bat su kien click sap xep
+            DialogShow.showDialogSort(this, this::showFilter);
+
+            //cancelOnTouchOutSide
+            binding.constraintInclude.setVisibility(View.INVISIBLE);
+            isShow = false;
+        });
+        //chon che do hien thi
+        binding.layoutMoreSetup.tvTypeShow.setOnClickListener(click ->{
+            if(isGrid){
+                //neu dang la dang luoi
+                binding.layoutMoreSetup.tvTypeShow.setText("Dang sách");
+            }
+            else{
+                binding.layoutMoreSetup.tvTypeShow.setText("Lưới");
+            }
+            isGrid = !isGrid;
+            SharePre.getInstance(this).saveTypeShow(isGrid);
+            displayType();
+            binding.constraintInclude.setVisibility(View.INVISIBLE);
+            isShow = false;
+        });
+
+        //nhan ra ngoai menu thi an menu
+        binding.constraintInclude.setOnClickListener(click ->{
+            binding.constraintInclude.setVisibility(View.INVISIBLE);
+            isShow = false;
+        });
     }
 
     //show danh sach theo nhan
@@ -130,10 +174,8 @@ public class MainActivity extends AppCompatActivity {
             listNotesCurrent.removeObservers(this); // Hủy tất cả observer của Activity này trên LiveData cũ
         }
         if (Objects.equals(label, Constants.labelAll)) {
-            icFilter.setVisibility(View.VISIBLE);//cho phep loc
             showAllNotes();
         } else {
-            icFilter.setVisibility(View.INVISIBLE);// ko cho phep loc
             displayType();
             listNotesCurrent = Transformations.distinctUntilChanged(viewModel.getListNotesByLabel(label));
             listNotesCurrent.observe(this, notes -> {
@@ -146,12 +188,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayType() {
-        if(!isType){
-            iv_TypeShow.setImageResource(R.drawable.ic_app);
+        if(!isGrid){
             rcNotes.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         }
         else{
-            iv_TypeShow.setImageResource(R.drawable.ic_list_land);
             rcNotes.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
         }
         noteAdapter.notifyDataSetChanged();
@@ -220,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
             //focus vao thanh nhap
             edtSearchView.requestFocus();
             //an icon type show
-            iv_TypeShow.setVisibility(View.INVISIBLE);
+            ivShowMoreSetup.setVisibility(View.INVISIBLE);
             //hien thi cancel
             tvCancel.setVisibility(View.VISIBLE);
             ShowKey();
@@ -235,26 +275,21 @@ public class MainActivity extends AppCompatActivity {
             //an cancel
             tvCancel.setVisibility(View.INVISIBLE);
             //hien thi type show
-            iv_TypeShow.setVisibility(View.VISIBLE);
+            ivShowMoreSetup.setVisibility(View.VISIBLE);
             //an thanh search di
             edtSearchView.setVisibility(View.INVISIBLE);
             //hien thi icon search
             iv_showSearch.setVisibility(View.VISIBLE);
         });
 
-        //thay doi bo cuc hien thi
-        iv_TypeShow.setOnClickListener(v ->{
-            if(isType){
-                iv_TypeShow.setImageResource(R.drawable.ic_app);
-                rcNotes.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        ivShowMoreSetup.setOnClickListener(v ->{
+            if(isShow) {
+                binding.constraintInclude.setVisibility(View.INVISIBLE);
             }
             else{
-                iv_TypeShow.setImageResource(R.drawable.ic_list_land);
-                rcNotes.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
+                binding.constraintInclude.setVisibility(View.VISIBLE);
             }
-            isType = !isType;
-            SharePre.getInstance(this).saveTypeShow(isType);
-            noteAdapter.notifyDataSetChanged();
+            isShow = !isShow;
         });
 
         //thay doi nhap search -> du lieu thay doi theo nhap
@@ -299,34 +334,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, CreateNote.class);
             intent.putExtra(Constants.LABEL_CURRENT,labelCurrentClick);
             startActivity(intent);
-        });
-
-        icFilter.setOnClickListener(v ->{
-            ContextWrapper wrapper = new ContextThemeWrapper(this,R.style.CustomViewPopupMenu);
-            PopupMenu popupMenu = new PopupMenu(wrapper,icFilter);
-            popupMenu.getMenuInflater().inflate(R.menu.menu_filter,popupMenu.getMenu());
-            popupMenu.show();
-
-            //bat su kien
-            popupMenu.setOnMenuItemClickListener(item -> {
-                int id = item.getItemId();
-                if(id == R.id.it_filterByZA){
-                    showFilter(Constants.sortZToA);
-                }
-                else if(id == R.id.it_filterByAZ){
-                    showFilter(Constants.sortAToZ);
-                }
-                else if(id == R.id.it_filterByTimeNew){
-                    showFilter(Constants.sortNewToOld);
-                }
-                else if(id == R.id.it_filterByTimeOld){
-                    showFilter(Constants.sortOldToNew);
-                }
-                else if(id == R.id.it_default){
-                    showAllNotes();
-                }
-                return true;
-            });
         });
 
         noteAdapter.setOnClickItemListener(new NoteAdapter.OnItemClickListener() {
@@ -460,12 +467,14 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         //check permission
         if(ActivityCompat.checkSelfPermission(this, Arrays.toString(new String[]{Manifest.permission.POST_NOTIFICATIONS})) != PackageManager.PERMISSION_GRANTED){
-            requirePermissionNotify();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requirePermissionNotify();
+            }
         };
         iv_showSearch = findViewById(R.id.iv_show_search);
         edtSearchView = findViewById(R.id.edtSearch);
-        iv_TypeShow = findViewById(R.id.ic_show_type);
-        icFilter = findViewById(R.id.ic_filter);
+        //iv_TypeShow = findViewById(R.id.ic_show_type);
+        ivShowMoreSetup = findViewById(R.id.ic_show_more_setting);
         tvCancel = findViewById(R.id.tv_cancel);
         fabAdd = findViewById(R.id.fab_add);
         ivClearText = findViewById(R.id.iv_clearText);
@@ -487,8 +496,8 @@ public class MainActivity extends AppCompatActivity {
         //viewmodel cua ghi chu
         viewModel = new ViewModelProvider(this).get(NoteViewModel.class);
 
-        isType = SharePre.getInstance(this).getTypeShow();//ban dau mac dinh la false
-
+        isGrid = SharePre.getInstance(this).getTypeShow();//ban dau mac dinh la false
+        binding.layoutMoreSetup.tvTypeShow.setText((isGrid) ? "Lưới" : "Dang sách");
         displayType();
 
         ivEmptyList = findViewById(R.id.iv_empty);

@@ -3,25 +3,27 @@ package com.hoamz.hoamz.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import androidx.core.content.ContextCompat;
+import android.view.View;
+
 import com.hoamz.hoamz.Broadcast.MyBroadCastReminder;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.data.model.Note;
 
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Constants {
     //luu cac hang ko doi
-    public static final String sortAToZ = "a_z";
+    public static final String sortAToZ = "Tên A đến Z";
     public static final String TitleCreateNewLabel = "Tạo danh mục mới";
     public static final String TitleEditLabel = "Sửa tên danh mục";
-    public static final String sortZToA = "z_a";
-    public static final String sortOldToNew = "asc";
-    public static final String sortNewToOld = "desc";
+    public static final String sortZToA = "Tên Z đến A";
+    public static final String sortOldToNew = "Theo thời gian tạo (Cũ nhất trước)";
+    public static final String sortNewToOld = "Theo thời gian tạo (Mới nhất trước)";
     public static final String labelAll = "All";
     public static final String READING_MODE = "ReadingMode";
     public static final String EDIT_MODE = "EditMode";
@@ -40,10 +42,11 @@ public class Constants {
     public static final String EDIT = "edit_widget";
     public static final String BACK = "back";
     public static final String HINT = "Không tìm thấy tiện ích cần quản lý \nVui lòng tạo tiện ích!";
+    public static final String EMPTY_NOTIFY = "Chưa có ghi chú hôm nay\nNhấn + để thêm";
     public static final String SOURCE = "source";
     public static Set<Integer> backGroundDark = new HashSet<>();
     public static Set<Integer> backGroundLight = new HashSet<>();
-    public static long time30Days = 2592000000L;
+    public static long time30Days = 30L * 24 * 60 * 60 * 1000L;
 
     //set mau sang -> chu den
     public static void init(){
@@ -79,6 +82,7 @@ public class Constants {
         backGroundLight.add(R.drawable.img_9);
         backGroundLight.add(R.drawable.img_31);
         backGroundLight.add(R.drawable.img_26);
+
     }
 
     public static void setUpAlarm(Activity act,Note note,long trigger){
@@ -110,12 +114,11 @@ public class Constants {
         return String.format("%02d:%02d",hour,minutes);
     }
     @SuppressLint("DefaultLocale")
-    public static String getCurrentDay(){
+    public static String getCurrentDay() {
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH) + 1;
         int year = calendar.get(Calendar.YEAR);
-        return String.format("%02d/%02d/%04d",day,month,year);
+        return String.format("%02d/%02d/%04d", day, month, year);
     }
-
 }

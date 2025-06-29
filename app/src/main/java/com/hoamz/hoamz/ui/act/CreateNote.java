@@ -1,15 +1,13 @@
 package com.hoamz.hoamz.ui.act;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -17,15 +15,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -51,7 +48,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Deque;
@@ -64,7 +60,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CreateNote extends AppCompatActivity {
     private ImageView iv_backToMain,ivSetAlarm,ivAddColor;
-    private TextView tv_done,tv_choose_label;
+    private TextView tv_choose_label;
     private EditText edtTitle;
     private EditText edtContent;
     private TextView tv_date;
@@ -77,7 +73,7 @@ public class CreateNote extends AppCompatActivity {
     private String timeChoose,dayChoose;
     private String dateCalender;
     private String currentLabel;
-    private int colorBackground = Color.WHITE;
+    private int colorBackground = R.drawable.img_15;
     private String dateChoose;
     private BottomSheetColor sheetColor;
     private final Deque<String> undoSt = new ArrayDeque<>();
@@ -87,7 +83,6 @@ public class CreateNote extends AppCompatActivity {
     private static final int MAX_UNDO = 100;
     private ImageButton ivb_undo,ivb_redo;
     private long timeAlarm = 0;
-    private long timeRepeat = 0;
 
     private String tmpDay,tmpTime;
 
@@ -173,9 +168,8 @@ public class CreateNote extends AppCompatActivity {
     @SuppressLint({"ClickableViewAccessibility", "DefaultLocale", "NewApi"})
     private void onClickItems() {
         //back to main
-        iv_backToMain.setOnClickListener(v -> finish());//back to main(ok)
         //done
-        tv_done.setOnClickListener(v ->{
+        iv_backToMain.setOnClickListener(v ->{
             hideKey();//an ban phim ao
             String titleCheck = edtTitle.getText().toString();
             String content = edtContent.getText().toString();
@@ -191,7 +185,7 @@ public class CreateNote extends AppCompatActivity {
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
-            Note note = new Note(title, content, timestamp, timeAlarm, timeRepeat, 0,false, label, colorBackground);
+            Note note = new Note(title, content, timestamp, timeAlarm, 0,false, label, colorBackground);
             noteViewModel.insertNewNote(note);
             //set notify
             if(timeAlarm > 0){
@@ -211,7 +205,7 @@ public class CreateNote extends AppCompatActivity {
         ivSetAlarm.setOnClickListener(v ->{
             //hien thi alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            View viewDialog = View.inflate(this,R.layout.dialog_notification,null);
+            View viewDialog = View.inflate(this,R.layout.dialog_create_reminder,null);
             builder.setView(viewDialog);
             AlertDialog dialog = builder.create();
             dialog.setCancelable(true);
@@ -239,6 +233,7 @@ public class CreateNote extends AppCompatActivity {
             btnCancel.setOnClickListener(click ->{
                 dialog.dismiss();
             });
+
 
             btnSave.setOnClickListener(click ->{
                 timeAlarm = calendarAlarm.getTimeInMillis();
@@ -364,8 +359,7 @@ public class CreateNote extends AppCompatActivity {
 
          if(Constants.backGroundLight.contains(colorBackground)){
             //set mau den
-            iv_backToMain.setImageResource(R.drawable.ic_back_24);//nut back
-            tv_done.setTextColor(Color.BLACK);//chu done
+            iv_backToMain.setImageResource(R.drawable.ic_save_edit_b);//nut back
             ivSetAlarm.setImageResource(R.drawable.ic_alarm);//icon nhac nho
             ivAddColor.setImageResource(R.drawable.ic_color_24);//icon dat mau
             tv_date.setTextColor(Color.BLACK);
@@ -376,7 +370,7 @@ public class CreateNote extends AppCompatActivity {
 
             edtContent.setTextColor(Color.BLACK);
             edtTitle.setTextColor(Color.BLACK);
-            edtTitle.setHintTextColor(Color.BLACK);
+            edtTitle.setHintTextColor(Color.GRAY);
 
             ivb_undo.setImageResource(R.drawable.ic_undo_b);
             ivb_redo.setImageResource(R.drawable.ic_redo_b);
@@ -388,8 +382,7 @@ public class CreateNote extends AppCompatActivity {
 
          else if(Constants.backGroundDark.contains(colorBackground)){
             //set mau trang
-            iv_backToMain.setImageResource(R.drawable.ic_back_w);//nut back
-            tv_done.setTextColor(Color.WHITE);//chu done
+            iv_backToMain.setImageResource(R.drawable.ic_save_edit_w);//nut back
             ivSetAlarm.setImageResource(R.drawable.ic_alarm_w);//icon nhac nho
             ivAddColor.setImageResource(R.drawable.ic_color_w);//icon dat mau
             tv_date.setTextColor(Color.WHITE);
@@ -403,7 +396,7 @@ public class CreateNote extends AppCompatActivity {
 
             edtContent.setTextColor(Color.WHITE);
             edtTitle.setTextColor(Color.WHITE);
-            edtTitle.setHintTextColor(Color.WHITE);
+            edtTitle.setHintTextColor(Color.GRAY);
 
             ivb_undo.setImageResource(R.drawable.ic_undo_w);
             ivb_redo.setImageResource(R.drawable.ic_redo_w);
@@ -500,7 +493,6 @@ public class CreateNote extends AppCompatActivity {
     }
     private void initViews() {
         iv_backToMain = findViewById(R.id.icBackToMain);
-        tv_done = findViewById(R.id.tvDone);
         tv_date = findViewById(R.id.tvDate);
         edtTitle = findViewById(R.id.edtTitle);
         edtContent = findViewById(R.id.edtContent);

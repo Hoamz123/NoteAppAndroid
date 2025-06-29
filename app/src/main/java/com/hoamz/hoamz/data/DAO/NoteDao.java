@@ -42,10 +42,10 @@ public interface NoteDao {
     @Query("select * from note order by date asc,isPin desc")
     LiveData<List<Note>> getListNotesByDateASC();
 
-    @Query("select * from note order by title COLLATE NOCASE asc")
+    @Query("select * from note order by title COLLATE NOCASE asc,content COLLATE NOCASE asc")
     LiveData<List<Note>> getListNotesOderByAz();
 
-    @Query("select * from note order by title COLLATE NOCASE desc")
+    @Query("select * from note order by title COLLATE NOCASE desc,content COLLATE NOCASE desc")
     LiveData<List<Note>> getListNotesOderByZa();
 
     @Query("select * from note where date <= :endOfDay and date >= :startOfDay order by isPin desc")
@@ -70,4 +70,8 @@ public interface NoteDao {
 
     @Query("select * from note where isFavorite =:isFavorite order by isPin desc")
     LiveData<List<Note>> getListNoteFavorite(boolean isFavorite);
+
+    @Query("select * from note where id = :id limit 1")
+    Note getNoteById(int id);
+
 }

@@ -1,18 +1,14 @@
 package com.hoamz.hoamz.ui.act;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +18,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -33,8 +27,6 @@ import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
@@ -61,7 +53,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Deque;
@@ -91,7 +82,6 @@ public class NoteDetail extends AppCompatActivity {
     private LabelViewModel labelViewModel;
     private long timeAlarm = 0;
     private long timePrevious = 0;
-    private long timeRepeat = 0;
     private final Deque<String> undoSt = new ArrayDeque<>();
     private final Deque<String> redoSt = new ArrayDeque<>();
     private boolean isUndoRedoMode = false;
@@ -143,7 +133,6 @@ public class NoteDetail extends AppCompatActivity {
             noteEdit.setTitle(titleUpdate);
             noteEdit.setLabel(labelUpdate);
             noteEdit.setTimeAlarm(timeAlarm);
-            noteEdit.setRepeat(timeRepeat);
             String date = tvDate.getText().toString();
             try {
                 Date date1 = sdf.parse(date);
@@ -165,6 +154,7 @@ public class NoteDetail extends AppCompatActivity {
             finish();
         });//back ve act gan nhat (tren dinh stack)
 
+        /*
         //show menu
         iv_More.setOnClickListener(v -> {
             ContextWrapper contextWrapper = new ContextThemeWrapper(this, R.style.CustomViewPopupMenu);
@@ -277,6 +267,9 @@ public class NoteDetail extends AppCompatActivity {
 
             popupMenu.show();
         });
+        */
+
+
 
         sheetColor.setOnSelectedColor(color -> {
             colorBackground = color;
@@ -391,7 +384,7 @@ public class NoteDetail extends AppCompatActivity {
         iv_alarm.setOnClickListener(v ->{
             //hien thi alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            View viewDialog = View.inflate(this,R.layout.dialog_notification,null);
+            View viewDialog = View.inflate(this,R.layout.dialog_create_reminder,null);
             builder.setView(viewDialog);
             AlertDialog dialog = builder.create();
             dialog.setCancelable(true);
@@ -427,6 +420,7 @@ public class NoteDetail extends AppCompatActivity {
             nguyen nhan : khi nhan hai lan save ma ko thay doi thoi gian -> gay ra reset time TimeAlarm ve 0
             -> cach khac phuc : thay vi gan truc tiep calendarAlarm.getTimeInMillis(); cho timeAlarm thi chi gan khi nao thoa man dk -> tranh case gan nham
              */
+
             btnSave.setOnClickListener(click ->{
                 long timeTMP = calendarAlarm.getTimeInMillis();
                 long timeNow = System.currentTimeMillis();
@@ -435,7 +429,6 @@ public class NoteDetail extends AppCompatActivity {
                         timeAlarm = timeTMP;
                         timePrevious = timeTMP;
                         noteEdit.setTimeAlarm(timeAlarm);//set -> luc nhan back se cap nhat sau
-//                        Constants.setCancelAlarm(this,noteEdit);
                         Constants.setUpAlarm(this,noteEdit,timeAlarm);
                     }
                 }
@@ -445,21 +438,6 @@ public class NoteDetail extends AppCompatActivity {
         });
     }
 
-//    @SuppressLint("DefaultLocale")
-//    private String getCurrentTime(){
-//        Calendar calendar = Calendar.getInstance();
-//        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-//        int minutes = calendar.get(Calendar.MINUTE);
-//        return String.format("%02d:%02d",hour,minutes);
-//    }
-//    @SuppressLint("DefaultLocale")
-//    private String getCurrentDay(){
-//        Calendar calendar = Calendar.getInstance();
-//        int day = calendar.get(Calendar.DAY_OF_MONTH);
-//        int month = calendar.get(Calendar.MONTH) + 1;
-//        int year = calendar.get(Calendar.YEAR);
-//        return String.format("%02d/%02d/%04d",day,month,year);
-//    }
     private void showTimePickerAlarm(TextView setTime){
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -585,7 +563,6 @@ public class NoteDetail extends AppCompatActivity {
                 isPin = (noteEdit.isPin() == 1);//bien nay true hay false se phu thuoc vao dk isPin() co = 1 hay khong
                 tvDate.setText(sdf.format(date));
                 colorBackground = noteEdit.getColorBgID();
-                timeRepeat = noteEdit.getTimeRepeat();
                 viewMainDetail.setBackgroundResource(colorBackground);
                 setColorDetail(colorBackground);
                 timePrevious = timeAlarm;

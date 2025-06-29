@@ -103,5 +103,4 @@ public class NoteViewModel extends AndroidViewModel {
     public void deletedNoteAfter30Day(NoteDeleted noteDeleted){
         noteRepo.deletedNoteAfter30Day(noteDeleted);
     }
-
 }

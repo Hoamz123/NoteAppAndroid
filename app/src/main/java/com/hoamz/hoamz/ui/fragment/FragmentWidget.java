@@ -104,6 +104,9 @@ public class FragmentWidget extends Fragment {
         //gui du lieu den appwidgetProvider
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.widget_layout);
         remoteViews.setTextViewText(R.id.tvContentWidget,contentWidget);
+        if(idBackGround == 0){
+            idBackGround = R.drawable.img_30;
+        }
         remoteViews.setInt(R.id.mainRelayout,"setBackgroundResource",idBackGround);
         remoteViews.setTextViewText(R.id.tv_dateWG,Constants.getCurrentDay());
         AppWidgetManager.getInstance(context).updateAppWidget(idWidget,remoteViews);
@@ -174,6 +177,7 @@ public class FragmentWidget extends Fragment {
         setImageClickListener(binding.ivWg8, R.drawable.bg_wg8);
         setImageClickListener(binding.ivWg9, R.drawable.bg_wg9);
         setImageClickListener(binding.ivWg10, R.drawable.bg_wg10);
+        setImageClickListener(binding.ivWgDefault, R.drawable.img_30);
 
         setImageClickListener(binding.ivWg11, R.drawable.img_9);
         setImageClickListener(binding.ivWg12, R.drawable.img_8);

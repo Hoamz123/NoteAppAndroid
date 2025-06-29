@@ -91,7 +91,7 @@ public class FragmentBin extends Fragment {
                 if(_noteDeleted != null){
                     if(System.currentTimeMillis() - _noteDeleted.getTimeDeleted() <= Constants.time30Days){
                         Note note = new Note(_noteDeleted.getTitle(),_noteDeleted.getContent(),_noteDeleted.getTimeDeleted(),
-                                0,0,0,false,_noteDeleted.getLabel(),_noteDeleted.getColorBgID());
+                                0,0,false,_noteDeleted.getLabel(),_noteDeleted.getColorBgID());
                         list.add(note);
                     }
                     else{

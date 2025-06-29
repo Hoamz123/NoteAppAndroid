@@ -6,31 +6,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     android:background="@color/color_bg"
-    tools:context=".ui.fragment.FragmentCalenderView">
+    tools:context=".ui.fragment.FragmentCalenderView"
+    tools:ignore="HardcodedText">
 
-    <ImageView
-        android:id="@+id/icBackInCalenderView"
-        android:layout_width="30dp"
-        android:layout_height="19dp"
-        android:src="@drawable/ic_exit"
-        android:layout_marginStart="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/title"
-        app:layout_constraintBottom_toBottomOf="@id/title"/>
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:drawablePadding="20dp"
-        android:gravity="start"
-        android:text="Lịch"
-        android:layout_marginStart="10dp"
-        android:textColor="@color/color_2"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@id/icBackInCalenderView"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/liner"
@@ -45,7 +23,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
             android:id="@+id/materialCalender"
@@ -73,18 +51,32 @@
         app:layout_constraintBottom_toTopOf="@id/guideline4"
         app:layout_constraintTop_toBottomOf="@id/liner" />
 
+    <TextView
+        android:id="@+id/tvEmptyNotify"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="18dp"
+        app:layout_constraintBottom_toTopOf="@id/guideline4"
+        app:layout_constraintTop_toBottomOf="@id/liner"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fab_add_calender"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         app:layout_constraintBottom_toTopOf="@id/guideline4"
         app:layout_constraintEnd_toStartOf="@id/guideline7"
         android:layout_marginBottom="15dp"
         android:background="@drawable/custom_fab">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/baseline_add_24"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -94,12 +86,25 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    <TextView
+        android:id="@+id/acBackToMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quay lại"
+        app:layout_constraintTop_toBottomOf="@id/guideline4"
+        android:textColor="@color/color_2"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"/>
+
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.985" />
+        app:layout_constraintGuide_percent="0.92" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"

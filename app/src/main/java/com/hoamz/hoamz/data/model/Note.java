@@ -16,11 +16,10 @@ public class Note implements Parcelable {
     private boolean isFavorite;
     private long date;
     private long trigger;
-    private long timeRepeat;
     private String label;
     private int colorBgID;//mac dinh ban dau la mau trang
 
-    public Note(String title, String content,long date,long trigger,long timeRepeat, int isPin, boolean isFavorite,String label,int colorBgID) {
+    public Note(String title, String content,long date,long trigger, int isPin, boolean isFavorite,String label,int colorBgID) {
         this.title = title;
         this.content = content;
         this.isPin = isPin;
@@ -29,7 +28,6 @@ public class Note implements Parcelable {
         this.label = label;
         this.colorBgID = colorBgID;
         this.trigger = trigger;
-        this.timeRepeat = timeRepeat;
     }
 
     protected Note(Parcel in) {
@@ -40,7 +38,6 @@ public class Note implements Parcelable {
         isFavorite = in.readByte() != 0;
         date = in.readLong();
         trigger = in.readLong();
-        timeRepeat = in.readLong();
         label = in.readString();
         colorBgID = in.readInt();
     }
@@ -65,20 +62,9 @@ public class Note implements Parcelable {
         this.trigger = timeAlarm;
     }
 
-    public void setRepeat(long timeRepeat) {
-        this.timeRepeat = timeRepeat;
-    }
-
-    public void setTrigger(long trigger) {
-        this.trigger = trigger;
-    }
 
     public long getTrigger() {
         return trigger;
-    }
-
-    public long getTimeRepeat() {
-        return timeRepeat;
     }
 
     public int getColorBgID() {
@@ -153,7 +139,6 @@ public class Note implements Parcelable {
         dest.writeByte((byte) (isFavorite ? 1 : 0));
         dest.writeLong(date);
         dest.writeLong(trigger);
-        dest.writeLong(timeRepeat);
         dest.writeString(label);
         dest.writeInt(colorBgID);
     }

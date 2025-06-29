@@ -55,7 +55,7 @@
                 android:textSize="15sp"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/ic_show_type"
+                app:layout_constraintEnd_toStartOf="@id/ic_show_more_setting"
                 app:layout_constraintStart_toEndOf="@id/menu_nav"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -66,7 +66,7 @@
                 android:layout_marginEnd="20dp"
                 android:src="@drawable/ic_search"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/ic_show_type"
+                app:layout_constraintEnd_toStartOf="@id/ic_show_more_setting"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -81,11 +81,11 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/ic_show_type"
+                android:id="@+id/ic_show_more_setting"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_marginEnd="15dp"
-                android:src="@drawable/ic_app"
+                android:src="@drawable/ic_more"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -94,8 +94,8 @@
                 android:id="@+id/tv_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
-                android:text="Cancel"
+                android:layout_marginEnd="20dp"
+                android:text="hủy"
                 android:textColor="@color/color_2"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -120,18 +120,7 @@
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintBottom_toTopOf="@id/id_swiper"/>
 
-        <!-- filter -->
-        <ImageView
-            android:id="@+id/ic_filter"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:src="@drawable/filter"
-            app:layout_constraintTop_toTopOf="@id/rcListLabel"
-            app:layout_constraintBottom_toBottomOf="@id/rcListLabel"
-            android:layout_marginEnd="15dp"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-            <!-- list notes -->
+        <!-- list notes -->
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/id_swiper"
             android:layout_width="match_parent"
@@ -226,6 +215,33 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.05"/>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_include"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:layout_height="match_parent">
+            <include
+                layout="@layout/layout_setting_main"
+                android:id="@+id/layout_moreSetup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|top"
+                android:layout_marginEnd="10dp"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintTop_toBottomOf="@id/guideline_"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.05"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -247,3 +263,27 @@
         app:menu="@menu/menu_nav_view"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
+
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:elevation="3dp">
+
+           <include layout="@layout/layout_setting_main"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:id="@+id/acShowMoreSetup"
+               android:layout_marginEnd="10dp"
+               android:layout_marginTop="5dp"
+               android:elevation="10dp"
+               app:layout_constraintTop_toBottomOf="@id/guideline_"
+               app:layout_constraintEnd_toEndOf="parent"/>
+
+           <androidx.constraintlayout.widget.Guideline
+               android:id="@+id/guideline_"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               app:layout_constraintGuide_percent="0.05"/>
+
+       </androidx.constraintlayout.widget.ConstraintLayout> -->

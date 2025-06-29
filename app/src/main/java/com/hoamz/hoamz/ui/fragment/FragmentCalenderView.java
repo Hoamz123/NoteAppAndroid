@@ -18,6 +18,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -61,7 +62,8 @@ public class FragmentCalenderView extends Fragment {
     private LiveData<List<Note>> listNotes;
     private LiveData<List<Long>> listTimestamp;
     private List<CalendarDay> calendarDayList;
-    private ImageView ivBack;
+    private TextView tvEmptyNotify;
+    private TextView acBackToMain;
     private String dateSelected;
     private SimpleDateFormat sdf;
 
@@ -91,15 +93,22 @@ public class FragmentCalenderView extends Fragment {
     }
 
     private void onClick() {
+
+        acBackToMain.setOnClickListener(v ->{
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
+
         fabAddNote.setOnClickListener(v ->{
             Intent intent = new Intent(getActivity(), CreateNote.class);
             intent.putExtra(Constants.DATE_SELECTED,dateSelected);
             startActivity(intent);
         });
 
-        //back
-        ivBack.setOnClickListener(v ->{
-            requireActivity().getSupportFragmentManager().popBackStack();
+        //create new note
+        tvEmptyNotify.setOnClickListener(v ->{
+            Intent intent = new Intent(getActivity(), CreateNote.class);
+            intent.putExtra(Constants.DATE_SELECTED,dateSelected);
+            startActivity(intent);
         });
 
         noteAdapter.setOnClickItemListener(new NoteAdapter.OnItemClickListener() {
@@ -206,6 +215,7 @@ public class FragmentCalenderView extends Fragment {
         }
         listNotes = Transformations.distinctUntilChanged(noteViewModel.getNotesByTime(startOfDay,endOfDay));//chi khi du lieu thay doi thi moi update
         listNotes.observe(getViewLifecycleOwner(), notes -> {
+            show(notes);
             if (notes != null) {
                 noteAdapter.setNoteList(notes);
             }
@@ -213,6 +223,26 @@ public class FragmentCalenderView extends Fragment {
                 rcViewByDate.setAdapter(noteAdapter);
             }
         });
+    }
+
+    private void show(List<Note> list){
+        if(list == null || list.isEmpty()){
+            showWhenEmpty();
+        }else{
+            showWhenNotEmpty();
+        }
+    }
+
+    private void showWhenEmpty(){
+        tvEmptyNotify.setVisibility(View.VISIBLE);
+        rcViewByDate.setVisibility(View.INVISIBLE);
+        tvEmptyNotify.setHint(Constants.EMPTY_NOTIFY);
+        tvEmptyNotify.setGravity(Gravity.CENTER);
+    }
+
+    private void showWhenNotEmpty(){
+        tvEmptyNotify.setVisibility(View.INVISIBLE);
+        rcViewByDate.setVisibility(View.VISIBLE);
     }
 
     private void setStartOfDayAndEndOfDay(int day,int month,int year) {
@@ -240,11 +270,12 @@ public class FragmentCalenderView extends Fragment {
         rcViewByDate = view.findViewById(R.id.rcViewByDate);
         noteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
         noteAdapter = new NoteAdapter();
-        rcViewByDate.setLayoutManager(new GridLayoutManager(getActivity(),1));
+        rcViewByDate.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         listNotes = new MutableLiveData<>();
         listTimestamp = new MutableLiveData<>();
         calendarDayList = new ArrayList<>();
-        ivBack = view.findViewById(R.id.icBackInCalenderView);
+        tvEmptyNotify = view.findViewById(R.id.tvEmptyNotify);
+        acBackToMain = view.findViewById(R.id.acBackToMain);
         sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
     }
 

@@ -7,12 +7,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
@@ -24,9 +26,10 @@ import com.hoamz.hoamz.data.model.Label;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class DialogShow {
+
+    private Calendar calendarAlarm = Calendar.getInstance();
     public static void showDialogLabel(Context context,String title,String hint, List<Label> listLabel, onDialogListener onDialogCreateLabel){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = View.inflate(context, R.layout.dialog_create_label,null);
@@ -111,28 +114,33 @@ public class DialogShow {
         dialog.show();
     }
 
-    public static void showChooseRepeat(Context context,onChooseRepeatListener onChooseRepeatListener){
-        String [] list = {"Không lặp lại","15 phút","30 phút","Hàng ngày","Hàng tuần"};
-        long [] listTime = {0,15*60*1000,30*60*1000,24*60*60*1000,7*24*60*60*1000};//ms
-        AtomicInteger index = new AtomicInteger(0);
+    public static void showDialogSort(Context context,showDialogSortListener showDialogSortListener){
+        View view = View.inflate(context,R.layout.layout_dialog_type_sort,null);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setCancelable(true);
-        builder.setTitle("Nhắc lại");
-        builder.setSingleChoiceItems(list, 0, (dialog, which) -> {
-            index.set(which);
-        });
-
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            onChooseRepeatListener.onChooseRepeat(listTime[index.get()]);
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(true);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        RadioGroup radioGroup = view.findViewById(R.id.radioGroup);
+        TextView tvCancel = view.findViewById(R.id.tvCancelSort);
+        TextView tvOKSort = view.findViewById(R.id.tvOkSort);
+        //bat su kien click
+        tvCancel.setOnClickListener(v -> dialog.dismiss());
+        tvOKSort.setOnClickListener(click ->{
+            int idClicked = radioGroup.getCheckedRadioButtonId();
+            RadioButton radioButton = view.findViewById(idClicked);
+            String typeSort = radioButton.getText().toString();
+            showDialogSortListener.onSort(typeSort);
+            radioButton.setChecked(true);
             dialog.dismiss();
         });
-
-        AlertDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(true);
         dialog.show();
     }
-    public interface onChooseRepeatListener{
-        void onChooseRepeat(long repeat);
+
+    public interface showDialogSortListener{
+        void onSort(String sort);
     }
+
 
 }
