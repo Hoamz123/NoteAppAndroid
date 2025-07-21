@@ -1,13 +1,10 @@
 package com.hoamz.hoamz.ui.fragment;
 
-import static androidx.core.content.res.ResourcesCompat.getColor;
 import static java.util.Calendar.DAY_OF_MONTH;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -16,29 +13,32 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.hoamz.hoamz.Broadcast.MyBroadCastReminder;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.adapter.NoteAdapter;
 import com.hoamz.hoamz.data.model.Note;
+import com.hoamz.hoamz.data.model.Reminder;
 import com.hoamz.hoamz.ui.act.CreateNote;
+import com.hoamz.hoamz.ui.act.MainActivity;
 import com.hoamz.hoamz.ui.act.NoteDetail;
+import com.hoamz.hoamz.utils.AlarmUtils;
 import com.hoamz.hoamz.utils.Constants;
+import com.hoamz.hoamz.utils.DialogUtils;
 import com.hoamz.hoamz.utils.EvenDecor;
 import com.hoamz.hoamz.utils.SelectedDayCustom;
 import com.hoamz.hoamz.utils.TodayCustom;
 import com.hoamz.hoamz.viewmodel.NoteViewModel;
+import com.hoamz.hoamz.viewmodel.ReminderViewModel;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import java.text.SimpleDateFormat;
@@ -47,7 +47,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 
 public class FragmentCalenderView extends Fragment {
@@ -77,7 +76,7 @@ public class FragmentCalenderView extends Fragment {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         if(getActivity() != null) {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            getActivity().getWindow().setStatusBarColor(getColor(getResources(), R.color.color_bg, null));
+//            getActivity().getWindow().setStatusBarColor(getColor(getResources(), R.color.color_bg, null));
             getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
     }
@@ -95,7 +94,9 @@ public class FragmentCalenderView extends Fragment {
     private void onClick() {
 
         acBackToMain.setOnClickListener(v ->{
-            requireActivity().getSupportFragmentManager().popBackStack();
+            if (isAdded()) {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }
         });
 
         fabAddNote.setOnClickListener(v ->{
@@ -116,34 +117,41 @@ public class FragmentCalenderView extends Fragment {
             public void onItemClick(Note note) {
                 //gui du lieu sang act edit de chinh sua
                 Intent intent = new Intent(getActivity(), NoteDetail.class);
-                intent.putExtra(Constants.KEY_NOTE,note);
+                intent.putExtra(Constants.KEY_NOTE,note.getId());
                 startActivity(intent);
             }
 
             @Override
             public void onItemLongClick(Note note) {
-                //an li de xoa
-                //hien thi log thong bao xoa
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View viewDialog = View.inflate(getActivity(),R.layout.dialog_delete,null);
-                builder.setView(viewDialog);
-                AlertDialog dialog = builder.create();
-                dialog.setCancelable(true);
-                dialog.setCanceledOnTouchOutside(true);
-                TextView acCancel = viewDialog.findViewById(R.id.tvCancel);
-                TextView acDelete = viewDialog.findViewById(R.id.tvDelete);
-                acCancel.setOnClickListener(v -> dialog.dismiss());
-                acDelete.setOnClickListener(v -> {
-                    noteViewModel.deleteNote(note);
-                    dialog.dismiss();
+                DialogUtils.ActionOnLongClickNote(getActivity(),Constants.DELETE, isAccept -> {
+                    if(isAccept){
+                        note.setDeleted(true);//xoa
+                        noteViewModel.updateNote(note,state ->{});
+                        deleteAllReminder(note);
+                    }
                 });
+            }
+        });
+    }
 
-                WindowManager.LayoutParams layoutParams = Objects.requireNonNull(dialog.getWindow()).getAttributes();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                layoutParams.gravity = Gravity.BOTTOM;
-                layoutParams.y = 100;
-                viewDialog.setLayoutParams(layoutParams);
-                dialog.show();
+    private void deleteAllReminder(Note note){
+        LiveData<List<Reminder>> reminderLiveData = Transformations.distinctUntilChanged(getReminderViewModel().getAllRemindersByIdNote(note.getId()));
+        reminderLiveData.observe(this, reminderList -> {
+            if(reminderList != null){
+                for(Reminder reminder : reminderList){
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                            requireActivity(),
+                            reminder.getIdReminder(),
+                            new Intent(requireActivity(), MyBroadCastReminder.class),
+                            PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+                    getReminderViewModel().deleteReminder(reminder);
+                    AlarmUtils.getInstance().setCancelAlarm(requireActivity(), pendingIntent);
+                }
+                reminderLiveData.removeObservers(this);
+            }
+            else{
+                reminderLiveData.removeObservers(this);
             }
         });
     }
@@ -191,6 +199,10 @@ public class FragmentCalenderView extends Fragment {
             materialCalendarView.addDecorator(selectedDayCustom);
             loadData();
         });
+    }
+
+    private ReminderViewModel getReminderViewModel(){
+        return new ViewModelProvider(this).get(ReminderViewModel.class);
     }
 
     private CalendarDay getCalenderDay(long timestamp){
@@ -270,7 +282,7 @@ public class FragmentCalenderView extends Fragment {
         rcViewByDate = view.findViewById(R.id.rcViewByDate);
         noteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
         noteAdapter = new NoteAdapter();
-        rcViewByDate.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        rcViewByDate.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
         listNotes = new MutableLiveData<>();
         listTimestamp = new MutableLiveData<>();
         calendarDayList = new ArrayList<>();

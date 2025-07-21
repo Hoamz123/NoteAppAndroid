@@ -1,25 +1,26 @@
 package com.hoamz.hoamz.ui.act;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.util.Log;
-import android.view.KeyEvent;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -33,78 +34,76 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
-import com.google.android.material.timepicker.MaterialTimePicker;
-import com.google.android.material.timepicker.TimeFormat;
 import com.hoamz.hoamz.R;
+import com.hoamz.hoamz.adapter.PhotoAdapter;
 import com.hoamz.hoamz.adapter.SelectLabelAdapter;
-import com.hoamz.hoamz.data.local.SharePre;
 import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.LabelDetail;
 import com.hoamz.hoamz.data.model.Note;
+import com.hoamz.hoamz.data.model.Photo;
+import com.hoamz.hoamz.data.model.Reminder;
 import com.hoamz.hoamz.databinding.ActivityCreateNoteBinding;
 import com.hoamz.hoamz.ui.fragment.BottomSheetColor;
 import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.utils.CustomTextWatcher;
+import com.hoamz.hoamz.utils.DialogUtils;
 import com.hoamz.hoamz.utils.TextViewUndoRedo;
 import com.hoamz.hoamz.viewmodel.LabelViewModel;
 import com.hoamz.hoamz.viewmodel.NoteViewModel;
+import com.hoamz.hoamz.viewmodel.PhotoViewModel;
+import com.hoamz.hoamz.viewmodel.ReminderViewModel;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 public class CreateNote extends AppCompatActivity {
-    private ImageView iv_backToMain,ivSetAlarm,ivAddColor;
+    private ImageView iv_backToMain,ivSetAlarm;
     private TextView tv_choose_label;
     private EditText edtTitle;
     private EditText edtContent;
     private TextView tv_date;
     private SimpleDateFormat sdf;
     private ConstraintLayout viewEdtContent;
+    private boolean haveReminders = false;
     private CoordinatorLayout viewMain;
     private LiveData<List<Label>> listLabel;
     private LabelViewModel labelViewModel;
     private NoteViewModel noteViewModel;
-    private String timeChoose,dayChoose;
-    private String dateCalender;
-    private String currentLabel;
-    private int colorBackground = R.drawable.img_15;
+    private Note noteTemp;
+    private int colorBackground = R.drawable.img_12;
     private String dateChoose;
     private BottomSheetColor sheetColor;
-
-    private Calendar calendarAlarm;
     private ImageButton ivb_undo,ivb_redo;
-    private long timeAlarm = 0;
-    private String tmpDay,tmpTime;
-    private long timeRepeat = 0;
-    private boolean isRepeat = false;
 
     //att in dialog
     /********************************/
     private RecyclerView rcViewInDialog;
     private SelectLabelAdapter selectLabelAdapter;
-    private Button btnCreateNewLabel;
+    private TextView btnCreateNewLabel;
     private TextView acSave,acCancel;
     private List<LabelDetail> labelDetailList;
     private EditText edtInputNewLabel;
     private TextView acCancelCreateNewLabel,acSaveNewLabel;
     /********************************/
-
     //undo  redo
     private TextViewUndoRedo helper;
-
     private ActivityCreateNoteBinding binding;
+    private ActivityResultLauncher<Intent> launcher;
+    private ActivityResultLauncher<Intent> chooseImage;
+    private PhotoAdapter adapterPhoto;
+    private boolean hasObservePhoto = false;
+    private int idNoteSaved = -1;
+    private boolean isSaved = false;//neu da luu roi thi set true
 
     @SuppressLint("NewApi")
     @Override
@@ -125,14 +124,14 @@ public class CreateNote extends AppCompatActivity {
 
     private void onGetData() {
         //lay date tu calenderDetail gui sang
-        dateCalender = getIntent().getStringExtra(Constants.DATE_SELECTED);
+        String dateCalender = getIntent().getStringExtra(Constants.DATE_SELECTED);
         if(dateCalender != null){
             //co du lieu moi gan tuc la khi gui moi gan
             tv_date.setText(dateCalender);
         }
 
         //lay nhan tu main gui sang
-        currentLabel = getIntent().getStringExtra(Constants.LABEL_CURRENT);
+        String currentLabel = getIntent().getStringExtra(Constants.LABEL_CURRENT);
         if(currentLabel != null){
             tv_choose_label.setText(currentLabel);
         }
@@ -172,6 +171,55 @@ public class CreateNote extends AppCompatActivity {
                 });
             }
         });
+
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),result ->{
+            if(result.getResultCode() == 111){
+                Intent intentData = result.getData();
+                assert intentData != null;
+                Uri uri = Uri.parse(intentData.getStringExtra("PhotoUri"));
+                if(uri != null) {
+                    if(idNoteSaved == -1){
+                        saveNoteBeforePickingImage(uri);
+                    } else {
+                        savePhoto(uri);
+                    }
+                }
+            }
+        });
+
+        chooseImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),result ->{
+            if(result.getResultCode() == RESULT_OK){
+                Intent intent = result.getData();
+                if(intent != null){
+                    Uri uri = intent.getData();
+                    if(uri != null){
+                        if(idNoteSaved == -1){
+                            saveNoteBeforePickingImage(uri);
+                        } else {
+                            savePhoto(uri);
+                        }
+                    }
+                }
+            }
+        });
+
+        if(binding.rcPhotos.getAdapter() == null){
+            binding.rcPhotos.setAdapter(adapterPhoto);
+        }
+    }
+
+    private void savePhoto(Uri uri) {
+        if (idNoteSaved == -1) return;
+        String path = uri.toString();
+        Photo photo = new Photo(path, idNoteSaved);
+        getPhotoViewModel().insertPhoto(photo,id ->{
+            photo.setIdPhoto(Math.toIntExact(id));
+            getPhotoViewModel().updatePhoto(photo);
+        });
+    }
+
+    private void saveNoteBeforePickingImage(Uri uri) {
+        saveNote(() -> savePhoto(uri));
     }
 
     @SuppressLint({"ClickableViewAccessibility", "DefaultLocale", "NewApi", "SetTextI18n"})
@@ -179,34 +227,19 @@ public class CreateNote extends AppCompatActivity {
         //back to main
         //done
         iv_backToMain.setOnClickListener(v ->{
-            hideKey();//an ban phim ao
-            String titleCheck = edtTitle.getText().toString();
-            String content = edtContent.getText().toString();
-            String title = (titleCheck.isEmpty()) ? edtTitle.getHint().toString() : titleCheck;
-            String date = tv_date.getText().toString();//thoi gian tao note
-            String label = tv_choose_label.getText().toString();
-            long timestamp = 0;
-            try {
-                Date date1 = sdf.parse(date);
-                if(date1 != null){
-                    timestamp = date1.getTime();
-                }
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
+            if(!isSaved && idNoteSaved == -1){
+                saveNote(() ->{
+                    //neu nhu luu o day chung to chua dat nhac nho -> reminder = false
+                });
             }
-            Note note = new Note(title, content, timestamp, timeAlarm, 0,false, label, colorBackground);
-            noteViewModel.insertNewNote(note, id -> {
-                note.setId(Math.toIntExact(id));
-                // set notify ở đây!
-                if (timeAlarm > 0) {
-                    Constants.setUpAlarm(this, note, timeAlarm);
-                    if (isRepeat) {
-                        SharePre.getInstance(this).saveTimeRepeat(note.getId(), timeRepeat);
-                    }
-                }
-                // back về main ở đây luôn cho chắc
-                finish();
-            });
+            else{
+                //update
+                getReminderViewModel().getAllRemindersByIdNote(idNoteSaved).observe(this,list ->{
+                    haveReminders = list != null && !list.isEmpty();
+                });
+                updateNote();
+            }
+            finish();
         });
 
         //bat focus khi user click
@@ -215,108 +248,64 @@ public class CreateNote extends AppCompatActivity {
             ShowKey();
         });
 
-        //alarm
         ivSetAlarm.setOnClickListener(v ->{
-            //hien thi alert dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            View viewDialog = View.inflate(this,R.layout.dialog_create_reminder,null);
-            builder.setView(viewDialog);
-            AlertDialog dialog = builder.create();
-            dialog.setCancelable(true);
-            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.setCanceledOnTouchOutside(true);
-
-            if(Objects.equals(tmpTime, "") && Objects.equals(tmpDay, "")){
-                tmpTime = Constants.getCurrentTime();
-                tmpDay = Constants.getCurrentDay();
+            ivSetAlarm.setEnabled(false);
+            if(!isSaved) {
+                saveNote(() -> {
+                    LiveData<List<Reminder>> liveData = getReminderViewModel().getAllRemindersByIdNote(idNoteSaved);
+                    liveData.observe(this,list ->{
+                        DialogUtils.ActionManagerReminder2(this,getSupportFragmentManager(),noteTemp,list,getReminderViewModel(),() ->{
+                            getReminderViewModel().getAllRemindersByIdNote(idNoteSaved).observe(this,listRmd ->{
+                                haveReminders = listRmd != null && !listRmd.isEmpty();
+                                noteTemp.setTimeAlarm(haveReminders);
+                                updateNote();
+                                getReminderViewModel().getAllRemindersByIdNote(idNoteSaved).removeObservers(this);
+                            });
+                        });
+                        liveData.removeObservers(this);
+                    });
+                });
             }
-
-            timeChoose = tmpTime;
-            dayChoose = tmpDay;
-
-            TextView setDate = viewDialog.findViewById(R.id.acSetDay);
-            setDate.setText(dayChoose);
-            TextView setTime = viewDialog.findViewById(R.id.acSetTime);
-            setTime.setText(timeChoose);
-            TextView btnSave = viewDialog.findViewById(R.id.acSave);
-            TextView btnCancel = viewDialog.findViewById(R.id.acCancel);
-            TextView tvAcRepeat = viewDialog.findViewById(R.id.acSetRepeat);
-            setTime.setOnClickListener(vw -> showTimePickerAlarm(setTime));
-            setDate.setOnClickListener(vw -> showDatePickerAlarm(setDate));
-
-            btnCancel.setOnClickListener(click ->{
-                dialog.dismiss();
-            });
-
-
-            //khi cai lai time Repeat
-            tvAcRepeat.setOnClickListener(rp->{
-                //logic here
-                isRepeat = !isRepeat;
-                if(isRepeat){
-                    viewDialog.findViewById(R.id.scrollRepeat).setVisibility(View.VISIBLE);
-                    tvAcRepeat.setBackground(ContextCompat.getDrawable(this,R.drawable.custom_bg_click_btn));
-                    tvAcRepeat.setTextColor(Color.WHITE);
-
-                    viewDialog.findViewById(R.id.tv15min).setOnClickListener(click->{
-                        Constants.onBackgroundSelectTimeRepeat(viewDialog,viewDialog.findViewById(R.id.tv15min),timeRepeatSelect->{
-                            timeRepeat = timeRepeatSelect;
+            else{
+                LiveData<List<Reminder>> liveData = getReminderViewModel().getAllRemindersByIdNote(idNoteSaved);
+                liveData.observe(this,list ->{
+                    DialogUtils.ActionManagerReminder2(this,getSupportFragmentManager(),noteTemp,list,getReminderViewModel(),()->{
+                        getReminderViewModel().getAllRemindersByIdNote(idNoteSaved).observe(this,listRmd ->{
+                            haveReminders = listRmd != null && !listRmd.isEmpty();
+                            noteTemp.setTimeAlarm(haveReminders);
+                            updateNote();
+                            getReminderViewModel().getAllRemindersByIdNote(idNoteSaved).removeObservers(this);
                         });
                     });
-                    viewDialog.findViewById(R.id.tv30min).setOnClickListener(click->{
-                        Constants.onBackgroundSelectTimeRepeat(viewDialog,viewDialog.findViewById(R.id.tv30min),timeRepeatSelect->{
-                            timeRepeat = timeRepeatSelect;
-                        });
-                    });
-
-                    viewDialog.findViewById(R.id.tv1hour).setOnClickListener(click->{
-                        Constants.onBackgroundSelectTimeRepeat(viewDialog,viewDialog.findViewById(R.id.tv1hour),timeRepeatSelect->{
-                            timeRepeat = timeRepeatSelect;
-                        });
-                    });
-
-                    viewDialog.findViewById(R.id.tv1day).setOnClickListener(click->{
-                        Constants.onBackgroundSelectTimeRepeat(viewDialog,viewDialog.findViewById(R.id.tv1day),timeRepeatSelect->{
-                            timeRepeat = timeRepeatSelect;
-                        });
-                    });
-
-                    viewDialog.findViewById(R.id.tv1week).setOnClickListener(click->{
-                        Constants.onBackgroundSelectTimeRepeat(viewDialog,viewDialog.findViewById(R.id.tv1week),timeRepeatSelect->{
-                            timeRepeat = timeRepeatSelect;
-                        });
-                    });
-
-                    viewDialog.findViewById(R.id.tv1month).setOnClickListener(click->{
-                        Constants.onBackgroundSelectTimeRepeat(viewDialog,viewDialog.findViewById(R.id.tv1month),timeRepeatSelect->{
-                            timeRepeat = timeRepeatSelect;
-                        });
-                    });
-                }
-                else{
-                    viewDialog.findViewById(R.id.scrollRepeat).setVisibility(View.GONE);
-                    tvAcRepeat.setBackground(ContextCompat.getDrawable(this,R.drawable.custom_bg_time_repeat));
-                    tvAcRepeat.setTextColor(Color.GRAY);
-                }
-            });
-
-            btnSave.setOnClickListener(click ->{
-                timeAlarm = calendarAlarm.getTimeInMillis();
-                if(timeAlarm < System.currentTimeMillis()){
-                    timeAlarm = 0;
-                }
-                Toast.makeText(this, "Dat nhac nho thanh cong", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            });
-
-            dialog.show();
+                    liveData.removeObservers(this);
+                });
+            }
+            new Handler(Looper.getMainLooper()).postDelayed(() ->{ivSetAlarm.setEnabled(true);},500);
         });
 
-        //su kien chon mau
-        ivAddColor.setOnClickListener(v ->{
+        binding.acShowMoreSetupBottomBar.ivSetColorBg.setOnClickListener(v ->{
             //an ban phim
             hideKey();
-            sheetColor.show(getSupportFragmentManager(),"bottomSheetColor");
+            if(!sheetColor.isAdded()){
+                sheetColor.show(getSupportFragmentManager(),"bottomSheetColor");
+            }
+        });
+
+        binding.acShowMoreSetupBottomBar.ivAddPhoto.setOnClickListener(v ->{
+            DialogUtils.showAddImage(this, action ->{
+                Toast.makeText(this, action, Toast.LENGTH_SHORT).show();
+                if(action.equals(Constants.TAKE_PHOTO)){
+                    Intent intent = new Intent(CreateNote.this, TakePhoto.class);
+                    launcher.launch(intent);
+                }
+                else if(action.equals(Constants.CHOOSE_IMAGE)){
+                    //logic
+                    //mo thu muc anh cua user
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    intent.setType("image/*");
+                    chooseImage.launch(intent);
+                }
+            });
         });
 
         sheetColor.setOnSelectedColor(color -> {
@@ -330,16 +319,6 @@ public class CreateNote extends AppCompatActivity {
             viewMain.setBackgroundResource(color);
             setColorDetail(color);
         });//bat mau
-
-//        edtContent.addTextChangedListener(new CustomTextWatcher() {
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                if(isUndoRedoMode) return;//neu dang o trang thai undo hay redo thi khong theo doi thay doi
-//                String currText = s.toString();
-//                redoSt.clear();
-//                iconUndoRedo();
-//            }
-//        });
 
         ivb_undo.setOnClickListener(v->{
             if(helper.getCanUndo()){
@@ -397,8 +376,6 @@ public class CreateNote extends AppCompatActivity {
 
             //them moi nhan
             btnCreateNewLabel.setOnClickListener(click ->{
-                //logic an dialog ngoai di
-                dialog.dismiss();
                 //logic show dialog input
                 AlertDialog.Builder builderCreateNewLabel = new AlertDialog.Builder(this);
                 View viewDialogCreateNewLabel = View.inflate(this,R.layout.layout_add_label,null);
@@ -415,7 +392,9 @@ public class CreateNote extends AppCompatActivity {
 
                 acCancelCreateNewLabel.setOnClickListener(c -> dialogCreateNewLabel.dismiss());
                 acSaveNewLabel.setOnClickListener(c ->{
-                    labelViewModel.insertLabel(new Label(edtInputNewLabel.getText().toString()));
+                    labelViewModel.insertLabel(new Label(edtInputNewLabel.getText().toString()),state ->{
+                        Toast.makeText(this, state, Toast.LENGTH_SHORT).show();
+                    });
                     dialogCreateNewLabel.dismiss();
                 });
 
@@ -429,14 +408,94 @@ public class CreateNote extends AppCompatActivity {
         });
 
         edtContent.addTextChangedListener(new CustomTextWatcher() {
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 super.onTextChanged(s, start, before, count);
                 iconUndoRedo();
             }
         });
+
+        adapterPhoto.setOnClickPhoto(photo ->{
+            Intent intent = new Intent(this, ShowImage.class);
+            intent.putExtra("photo___",photo);
+            startActivity(intent);
+        });
+
     }
+
+    @Override
+    public void onBackPressed() {
+        if(isSaved){
+            updateNote();
+        }
+        super.onBackPressed();
+    }
+
+    private void saveNote(Runnable onSavedCallback){
+        hideKey();//an ban phim ao
+        String titleCheck = edtTitle.getText().toString();
+        String content = edtContent.getText().toString();
+        String title = (titleCheck.isEmpty()) ? edtTitle.getHint().toString() : titleCheck;
+        String date = tv_date.getText().toString();//thoi gian tao note
+        String label = tv_choose_label.getText().toString();
+        long timestamp = 0;
+        try {
+            Date date1 = sdf.parse(date);
+            if(date1 != null){
+                timestamp = date1.getTime();
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        Note note = new Note(title, content, timestamp,haveReminders, 0,false,false,false, label, colorBackground,-1);
+        noteTemp = note;
+        noteViewModel.insertNewNote(note, id -> {
+            note.setId(Math.toIntExact(id));
+            noteViewModel.updateNote(note,state ->{});
+            isSaved = true;
+            idNoteSaved = note.getId();
+            runOnUiThread(() ->{
+                if(!hasObservePhoto){
+                    hasObservePhoto = true;
+                    getPhotoViewModel().getAllPhotosByIdNote(idNoteSaved).observe(this,list ->{
+                        if(list != null){
+                            adapterPhoto.setPhotoList(list);
+                        }
+                    });
+                    if (onSavedCallback != null) {
+                        onSavedCallback.run();  // gọi callback sau khi lưu xong
+                    }
+                }
+            });
+        });
+    }
+
+    private void updateNote(){
+        if(noteTemp == null) return;
+        hideKey();//an ban phim ao
+        String titleCheck = edtTitle.getText().toString();
+        String content = edtContent.getText().toString();
+        String title = (titleCheck.isEmpty()) ? edtTitle.getHint().toString() : titleCheck;
+        String date = tv_date.getText().toString();//thoi gian tao note
+        String label = tv_choose_label.getText().toString();
+        long timestamp = 0;
+        try {
+            Date date1 = sdf.parse(date);
+            if(date1 != null){
+                timestamp = date1.getTime();
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        noteTemp.setTitle(title);
+        noteTemp.setColorBgID(colorBackground);
+        noteTemp.setContent(content);
+        noteTemp.setLabel(label);
+        noteTemp.setDate(timestamp);
+        noteTemp.setTimeAlarm(haveReminders);
+        noteViewModel.updateNote(noteTemp,state ->{});
+    }
+
     //set color view
     private void setColorDetail(int colorBackground){
 
@@ -444,16 +503,14 @@ public class CreateNote extends AppCompatActivity {
             //set mau den
             iv_backToMain.setImageResource(R.drawable.ic_save_edit_b);//nut back
             ivSetAlarm.setImageResource(R.drawable.ic_alarm);//icon nhac nho
-            ivAddColor.setImageResource(R.drawable.ic_color_24);//icon dat mau
             tv_date.setTextColor(Color.BLACK);
             @SuppressLint("UseCompatLoadingForDrawables") Drawable drawable = getResources().getDrawable(R.drawable.ic_calender,null);
             tv_date.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
-
             tv_choose_label.setTextColor(Color.BLACK);
 
             edtContent.setTextColor(Color.BLACK);
             edtTitle.setTextColor(Color.BLACK);
-            edtTitle.setHintTextColor(Color.GRAY);
+//            edtTitle.setHintTextColor(Color.GRAY);
 
             ivb_undo.setImageResource(R.drawable.ic_undo_b);
             ivb_redo.setImageResource(R.drawable.ic_redo_b);
@@ -467,19 +524,17 @@ public class CreateNote extends AppCompatActivity {
             //set mau trang
             iv_backToMain.setImageResource(R.drawable.ic_save_edit_w);//nut back
             ivSetAlarm.setImageResource(R.drawable.ic_alarm_w);//icon nhac nho
-            ivAddColor.setImageResource(R.drawable.ic_color_w);//icon dat mau
             tv_date.setTextColor(Color.WHITE);
 
             edtContent.setHintTextColor(ContextCompat.getColor(this,R.color.hint));
 
             @SuppressLint("UseCompatLoadingForDrawables") Drawable drawable = getResources().getDrawable(R.drawable.ic_calender_w,null);
             tv_date.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
-
             tv_choose_label.setTextColor(Color.WHITE);
 
             edtContent.setTextColor(Color.WHITE);
             edtTitle.setTextColor(Color.WHITE);
-            edtTitle.setHintTextColor(Color.GRAY);
+            edtTitle.setHintTextColor(getResources().getColor(R.color.hint,null));
 
             ivb_undo.setImageResource(R.drawable.ic_undo_w);
             ivb_redo.setImageResource(R.drawable.ic_redo_w);
@@ -490,66 +545,6 @@ public class CreateNote extends AppCompatActivity {
 
          iconUndoRedo();
 
-    }
-    private void showTimePickerAlarm(TextView setTime){
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-
-        MaterialTimePicker picker = new MaterialTimePicker.Builder()
-                .setHour(hour)
-                .setMinute(minute)
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setTitleText("Chọn thời gian")
-                .setTheme(R.style.CustomTimePicker)
-                .build();
-
-        picker.addOnPositiveButtonClickListener(new View.OnClickListener() {
-            @SuppressLint("DefaultLocale")
-            @Override
-            public void onClick(View v) {
-                int hour = picker.getHour();
-                int minute = picker.getMinute();
-
-                calendarAlarm.set(Calendar.HOUR_OF_DAY,hour);
-                calendarAlarm.set(Calendar.MINUTE,minute);
-                calendarAlarm.set(Calendar.SECOND,0);
-                calendarAlarm.set(Calendar.MILLISECOND,0);
-
-                timeChoose = String.format("%02d:%02d",hour,minute);
-                tmpTime = timeChoose;
-                setTime.setText(timeChoose);
-            }
-        });
-        picker.show(getSupportFragmentManager(),"timePicker");
-    }
-    private void showDatePickerAlarm(TextView setDate){
-        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
-        builder.setTitleText("Chọn ngày")
-                .setTheme(R.style.CustomDatePicker);
-        MaterialDatePicker<Long> picker = builder.build();
-
-
-        picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-            @SuppressLint("DefaultLocale")
-            @Override
-            public void onPositiveButtonClick(Long selection) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(selection);
-                calendar.setFirstDayOfWeek(Calendar.MONDAY);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                int month = calendar.get(Calendar.MONTH) + 1;
-                int year = calendar.get(Calendar.YEAR);
-                //set ngay thang vao calenderAlarm
-                calendarAlarm = calendar;
-                dayChoose = String.format("%02d/%02d/%04d", day, month, year);
-                tmpDay = dayChoose;
-                setDate.setText(dayChoose);
-            }
-        });
-
-
-        picker.show(getSupportFragmentManager(),"datePicker");
     }
     private void setDateEdit(TextView tvDate){
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
@@ -579,25 +574,22 @@ public class CreateNote extends AppCompatActivity {
         tv_date = findViewById(R.id.tvDate);
         edtTitle = findViewById(R.id.edtTitle);
         edtContent = findViewById(R.id.edtContent);
-        ivAddColor = findViewById(R.id.iv_addColor);
         viewEdtContent = findViewById(R.id.viewEdtTextContent);
         viewMain = findViewById(R.id.main_create_note);
         tv_choose_label = findViewById(R.id.choose_label);
         labelViewModel = new ViewModelProvider(this).get(LabelViewModel.class);
         ivSetAlarm = findViewById(R.id.iv_alarm);
         noteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
-        sheetColor = new BottomSheetColor();
         ivb_undo = findViewById(R.id.btnUndo);
         ivb_redo = findViewById(R.id.btnRedo);
         iconUndoRedo();
+        sheetColor = new BottomSheetColor();
         //lay ngay hom nay lam ngay mac dinh khi chua sua
         Calendar calendar = Calendar.getInstance();
         sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
         tv_date.setText(sdf.format(calendar.getTime()));//(ok)
-        //khoi tao calenderAlarm de luu time nhac nho
-        calendarAlarm = Calendar.getInstance();
-        tmpDay = "";
-        tmpTime = "";
+        binding.rcPhotos.setLayoutManager(new GridLayoutManager(this, 2));//hai cot
+        adapterPhoto = new PhotoAdapter();
     }
     private void ShowKey(){
         //hien thi ban phim ao
@@ -632,7 +624,9 @@ public class CreateNote extends AppCompatActivity {
             setIconRedoByColorBackground();
         }
     }
-
+    private ReminderViewModel getReminderViewModel(){
+        return new ViewModelProvider(this).get(ReminderViewModel.class);
+    }
     private void setIconUndoByColorBackground(){
         if(Constants.backGroundLight.contains(colorBackground)){
             ivb_undo.setImageResource(R.drawable.ic_undo_b);
@@ -641,7 +635,6 @@ public class CreateNote extends AppCompatActivity {
             ivb_undo.setImageResource(R.drawable.ic_undo_w);
         }
     }
-
     private void setIconRedoByColorBackground(){
         if(Constants.backGroundLight.contains(colorBackground)){
             ivb_redo.setImageResource(R.drawable.ic_redo_b);
@@ -649,6 +642,9 @@ public class CreateNote extends AppCompatActivity {
         else if(Constants.backGroundDark.contains(colorBackground)){
             ivb_redo.setImageResource(R.drawable.ic_redo_w);
         }
+    }
+    private PhotoViewModel getPhotoViewModel(){
+        return new ViewModelProvider(this).get(PhotoViewModel.class);
     }
 
 }

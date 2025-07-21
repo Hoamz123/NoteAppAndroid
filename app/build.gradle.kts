@@ -45,14 +45,44 @@ dependencies {
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
 
-    //room
-    implementation ("androidx.room:room-runtime:2.2.5")
-    implementation ("androidx.room:room-rxjava2:2.2.5")
-    annotationProcessor ("androidx.room:room-compiler:2.2.5")
+    // Room core
+    implementation ("androidx.room:room-runtime:2.7.2")
+    annotationProcessor ("androidx.room:room-compiler:2.7.2")
+
+
+    implementation ("androidx.room:room-rxjava3:2.7.2")
+
+    // Optional nếu có xài Paging
+    implementation ("androidx.room:room-paging:2.7.2")
+
+    // Optional test
+    testImplementation ("androidx.room:room-testing:2.7.2")
 
     //calender
     implementation ("com.prolificinteractive:material-calendarview:1.4.3")
 
 
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+
+    //cameraX
+    // CameraX core library
+    implementation("androidx.camera:camera-core:1.4.2")
+// CameraX Camera2 extensions
+    implementation("androidx.camera:camera-camera2:1.4.2")
+// CameraX Lifecycle library
+    implementation("androidx.camera:camera-lifecycle:1.4.2")
+// CameraX Viewfinder (hiển thị preview - phiên bản beta mới nhất)
+    implementation("androidx.camera:camera-viewfinder:1.3.0-beta02")
+// CameraX View (UI cao cấp)
+    implementation("androidx.camera:camera-view:1.4.2")
+
+    implementation("androidx.work:work-runtime:2.9.1")
+
+    //glide
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+    //photoview
+    implementation("com.github.chrisbanes:PhotoView:2.3.0")
+
 }

@@ -5,14 +5,13 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-
 import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.Note;
-import com.hoamz.hoamz.data.model.NoteDeleted;
+import com.hoamz.hoamz.data.model.Photo;
 
 import kotlin.jvm.Volatile;
 
-@Database(entities = {Note.class, Label.class, NoteDeleted.class},version = 7)
+@Database(entities = {Note.class, Label.class, Photo.class},version = 17)
 public abstract class NoteDatabase extends RoomDatabase {
     @Volatile
     private static NoteDatabase instance;
@@ -23,7 +22,6 @@ public abstract class NoteDatabase extends RoomDatabase {
         if(instance == null){
             synchronized (RoomDatabase.class){
                 instance = Room.databaseBuilder(context, NoteDatabase.class,name_database)
-                        .fallbackToDestructiveMigration()
                         .build();
             }
         }
@@ -31,5 +29,5 @@ public abstract class NoteDatabase extends RoomDatabase {
     }
     public abstract NoteDao noteDao();
     public abstract LabelDAO labelDAO();
-    public abstract NoteDeletedDAO noteDeletedDAO();
+    public abstract PhotoDao photoDao();
 }

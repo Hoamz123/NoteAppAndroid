@@ -1,10 +1,13 @@
 package com.hoamz.hoamz.ui.act;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.text.NoCopySpan;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,12 +17,16 @@ import androidx.lifecycle.ViewModelProvider;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.data.local.SharePre;
 import com.hoamz.hoamz.data.model.Label;
+import com.hoamz.hoamz.data.model.Note;
+import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.viewmodel.LabelViewModel;
+import com.hoamz.hoamz.viewmodel.NoteViewModel;
 
 public class FirstRunAct extends AppCompatActivity {
 
     private Button btnStart;
     private LabelViewModel model;
+    private NoteViewModel noteViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -30,22 +37,28 @@ public class FirstRunAct extends AppCompatActivity {
         //khoa dung man hinh
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        getWindow().setStatusBarColor(getColor(R.color.color_bg));
+//        getWindow().setStatusBarColor(getColor(R.color.color_bg));
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         btnStart = findViewById(R.id.btnStart);
 
         //blablala -> main
         model = new ViewModelProvider(this).get(LabelViewModel.class);
+        noteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
 
         //tao cac gia tri mac dinh ban dau khi bat dau dung app
 
         btnStart.setOnClickListener(v ->{
             //neu nhu chay vao dau -> mat lan dau
             //chen mac dinh cho 3 cai nhan
-            model.insertLabel(new Label("All"));
-            model.insertLabel(new Label("Home"));
-            model.insertLabel(new Label("Work"));
+            model.insertLabel(new Label("All"),state ->{});
+            model.insertLabel(new Label("Home"),state ->{});
+            model.insertLabel(new Label("Work"),state ->{});
+            //chen cho cai note mac dinh
+            @SuppressLint("UseCompatLoadingForDrawables") Note note = new Note(Constants.feature,Constants.content_welcome,System.currentTimeMillis(),
+                    false,1,true,false,false,"All",
+                    R.drawable.img_12,-1L);
+            noteViewModel.insertNewNote(note,state ->{});
             SharePre.getInstance(this).saveSecondRunApp();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);

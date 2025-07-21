@@ -3,6 +3,8 @@ package com.hoamz.hoamz.ui.act;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,11 +15,14 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.data.local.SharePre;
-import com.hoamz.hoamz.ui.fragment.FragmentWidget;
 import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.utils.MyAnimation;
+import com.hoamz.hoamz.utils.TextViewUtils;
+
+import java.util.Objects;
 
 public class Splash extends AppCompatActivity {
+    private boolean isBack = false;
     //them animation cho start app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,10 +34,28 @@ public class Splash extends AppCompatActivity {
         //khoa dung man hinh
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        getWindow().setStatusBarColor(getColor(R.color.color_bg));
+//        getWindow().setStatusBarColor(getColor(R.color.color_bg));
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
-        //lam 1 cai gi do trong 3 s chang han
+        Intent intentReceive = getIntent();
+        if(intentReceive != null){
+            if(Objects.equals(intentReceive.getAction(), Constants.ActionClickNotify)){
+                int id = intentReceive.getIntExtra(Constants.ID_NOTE_CLICK,-1);
+                if(id != -1){
+                    Intent intent = new Intent(this, NoteDetail.class);
+                    intent.putExtra(Constants.KEY_NOTE,id);
+                    intent.setAction(Constants.ActionClickNotify);
+                    startActivity(intent);
+                }
+            }
+        }
+
+        //hien nhu danh may
+        TextViewUtils textViewUtils = findViewById(R.id.tv_welcome);
+        textViewUtils.setCharacterDelay(100);
+        textViewUtils.animateText("welcome");
+
+//       lam 1 cai gi do trong 3 s chang han
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.show_logo);
         animation.setAnimationListener(new MyAnimation() {
             @Override
@@ -41,26 +64,11 @@ public class Splash extends AppCompatActivity {
                 next();
             }
         });
-        findViewById(R.id.iv_logo_main).startAnimation(animation);
+        findViewById(R.id.nameArthur).startAnimation(animation);
     }
 
     private void next(){
-
-        Intent intentReceiver = getIntent();
-        if(intentReceiver != null){
-            if(Constants.EDIT.equals(intentReceiver.getAction())){
-                //gui id nhan duoc qua fgEdit
-                int idWidget = intentReceiver.getIntExtra(Constants.ID_WIDGET_CLICK,0);
-                if(idWidget != 0){
-                    //gui du lieu idWidget qua fgEdit
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fagContainerSplash,FragmentWidget.getInstance(idWidget,"SPLASH"),FragmentWidget.class.getName())
-                            .commit();
-                }
-                return;
-            }
-        }
-
+        if(isBack || isDestroyed() || isFinishing()) return;
         //check lan dau cua user o day
         boolean isFirst = SharePre.getInstance(this).checkFirstRunApp();
         Intent intent;
@@ -73,5 +81,12 @@ public class Splash extends AppCompatActivity {
             intent = new Intent(this, MainActivity.class);
         }
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        isBack = true;
+        finish();
     }
 }

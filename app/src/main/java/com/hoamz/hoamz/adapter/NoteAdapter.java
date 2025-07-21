@@ -1,32 +1,20 @@
 package com.hoamz.hoamz.adapter;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.data.model.Note;
-import com.hoamz.hoamz.ui.act.MainActivity;
 import com.hoamz.hoamz.utils.Constants;
-import com.hoamz.hoamz.viewmodel.NoteViewModel;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,9 +22,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHodel> {
     private List<Note> noteList;
+    private boolean isMultiSelect = false;
+    private final Set<Integer> listMultiSelected;
+    private final Set<Note> listNoteSelected;
+    public void setMultiSelect(boolean multiSelect) {
+        isMultiSelect = multiSelect;
+        notifyDataSetChanged();
+    }
+
+
+    public void setCancelMultiSelect(){
+        listNoteSelected.clear();
+        listMultiSelected.clear();
+        isMultiSelect = false;
+        notifyDataSetChanged();
+    }
+
 
     public interface OnItemClickListener{
         void onItemClick(Note note);
@@ -44,7 +49,17 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHodel> {
         void onItemLongClick(Note note);
     }
 
+
+    public interface OnMultiSelectItem{
+        void onMultiSelect(Set<Note> listMultiSelected);
+    }
+
+    private OnMultiSelectItem onMultiSelectItem;
     private OnItemClickListener listener;
+
+    public void setOnMultiSelectItem(OnMultiSelectItem onMultiSelectItem) {
+        this.onMultiSelectItem = onMultiSelectItem;
+    }
 
     public void setOnClickItemListener(OnItemClickListener listener) {
         this.listener = listener;
@@ -52,11 +67,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHodel> {
 
     public NoteAdapter(){
         noteList = new ArrayList<>();
+        listMultiSelected = new HashSet<>();
+        listNoteSelected = new HashSet<>();
     }
     public void setNoteList(List<Note> noteList) {
         this.noteList = noteList;
         notifyDataSetChanged();
     }
+
 
     @NonNull
     @Override
@@ -110,8 +128,23 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHodel> {
         if (note.isFavorite()) holder.ivFavorite.setVisibility(View.VISIBLE);
         if (note.isPin() == 1) holder.ivPin.setVisibility(View.VISIBLE);
 
+        if(listMultiSelected.contains(position)){
+            if(Constants.backGroundDark.contains(colorBackground)){
+                holder.bgMultiSelected.setBackgroundResource(R.drawable.bg_select_mul_dark);
+            }
+            else holder.bgMultiSelected.setBackgroundResource(R.drawable.bg_multi_selec);
+        }
+        else{
+            holder.bgMultiSelected.setBackgroundResource(R.drawable.bg_un_select);
+        }
+
         holder.cardNote.setOnClickListener(v -> {
-            listener.onItemClick(note);
+            if(isMultiSelect){
+                toggleSelection(position);
+            }
+            else {
+                listener.onItemClick(note);
+            }
         });
 
         holder.cardNote.setOnLongClickListener(v -> {
@@ -120,17 +153,52 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHodel> {
         });
     }
 
+    private void toggleSelection(int position) {
+        if(listMultiSelected.contains(position)){
+            listMultiSelected.remove(position);
+            listNoteSelected.remove(noteList.get(position));
+        }
+        else{
+            listMultiSelected.add(position);
+            listNoteSelected.add(noteList.get(position));
+        }
+        notifyItemChanged(position);
+        onMultiSelectItem.onMultiSelect(listNoteSelected);
+    }
+
+    public void setAllClick(){
+        for(int i=0;i<noteList.size();i++){
+            listMultiSelected.add(i);
+            listNoteSelected.add(noteList.get(i));
+        }
+        notifyDataSetChanged();
+        onMultiSelectItem.onMultiSelect(listNoteSelected);
+    }
+
+    public void setClearAllClick(){
+        for(int i=0;i<noteList.size();i++){
+            if(listMultiSelected.contains(i) && listNoteSelected.contains(noteList.get(i))){
+                listMultiSelected.remove(i);
+                listNoteSelected.remove(noteList.get(i));
+            }
+        }
+        notifyDataSetChanged();
+        onMultiSelectItem.onMultiSelect(listNoteSelected);
+    }
+
     @Override
     public int getItemCount() {
         return noteList.size();
     }
 
     public static class ViewHodel extends RecyclerView.ViewHolder{
-        private ConstraintLayout cardNote;
-        private TextView tvTitle;
-        private TextView tvContent;
-        private TextView tvDate;
-        private ImageView ivFavorite,ivPin;
+        private final ConstraintLayout cardNote;
+        private final ConstraintLayout bgMultiSelected;
+        private final TextView tvTitle;
+        private final TextView tvContent;
+        private final TextView tvDate;
+        private final ImageView ivFavorite;
+        private final ImageView ivPin;
         public ViewHodel(@NonNull View itemView) {
             super(itemView);
             cardNote = itemView.findViewById(R.id.cardNote);
@@ -139,6 +207,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHodel> {
             tvDate = itemView.findViewById(R.id.tvDate);
             ivFavorite = itemView.findViewById(R.id.iv_favorite);
             ivPin = itemView.findViewById(R.id.iv_pin);
+            bgMultiSelected = itemView.findViewById(R.id.bgMultiSelected);
         }
     }
 }

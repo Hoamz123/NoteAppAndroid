@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tvActionReminder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:drawableEndCompat="@drawable/baseline_arrow_drop_down_24"
+    app:drawableStartCompat="@drawable/ic_alarm_svg"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:paddingVertical="10dp"
+    android:background="@drawable/custom_bg_time_repeat"
+    android:layout_marginTop="14dp"
+    android:paddingStart="10dp"
+    android:text="Add Time"
+    android:gravity="center_vertical"
+    android:drawablePadding="12dp"
+    android:paddingEnd="8dp">
+
+</TextView>

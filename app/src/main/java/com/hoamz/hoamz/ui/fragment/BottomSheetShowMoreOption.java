@@ -2,10 +2,10 @@ package com.hoamz.hoamz.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +17,7 @@ import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.Note;
 import com.hoamz.hoamz.databinding.BtSheetDetailTypeNoteBinding;
 import com.hoamz.hoamz.utils.Constants;
-import com.hoamz.hoamz.utils.DialogShow;
+import com.hoamz.hoamz.utils.DialogUtils;
 import com.hoamz.hoamz.viewmodel.LabelViewModel;
 import com.hoamz.hoamz.viewmodel.NoteViewModel;
 
@@ -72,17 +72,19 @@ public class BottomSheetShowMoreOption extends BottomSheetDialogFragment {
         //doi ten danh muc
         binding.idRenameLabel.setOnClickListener(v ->{
             //an sheet
-            DialogShow.showDialogLabel(context, Constants.TitleEditLabel,oldLabel,listLabel, label -> {
+            DialogUtils.showDialogLabel(context, Constants.TitleEditLabel,oldLabel,listLabel, label -> {
                 updateNoteLabel(oldLabel,label);
                 editLabel.setLabel(label);
-                labelViewModel.updateLabel(editLabel);
+                labelViewModel.updateLabel(editLabel,state ->{
+                    Toast.makeText(getContext(), state, Toast.LENGTH_SHORT).show();
+                });
                 dismiss();
             });
         });
 
         //xoa danh muc
         binding.idDeleteLabel.setOnClickListener(v ->{
-            DialogShow.showDialogNotifyDelete(context, delete -> {
+            DialogUtils.showDialogNotifyDelete(context, delete -> {
                 //delete = true thi xoa
                 if(delete){
                     //xoa
@@ -95,11 +97,16 @@ public class BottomSheetShowMoreOption extends BottomSheetDialogFragment {
 
     private void deleteAllNoteByLabel(Label label){
         //xoa nhan
-        labelViewModel.deleteLabel(label);
+        labelViewModel.deleteLabel(label,state ->{
+            Toast.makeText(getContext(), state, Toast.LENGTH_SHORT).show();
+        });
         //xoa tat ca cac note gan nhan nay
-        noteViewModel.deleteNotesByLabel(label.getLabel());
+        noteViewModel.deleteNotesByLabel(label.getLabel(),state ->{
+            Toast.makeText(getContext(), state, Toast.LENGTH_SHORT).show();
+        });
     }
 
+    //doi ten nhan cho note -> va cap nhat
     private void updateNoteLabel(String oldLabel, String newLabel) {
         if (!isAdded()) {
             return;
@@ -123,7 +130,9 @@ public class BottomSheetShowMoreOption extends BottomSheetDialogFragment {
 
             for (Note note : listNotesOldLabel) {
                 note.setLabel(newLabel);
-                noteViewModel.updateNote(note);
+                noteViewModel.updateNote(note,state ->{
+                    Toast.makeText(getContext(), state, Toast.LENGTH_SHORT).show();
+                });
             }
             notesLiveData.removeObservers(getViewLifecycleOwner());
         });

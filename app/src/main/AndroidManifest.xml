@@ -2,34 +2,52 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MANAGE_DEVICE_POLICY_CAMERA" />
+    <uses-permission
+        android:name="android.permission.SCHEDULE_EXACT_ALARM"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"
         tools:ignore="ScopedStorage" />
 
     <application
-        android:name="com.hoamz.hoamz.app.MyApplication"
+        android:name=".app.MyApplication"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/logo_1"
+        android:icon="@drawable/logo_2"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/logo_1"
+        android:roundIcon="@drawable/logo_2"
         android:supportsRtl="true"
         android:theme="@style/Theme.Hoamz"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ui.act.ShowImage"
+            android:configChanges="uiMode|screenLayout|screenSize|smallestScreenSize"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
+            android:name=".ui.act.TakePhoto"
+            android:configChanges="uiMode|screenLayout|screenSize|smallestScreenSize"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
         <activity
             android:name=".ui.act.NoteDetail"
             android:configChanges="uiMode|screenLayout|screenSize|smallestScreenSize"
             android:exported="false"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".ui.act.Splash"
             android:exported="true"
@@ -41,37 +59,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver android:name=".Broadcast.AppwidgetProvider"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info"/>
-        </receiver>
-
         <activity
             android:name=".ui.act.FirstRunAct"
+            android:configChanges="uiMode|screenLayout|screenSize|smallestScreenSize"
             android:exported="false"
             android:launchMode="singleTop"
-            android:configChanges="uiMode|screenLayout|screenSize|smallestScreenSize"
             android:noHistory="true" />
-
         <activity
             android:name=".ui.act.CreateNote"
             android:configChanges="uiMode|screenLayout|screenSize|smallestScreenSize"
             android:exported="false"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".ui.act.MainActivity"
             android:configChanges="uiMode|screenLayout|screenSize|smallestScreenSize"
             android:exported="true"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan" />
-        <receiver android:name=".Broadcast.MyBroadCastReminder"/>
+
+        <receiver android:name=".Broadcast.MyBroadCastReminder" />
     </application>
 
 </manifest>

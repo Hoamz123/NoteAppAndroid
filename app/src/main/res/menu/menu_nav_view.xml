@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+
+
     <item android:enabled="false"
         android:title="" />
 
-    <item android:id="@+id/idWidget"
-        android:title="Tiện ích"
-        android:icon="@drawable/ic_app"/>
+        <item android:id="@+id/idCalender"
+            android:title="Calendar"
+            android:icon="@drawable/ic_calendar_lines"/>
 
-    <item android:id="@+id/idCalender"
-        android:title="Lịch"
-        android:icon="@drawable/ic_calender"/>
+        <item android:id="@+id/idReminder"
+            android:title="Reminder"
+            android:icon="@drawable/outline_alarm_24"/>
 
-    <item android:id="@+id/idReminder"
-        android:title="Lời nhắc"
-        android:icon="@drawable/ic_alarm"/>
 
-    <item android:id="@+id/idCategories"
-        android:title="Thể loại"
-        android:icon="@drawable/ic_categories"/>
+        <item android:id="@+id/idCategories"
+            android:title="Categories"
+            android:icon="@drawable/ic_category_final"/>
 
-    <item android:id="@+id/idFavorites"
-        android:title="Yêu thích"
-        android:icon="@drawable/ic_favorites"/>
+        <item android:id="@+id/idFavorites"
+            android:title="Favorites"
+            android:icon="@drawable/ic_star"/>
 
-    <item android:id="@+id/idBin"
-        android:title="Thùng rác"
-        android:icon="@drawable/ic_bin"/>
+        <item android:id="@+id/idBin"
+            android:title="Trash"
+            android:icon="@drawable/ic_delete_fn"/>
 
-    <item android:id="@+id/idSetting"
-        android:title="Cài đặt"
-        android:icon="@drawable/ic_setting"/>
+        <item android:id="@+id/idArchive"
+            android:title="Archive"
+            android:icon="@drawable/archive_ic"/>
+
+        <item android:id="@+id/idContact"
+            android:title="Contact us"
+            android:icon="@drawable/ic_contact_fn"/>
+
 
 </menu>

@@ -44,7 +44,7 @@
                         <ImageView
                             android:id="@+id/icBackToMainIndT"
                             android:layout_width="30dp"
-                            android:layout_height="20dp"
+                            android:layout_height="25dp"
                             android:src="@drawable/ic_save_edit_b"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -52,8 +52,8 @@
 
                         <androidx.appcompat.widget.AppCompatImageButton
                             android:id="@+id/ivbUndoInEdit"
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:layout_marginEnd="8dp"
                             android:background="@android:color/transparent"
                             android:src="@drawable/ic_undo_b"
@@ -63,9 +63,10 @@
 
                         <androidx.appcompat.widget.AppCompatImageButton
                             android:id="@+id/ivbRedoInEdit"
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:layout_marginStart="8dp"
+                            android:saveEnabled="false"
                             android:background="@android:color/transparent"
                             android:src="@drawable/ic_redo_b"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -74,28 +75,18 @@
 
                         <ImageView
                             android:id="@+id/iv_alarmIndT"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:layout_marginEnd="20dp"
                             android:src="@drawable/ic_alarm"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/iv_addColorIndT"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <ImageView
-                            android:id="@+id/iv_addColorIndT"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginEnd="20dp"
-                            android:src="@drawable/ic_color_24"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@id/ivMoreIndT"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
                             android:id="@+id/ivMoreIndT"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="17dp"
+                            android:layout_height="17dp"
                             android:layout_marginEnd="20dp"
                             android:src="@drawable/ic_more"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -165,7 +156,6 @@
                             android:maxLength="10"
                             android:paddingBottom="4dp"
                             android:text="All"
-                            android:textSize="16sp"
                             app:drawableEndCompat="@drawable/ic_more_item"
                             app:layout_constraintBottom_toBottomOf="@id/tvDateIndT"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -203,7 +193,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="25dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="15dp"
                 android:hint="Ghi chú ở đây"
                 android:overScrollMode="never"
                 android:textSize="15sp"
@@ -214,6 +204,18 @@
                 android:gravity="top"
                 android:nestedScrollingEnabled="true"
                 android:inputType="textMultiLine"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcPhotosDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                app:layout_constraintTop_toBottomOf="@id/edtContentIndT"
+                app:layout_constraintStart_toStartOf="parent"
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -226,7 +228,7 @@
         android:visibility="invisible"
         android:elevation="3dp">
 
-        <include layout="@layout/layout_setting_edit"
+        <include layout="@layout/layout_setting_edit_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/acShowMoreSetupEdit"
@@ -235,6 +237,7 @@
             android:background="@android:color/transparent"
             android:clickable = "true"
             android:focusable = "true"
+            android:elevation="20dp"
             app:layout_constraintTop_toBottomOf="@id/guideline_"
             app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -244,6 +247,26 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.05"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="0.1dp">
+
+        <include layout="@layout/layout_bottom_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/acShowMoreSetupBottomBarEdit"
+            android:layout_marginEnd="10dp"
+            android:clickable = "true"
+            android:focusable = "true"
+            android:elevation="20dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

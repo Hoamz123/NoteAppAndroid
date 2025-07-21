@@ -41,12 +41,10 @@
             android:paddingVertical="10dp"
             android:textSize="15sp"
             android:maxLines="1"
-            android:layout_marginEnd="16dp"
             android:gravity="center_vertical"
             android:paddingStart="16dp"
             android:paddingEnd="5dp"
-            android:textColor="@color/color_2"
-            android:layout_marginStart="16dp"/>
+            android:textColor="@color/color_2" />
 
         <ImageView
             android:id="@+id/ivMoreSelect"
@@ -59,6 +57,4 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </LinearLayout>

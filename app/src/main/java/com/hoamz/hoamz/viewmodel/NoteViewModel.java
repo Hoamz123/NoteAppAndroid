@@ -4,10 +4,8 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.hoamz.hoamz.data.model.Note;
-import com.hoamz.hoamz.data.model.NoteDeleted;
 import com.hoamz.hoamz.data.repository.NoteRepo;
 import com.hoamz.hoamz.utils.Constants;
 
@@ -16,6 +14,7 @@ import java.util.function.Consumer;
 
 public class NoteViewModel extends AndroidViewModel {
     private final NoteRepo noteRepo;
+
     public NoteViewModel(@NonNull Application application) {
         super(application);
         noteRepo = new NoteRepo(application);
@@ -32,18 +31,33 @@ public class NoteViewModel extends AndroidViewModel {
     }
 
     //xoa 1 note
-    public void deleteNote(Note note){
-        noteRepo.deleteNote(note);
+    public void deleteNote(Note note,Consumer<String> stateFlow){
+        try{
+            noteRepo.deleteNote(note);
+            stateFlow.accept("Deleted success");
+        }catch (Exception e){
+            stateFlow.accept("Error " + e.getMessage());
+        }
     }
 
     //xoa 1 list note
-    public void deleteNotes(List<Note> listNote){
-        noteRepo.deleteNotes(listNote);
+    public void deleteNotes(List<Note> listNote,Consumer<String> stateFlow){
+        try{
+            noteRepo.deleteNotes(listNote);
+            stateFlow.accept("Delete success");
+        }catch (Exception e){
+            stateFlow.accept("Error " + e.getMessage());
+        }
     }
 
     //update
-    public void updateNote(Note note){
-        noteRepo.updateNote(note);
+    public void updateNote(Note note,Consumer<String> stateFlow){
+        try{
+            noteRepo.updateNote(note);
+            stateFlow.accept("Update success");
+        }catch (Exception e){
+            stateFlow.accept("Error " + e.getMessage());
+        }
     }
 
     //lay tat ca theo nhan
@@ -60,12 +74,12 @@ public class NoteViewModel extends AndroidViewModel {
     }
 
     //lay theo time
-    public LiveData<List<Note>> getListNotesByTime(String condition){
-        return noteRepo.getListNotesByTime(condition);
+    public LiveData<List<Note>> getListNotesByTime(String condition,String label){
+        return noteRepo.getListNotesByTime(condition,label);
     }
 
-    public LiveData<List<Note>> getListNotesByAlphabet(String condition){
-        return noteRepo.getListNotesByAlphabet(condition);
+    public LiveData<List<Note>> getListNotesByAlphabet(String condition,String label){
+        return noteRepo.getListNotesByAlphabet(condition,label);
     }
 
     public LiveData<List<Note>> getNotesByTime(long startOfDay,long endOfDay){
@@ -84,24 +98,33 @@ public class NoteViewModel extends AndroidViewModel {
         return noteRepo.getListNotesAlarm();
     }
 
-    public void deleteNotesByLabel(String label){
-        noteRepo.deleteNotesByLabel(label);
+    public void deleteNotesByLabel(String label,Consumer<String> stateFlow){
+        try{
+            noteRepo.deleteNotesByLabel(label);
+            stateFlow.accept("Delete success");
+        }catch (Exception e){
+            stateFlow.accept("Error " + e.getMessage());
+        }
     }
 
-    public LiveData<List<Note>> getListNoteFavorite(){
-        return noteRepo.getListNoteFavorite(true);
+    public LiveData<List<Note>> getListNoteFavorite(String condition){
+        return noteRepo.getListNoteFavorite(true,condition);
     }
 
-    //note deleted
-    public LiveData<List<NoteDeleted>> getAllNoteDeleted(){
-        return noteRepo.getAllNoteDeleted();
+    //get note by id
+    public LiveData<Note> getNoteById(int id){
+        return noteRepo.getNoteById(id);
     }
 
-    public void insertNoteDeleted(NoteDeleted noteDeleted){
-        noteRepo.insertNoteDeleted(noteDeleted);
+    public LiveData<List<Note>> getNotesDeleted(String condition){
+        return noteRepo.getNotesDeleted(condition);
     }
 
-    public void deletedNoteAfter30Day(NoteDeleted noteDeleted){
-        noteRepo.deletedNoteAfter30Day(noteDeleted);
+    public LiveData<List<Note>> getNotesArchived(String condition){
+        return noteRepo.getNotesArchived(condition);
+    }
+
+    public void deleteNotesAfter30Days(){
+        noteRepo.deleteNotesAfter30Days();
     }
 }

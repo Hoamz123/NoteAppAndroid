@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#DD000000">
+
+
+    <TextView
+        android:id="@+id/acBack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="Back"
+        android:textColor="@color/white"
+        app:drawableTopCompat="@drawable/ic_close"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/acDeleteImage"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/acDeleteImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="Delete"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@id/acDownloadImage"
+        app:drawableTopCompat="@drawable/ic_delete_image"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/acBack"/>
+
+    <TextView
+        android:id="@+id/acDownloadImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="Download"
+        android:textColor="@color/white"
+        app:drawableTopCompat="@drawable/ic_download"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/acDeleteImage"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_dialog"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:paddingBottom="20dp">
+
+
+        <TextView
+            android:id="@+id/acRestore"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:drawableTopCompat="@drawable/ic_restore"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/acDeleteItem"
+            android:text="Restore"
+            android:gravity="center_horizontal"
+            android:fontFamily="@font/medium"
+            android:layout_marginTop="20dp"
+            android:textSize="16sp"
+            android:layout_marginStart="30dp"
+            android:drawablePadding="5dp"
+            android:padding="5dp"/>
+
+        <TextView
+            android:id="@+id/acDeleteItem"
+            android:layout_width="0dp"
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            app:drawableTopCompat="@drawable/ic_delete_final"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/acRestore"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:fontFamily="@font/medium"
+            android:text="Delete"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="30dp"
+            android:drawablePadding="5dp"
+            android:padding="5dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

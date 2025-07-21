@@ -28,4 +28,6 @@
     <color name="color15">#546E7A</color>  <!-- Carbon Black (tối) -->
     <color name="color16">#00796B</color>  <!-- Deep Purple Night (tối) -->
 
+    <color name="ac_delete">#D81B1B</color>
+
 </resources>

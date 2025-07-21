@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.databinding.SheetChooseBackgroundBinding;
-import com.hoamz.hoamz.databinding.SheetColorBinding;
 
 import java.util.Objects;
 
@@ -48,22 +47,12 @@ public class BottomSheetColor extends BottomSheetDialogFragment {
         onClickListener(binding.ivBackground5, R.drawable.img_15);
         onClickListener(binding.ivBackground6, R.drawable.img_16);
         onClickListener(binding.ivBackground7, R.drawable.img_17);
-        onClickListener(binding.ivBackground8, R.drawable.img_19);
-        onClickListener(binding.ivBackground9, R.drawable.img_3);
-        onClickListener(binding.ivBackground10, R.drawable.img_4);
-        onClickListener(binding.ivBackground11, R.drawable.bg_wg2);
         onClickListener(binding.ivBackground12, R.drawable.img_5);
         onClickListener(binding.ivBackground13, R.drawable.img_6);
-        onClickListener(binding.ivBackground14, R.drawable.img_7);
-        onClickListener(binding.ivBackground15, R.drawable.img_8);
-        onClickListener(binding.ivBackground16, R.drawable.img_9);
-        onClickListener(binding.ivBackground17, R.drawable.img_10);
-        onClickListener(binding.ivBackground18, R.drawable.img_26);
 
         onClickListener(binding.ivBackground19, R.drawable.img_20);
         onClickListener(binding.ivBackground20, R.drawable.img_21);
         onClickListener(binding.ivBackground21, R.drawable.img_22);
-        onClickListener(binding.ivBackground22, R.drawable.img_23);
         onClickListener(binding.ivBackground23, R.drawable.img_24);
         onClickListener(binding.ivBackground24, R.drawable.img_25);
         onClickListener(binding.ivBackground25, R.drawable.bg_wg10);

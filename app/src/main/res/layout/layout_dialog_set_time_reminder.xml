@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_dialog"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:paddingBottom="28dp">
+
+
+    <TextView
+        android:id="@+id/titleAddReminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:text="Add Reminder"
+        android:fontFamily="@font/medium"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CalendarView
+        android:id="@+id/vCalendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/titleAddReminder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clAddTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/vCalendarView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tvAddTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:drawableStartCompat="@drawable/outline_alarm_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="Time"
+            android:fontFamily="@font/medium"
+            android:paddingVertical="5dp"
+            android:drawablePadding="8dp"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tvShowTimeAdded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:drawableEndCompat="@drawable/ic_more_item"
+            app:layout_constraintTop_toTopOf="@id/tvAddTime"
+            app:layout_constraintBottom_toBottomOf="@id/tvAddTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"
+            android:text="10:57 PM"
+            android:textColor="@color/color15"
+            android:fontFamily="@font/medium"
+            android:paddingVertical="5dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:textSize="15sp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clAddRepeat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/clAddTime"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvAddRepeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:drawableStartCompat="@drawable/outline_autorenew_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="Repeat"
+            android:fontFamily="@font/medium"
+            android:paddingVertical="5dp"
+            android:drawablePadding="8dp"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tvShowTimeRepeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:drawableEndCompat="@drawable/ic_more_item"
+            app:layout_constraintTop_toTopOf="@id/tvAddRepeat"
+            app:layout_constraintBottom_toBottomOf="@id/tvAddRepeat"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"
+            android:text="None"
+            android:textColor="@color/color15"
+            android:fontFamily="@font/medium"
+            android:paddingVertical="5dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:textSize="15sp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tcAcCancelAddReminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CANCEL"
+        android:textSize="15sp"
+        android:fontFamily="@font/medium"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/color_2"
+        app:layout_constraintTop_toBottomOf="@id/clAddRepeat"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tcAcSaveReminder"
+        android:layout_marginEnd="30dp" />
+
+    <TextView
+        android:id="@+id/tcAcSaveReminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SAVE"
+        android:textSize="15sp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/medium"
+        android:textColor="@color/color_2"
+        app:layout_constraintTop_toBottomOf="@id/clAddRepeat"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="26dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

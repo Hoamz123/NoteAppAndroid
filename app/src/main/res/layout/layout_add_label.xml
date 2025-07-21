@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/viewMainCreateNewLabel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@drawable/background_dialog"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:paddingBottom="20dp"
         android:paddingVertical="5dp">
 
         <TextView
             android:id="@+id/tvHeadTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thêm danh mục mới"
+            android:text="Add New Category"
             app:layout_constraintTop_toTopOf="parent"
-            android:textStyle="bold"
-            android:textColor="@color/color_2"
-            android:textSize="18sp"
+            android:fontFamily="@font/medium"
+            android:textSize="20sp"
             android:gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="14dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -34,30 +35,45 @@
             app:layout_constraintTop_toBottomOf="@id/tvHeadTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/custom_input_label"
-            android:hint="Nhập tên danh mục tại đây"
+            android:background="@drawable/custom_bg_time_repeat"
+            android:hint="Enter name"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:maxLines="1"
+            android:inputType="text"
             android:layout_marginTop="20dp"
             android:paddingVertical="14dp"/>
+
+
+        <ImageView
+            android:id="@+id/ivClearText"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:visibility="invisible"
+            android:src="@drawable/baseline_clear_24"
+            app:layout_constraintTop_toTopOf="@id/edtInputLabel"
+            app:layout_constraintBottom_toBottomOf="@id/edtInputLabel"
+            app:layout_constraintEnd_toEndOf="@id/edtInputLabel"
+            android:layout_marginEnd="14dp"/>
 
         <TextView
             android:id="@+id/tvCancelCreateLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/edtInputLabel"
-            android:text="HỦY"
+            android:text="CANCEL"
             android:gravity="center"
-            android:textSize="17sp"
+            android:textSize="15sp"
+            android:fontFamily="@font/medium"
+            android:textColor="@color/color_2"
             android:layout_marginEnd="30dp"
+            android:padding="5dp"
             app:layout_constraintEnd_toStartOf="@id/tvSaveNewLabel"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="20dp"
-            android:textColor="#77000000"/>
+            android:layout_marginBottom="20dp"/>
 
         <TextView
             android:id="@+id/tvSaveNewLabel"
@@ -66,10 +82,12 @@
             app:layout_constraintTop_toBottomOf="@id/edtInputLabel"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"
-            android:text="LƯU"
-            android:textSize="17sp"
+            android:text="ADD"
+            android:textSize="15sp"
+            android:fontFamily="@font/medium"
+            android:padding="5dp"
             android:layout_marginEnd="18dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="20dp"
             android:textColor="@color/color_2"/>
@@ -79,4 +97,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</com.google.android.material.card.MaterialCardView>
+</LinearLayout>

@@ -15,11 +15,14 @@ public class Note implements Parcelable {
     private int isPin;//1 la gim : 0 la khong gim -> order by -> gim nen dau
     private boolean isFavorite;
     private long date;
-    private long trigger;
+    private boolean haveReminder;
     private String label;
+    private boolean isDeleted;
+    private boolean isArchived;
     private int colorBgID;//mac dinh ban dau la mau trang
+    private long timeDeleteNote;
 
-    public Note(String title, String content,long date,long trigger, int isPin, boolean isFavorite,String label,int colorBgID) {
+    public Note(String title, String content,long date,boolean haveReminder, int isPin, boolean isFavorite,boolean isDeleted,boolean isArchived,String label,int colorBgID,long timeDeleteNote) {
         this.title = title;
         this.content = content;
         this.isPin = isPin;
@@ -27,7 +30,10 @@ public class Note implements Parcelable {
         this.date = date;
         this.label = label;
         this.colorBgID = colorBgID;
-        this.trigger = trigger;
+        this.haveReminder = haveReminder;
+        this.isDeleted = isDeleted;
+        this.isArchived = isArchived;
+        this.timeDeleteNote = timeDeleteNote;
     }
 
     protected Note(Parcel in) {
@@ -37,9 +43,12 @@ public class Note implements Parcelable {
         isPin = in.readInt();
         isFavorite = in.readByte() != 0;
         date = in.readLong();
-        trigger = in.readLong();
+        haveReminder = in.readByte() != 0;
         label = in.readString();
         colorBgID = in.readInt();
+        isDeleted = in.readByte() != 0;
+        isArchived = in.readByte() != 0;
+        timeDeleteNote = in.readLong();
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
@@ -58,13 +67,37 @@ public class Note implements Parcelable {
         this.colorBgID = colorBgID;
     }
 
-    public void setTimeAlarm(long timeAlarm) {
-        this.trigger = timeAlarm;
+    public void setTimeAlarm(boolean haveReminder) {
+        this.haveReminder = haveReminder;
     }
 
 
-    public long getTrigger() {
-        return trigger;
+    public boolean getTrigger() {
+        return haveReminder;
+    }
+
+    public long getTimeDeleteNote() {
+        return timeDeleteNote;
+    }
+
+    public void setTimeDeleteNote(long timeDeleteNote) {
+        this.timeDeleteNote = timeDeleteNote;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setArchived(boolean archived) {
+        isArchived = archived;
+    }
+
+    public boolean isArchived() {
+        return isArchived;
     }
 
     public int getColorBgID() {
@@ -85,6 +118,9 @@ public class Note implements Parcelable {
 
     public long getDate() {
         return date;
+    }
+    public boolean isHaveReminder() {
+        return haveReminder;
     }
 
     public void setDate(long date) {
@@ -138,8 +174,11 @@ public class Note implements Parcelable {
         dest.writeInt(isPin);
         dest.writeByte((byte) (isFavorite ? 1 : 0));
         dest.writeLong(date);
-        dest.writeLong(trigger);
+        dest.writeByte((byte) (haveReminder ? 1 : 0));
         dest.writeString(label);
         dest.writeInt(colorBgID);
+        dest.writeByte((byte) (isDeleted ? 1 : 0));
+        dest.writeByte((byte) (isArchived ? 1 : 0));
+        dest.writeLong(timeDeleteNote);
     }
 }

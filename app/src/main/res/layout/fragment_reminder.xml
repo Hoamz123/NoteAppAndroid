@@ -13,7 +13,7 @@
     <ImageView
         android:id="@+id/icExitReminder"
         android:layout_width="40dp"
-        android:layout_height="22dp"
+        android:layout_height="20dp"
         android:src="@drawable/ic_exit"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,38 +27,112 @@
         android:layout_marginTop="5dp"
         android:drawablePadding="20dp"
         android:gravity="center"
-        android:text="Nhắc nhở"
+        android:text="Reminder"
         android:layout_marginStart="10dp"
         android:textColor="@color/color_2"
-        android:textSize="20sp"
+        android:textSize="18sp"
+        android:fontFamily="@font/medium"
         app:layout_constraintStart_toEndOf="@id/icExitReminder"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcViewReminder"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guideline10"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintVertical_bias="1.0"
-        app:layout_constraintHorizontal_bias="1.0"/>
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/guideline10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/tvUpcoming"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Upcoming"
+                android:fontFamily="@font/medium"
+                android:textColor="@color/color_2"
+                android:visibility="invisible"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="15dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcViewReminderUpComing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvUpcoming"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintVertical_bias="1.0"
+                app:layout_constraintHorizontal_bias="1.0"/>
+
+            <TextView
+                android:id="@+id/tvExpired"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/rcViewReminderUpComing"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Expired"
+                android:visibility="invisible"
+                android:fontFamily="@font/medium"
+                android:textColor="@color/color_2"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="15dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcViewReminderExpired"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvExpired"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintVertical_bias="1.0"
+                app:layout_constraintHorizontal_bias="1.0"/>
+
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
 
     <!-- List empty -->
     <ImageView
         android:id="@+id/iv_emptyReminder"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:src="@drawable/empty_bg"
         app:layout_constraintTop_toBottomOf="@id/title"
         app:layout_constraintBottom_toTopOf="@id/guideline10"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvEmptyReminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/iv_emptyReminder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 
     <!-- fab -->
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E8000000"
+    android:clickable="true"
+    android:fitsSystemWindows="true"
+    android:focusable="true"
+    tools:context=".ui.act.TakePhoto">
+
+
+    <ImageView
+        android:id="@+id/icExitTakePhoto"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_back_w"
+        android:elevation="3dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewPreview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:cardCornerRadius="60dp"
+        app:layout_constraintBottom_toTopOf="@id/guideline6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline5">
+
+
+        <!-- previewView -->
+        <androidx.camera.view.PreviewView
+            android:id="@+id/preViewView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <!-- image preview -->
+
+        <ImageView
+            android:id="@+id/ivPreviewView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="invisible" />
+
+
+    </androidx.cardview.widget.CardView>
+
+
+    <ImageView
+        android:id="@+id/acTakePicture"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:elevation="4dp"
+        android:src="@drawable/ic_tp_final"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline16" />
+
+    <ImageView
+        android:id="@+id/acCancelSaveImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="50dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_no_final"
+        app:layout_constraintEnd_toStartOf="@id/acTakePicture"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline16" />
+
+    <ImageView
+        android:id="@+id/acSavePicture"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/ic_yes"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/acTakePicture"
+        app:layout_constraintTop_toBottomOf="@id/guideline16" />
+
+    <ImageView
+        android:id="@+id/acRotateCamera"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_rotate_final"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/acTakePicture"
+        app:layout_constraintStart_toEndOf="@id/acTakePicture"
+        app:layout_constraintTop_toTopOf="@id/acTakePicture" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.65" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.65" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

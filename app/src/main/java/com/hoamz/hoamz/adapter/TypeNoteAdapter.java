@@ -61,6 +61,10 @@ public class TypeNoteAdapter extends RecyclerView.Adapter<TypeNoteAdapter.viewHo
             onClickTypeNote.onClickTypeLabel(labelDetail,position);
         });
 
+        holder.imgViewIcon.setOnClickListener(v ->{
+            onClickTypeNote.onClickTypeLabel(labelDetail,position);
+        });
+
         holder.ivMore.setOnClickListener(v ->{
             onClickTypeNote.onClickForShowMoreOption(labelDetail);
         });
@@ -77,14 +81,13 @@ public class TypeNoteAdapter extends RecyclerView.Adapter<TypeNoteAdapter.viewHo
     }
 
     public static class viewHodel extends RecyclerView.ViewHolder {
-        private final ConstraintLayout cardViewCt;
         private final TextView tvNameLabel;
-        private ImageView ivMore;
+        private ImageView ivMore,imgViewIcon;
         public viewHodel(@NonNull View itemView) {
             super(itemView);
-            cardViewCt = itemView.findViewById(R.id.cardViewCt);
             tvNameLabel = itemView.findViewById(R.id.tvLabelInType);
             ivMore = itemView.findViewById(R.id.ivMoreSelect);
+            imgViewIcon = itemView.findViewById(R.id.imgViewIcon);
         }
     }
 }

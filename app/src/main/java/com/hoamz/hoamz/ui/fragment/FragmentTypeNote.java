@@ -1,7 +1,7 @@
 package com.hoamz.hoamz.ui.fragment;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -20,13 +21,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hoamz.hoamz.R;
-import com.hoamz.hoamz.adapter.LabelAdapter;
 import com.hoamz.hoamz.adapter.TypeNoteAdapter;
 import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.LabelDetail;
-import com.hoamz.hoamz.ui.act.MainActivity;
 import com.hoamz.hoamz.utils.Constants;
-import com.hoamz.hoamz.utils.DialogShow;
+import com.hoamz.hoamz.utils.DialogUtils;
 import com.hoamz.hoamz.viewmodel.LabelViewModel;
 import com.hoamz.hoamz.viewmodel.NoteViewModel;
 import com.hoamz.hoamz.viewmodel.TypeModel;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FragmentTypeNote extends Fragment {
@@ -63,6 +61,12 @@ public class FragmentTypeNote extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        if(getActivity() != null) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//            getActivity().getWindow().setStatusBarColor(getColor(getResources(), R.color.color_bg, null));
+            getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
     }
 
     @Nullable
@@ -145,8 +149,12 @@ public class FragmentTypeNote extends Fragment {
 
         btnAddLabel.setOnClickListener(v -> {
             if (isAdded()) {
-                DialogShow.showDialogLabel(context, Constants.TitleCreateNewLabel, null, listNameLabel,
-                        label -> labelViewModel.insertLabel(new Label(label)));
+                DialogUtils.showDialogLabel(context, Constants.TitleCreateNewLabel, null, listNameLabel,
+                        label -> {
+                    labelViewModel.insertLabel(new Label(label),state ->{
+                        Toast.makeText(getContext(), state, Toast.LENGTH_SHORT).show();
+                    });
+                });
             }
         });
 
@@ -167,7 +175,9 @@ public class FragmentTypeNote extends Fragment {
                     if (label != null && isAdded()) {
                         BottomSheetShowMoreOption sheetShowMoreOption = new BottomSheetShowMoreOption(
                                 listNameLabel, context, labelViewModel, noteViewModel, label);
-                        sheetShowMoreOption.show(requireActivity().getSupportFragmentManager(), sheetShowMoreOption.getTag());
+                        if(!sheetShowMoreOption.isAdded()){
+                            sheetShowMoreOption.show(requireActivity().getSupportFragmentManager(), sheetShowMoreOption.getTag());
+                        }
                     }
                 });
             }

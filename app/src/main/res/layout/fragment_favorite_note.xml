@@ -18,9 +18,10 @@
         android:layout_marginTop="5dp"
         android:drawablePadding="20dp"
         android:gravity="center"
-        android:text="Yêu thích"
+        android:text="Favorites"
+        android:fontFamily="@font/medium"
         android:textColor="@color/color_2"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:layout_marginStart="10dp"
         app:layout_constraintStart_toEndOf="@id/icExitFavorite"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,13 +29,23 @@
     <ImageView
         android:id="@+id/icExitFavorite"
         android:layout_width="40dp"
-        android:layout_height="22dp"
+        android:layout_height="20dp"
         android:layout_marginStart="16dp"
         android:elevation="3dp"
         android:src="@drawable/ic_exit"
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/title" />
+
+    <ImageView
+        android:id="@+id/ic_more_in_favorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_more_blue"
+        app:layout_constraintTop_toTopOf="@id/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/title"
+        android:layout_marginEnd="16dp"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -55,14 +66,28 @@
     <!-- List empty -->
     <ImageView
         android:id="@+id/iv_emptyFavorite"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:src="@drawable/empty_bg"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/img_41"
         app:layout_constraintTop_toBottomOf="@id/title"
         app:layout_constraintBottom_toTopOf="@id/guideline13"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tvEmpty_in_favorites"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/iv_emptyFavorite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="No favorites added"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:layout_marginTop="10dp"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline13"
@@ -70,6 +95,74 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.96"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_include_in_favorites"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:layout_height="match_parent">
+        <include
+            layout="@layout/layout_setting_main"
+            android:id="@+id/layout_moreSetupInFavorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|top"
+            android:layout_marginEnd="10dp"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/guideline_"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.05"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolbarSM_in_favorites"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_bg"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- toolbar select mul -->
+        <include
+            android:id="@+id/toolbarSelMulInFavorites"
+            layout="@layout/layout_select_mul" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- action mul select -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrainActionMulSelInFavorite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:clickable="true"
+        android:elevation="2dp"
+        android:focusable="true"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <include
+            android:id="@+id/layoutActionMulSelInFavorites"
+            layout="@layout/layout_action_mul_in_favorites" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 
