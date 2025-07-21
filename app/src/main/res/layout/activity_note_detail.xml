@@ -129,8 +129,8 @@
                             android:hint="Title"
                             android:maxLines="1"
                             android:textColor="@color/black"
-                            android:textSize="21sp"
                             android:textStyle="bold"
+                            android:textSize="21sp"
                             android:singleLine="true"
                             android:inputType="text"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -222,6 +222,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/constrainMoreOption"
+        android:visibility="invisible"
         android:elevation="3dp">
 
         <include layout="@layout/layout_setting_edit"
@@ -233,7 +235,6 @@
             android:background="@android:color/transparent"
             android:clickable = "true"
             android:focusable = "true"
-            android:visibility="invisible"
             app:layout_constraintTop_toBottomOf="@id/guideline_"
             app:layout_constraintEnd_toEndOf="parent"/>
 

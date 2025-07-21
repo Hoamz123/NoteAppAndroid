@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -120,6 +121,17 @@ public class MainActivity extends AppCompatActivity {
         });
         showNotesByLabel(labelCurrentClick);
         onClickToolbar();//bat su kien click toolbar
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if(binding.drawerNav.isOpen()){
+                    binding.drawerNav.closeDrawer(GravityCompat.START);
+                }
+                else{
+                    finish();
+                }
+            }
+        });
         onReceiverData();
         onClickMenu();
     }
@@ -147,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         binding.layoutMoreSetup.tvTypeShow.setOnClickListener(click ->{
             if(isGrid){
                 //neu dang la dang luoi
-                binding.layoutMoreSetup.tvTypeShow.setText("Dang sách");
+                binding.layoutMoreSetup.tvTypeShow.setText("Danh sách");
             }
             else{
                 binding.layoutMoreSetup.tvTypeShow.setText("Lưới");
@@ -353,7 +365,7 @@ public class MainActivity extends AppCompatActivity {
                 builder.setView(viewDialog);
                 AlertDialog dialog = builder.create();
                 dialog.setCancelable(true);
-                dialog.setCanceledOnTouchOutside(true);
+                dialog.setCanceledOnTouchOutside(false);
                 TextView acCancel = viewDialog.findViewById(R.id.tvCancel);
                 TextView acDelete = viewDialog.findViewById(R.id.tvDelete);
                 acCancel.setOnClickListener(v -> dialog.dismiss());

@@ -20,6 +20,7 @@
         android:layout_marginBottom="200dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/bold"
         android:textColor="@color/white"
         android:backgroundTint="@color/color_3"
         android:background="@drawable/custom_bg"/>

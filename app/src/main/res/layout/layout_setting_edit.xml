@@ -19,36 +19,12 @@
         android:textSize="20sp"
         android:text="Pin"/>
 
-    <TextView
-        android:id="@+id/tvReminder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tvPin"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:paddingHorizontal="20dp"
-        android:layout_marginTop="10dp"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="Reminder"/>
-
-    <TextView
-        android:id="@+id/tvReadingMode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tvReminder"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
-        android:text="Reading Mode"
-        android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/tvShare"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tvReadingMode"
+        app:layout_constraintTop_toBottomOf="@id/tvPin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
@@ -56,21 +32,46 @@
         android:textSize="20sp"/>
 
     <TextView
-        android:id="@+id/tvDownload"
+        android:id="@+id/tvReadingMode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tvShare"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
-        android:text="Download"
+        android:gravity="center_horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="Reading Mode"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/tvSaveTXT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvReadingMode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:text="txt"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/tvSaveImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvSaveTXT"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:text="Image"
         android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/tvFavorite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tvDownload"
+        app:layout_constraintTop_toBottomOf="@id/tvSaveImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
@@ -86,17 +87,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
         android:text="Delete"
-        android:textSize="20sp"/>
-
-    <TextView
-        android:id="@+id/tvDetail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tvDelete"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
-        android:text="Detail"
         android:textSize="20sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,10 +3,12 @@ package com.hoamz.hoamz.ui.act;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -36,12 +38,15 @@ import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.adapter.SelectLabelAdapter;
+import com.hoamz.hoamz.data.local.SharePre;
 import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.LabelDetail;
 import com.hoamz.hoamz.data.model.Note;
+import com.hoamz.hoamz.databinding.ActivityCreateNoteBinding;
 import com.hoamz.hoamz.ui.fragment.BottomSheetColor;
 import com.hoamz.hoamz.utils.Constants;
 import com.hoamz.hoamz.utils.CustomTextWatcher;
+import com.hoamz.hoamz.utils.TextViewUndoRedo;
 import com.hoamz.hoamz.viewmodel.LabelViewModel;
 import com.hoamz.hoamz.viewmodel.NoteViewModel;
 import java.text.ParseException;
@@ -57,6 +62,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public class CreateNote extends AppCompatActivity {
     private ImageView iv_backToMain,ivSetAlarm,ivAddColor;
@@ -76,15 +82,13 @@ public class CreateNote extends AppCompatActivity {
     private int colorBackground = R.drawable.img_15;
     private String dateChoose;
     private BottomSheetColor sheetColor;
-    private final Deque<String> undoSt = new ArrayDeque<>();
-    private final Deque<String> redoSt = new ArrayDeque<>();
-    private boolean isUndoRedoMode = false;
+
     private Calendar calendarAlarm;
-    private static final int MAX_UNDO = 100;
     private ImageButton ivb_undo,ivb_redo;
     private long timeAlarm = 0;
-
     private String tmpDay,tmpTime;
+    private long timeRepeat = 0;
+    private boolean isRepeat = false;
 
     //att in dialog
     /********************************/
@@ -97,18 +101,23 @@ public class CreateNote extends AppCompatActivity {
     private TextView acCancelCreateNewLabel,acSaveNewLabel;
     /********************************/
 
+    //undo  redo
+    private TextViewUndoRedo helper;
+
+    private ActivityCreateNoteBinding binding;
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
+        binding = ActivityCreateNoteBinding.inflate(getLayoutInflater());
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_create_note);
+        setContentView(binding.getRoot());
         //khoa dung man hinh
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-
+        helper = new TextViewUndoRedo(binding.edtContent);
+        helper.setMaxHistorySize(200);
         initViews();//set date luon khi vua chuyen sang man hinh create note
         onClickItems();
         onGetData();
@@ -165,7 +174,7 @@ public class CreateNote extends AppCompatActivity {
         });
     }
 
-    @SuppressLint({"ClickableViewAccessibility", "DefaultLocale", "NewApi"})
+    @SuppressLint({"ClickableViewAccessibility", "DefaultLocale", "NewApi", "SetTextI18n"})
     private void onClickItems() {
         //back to main
         //done
@@ -186,13 +195,18 @@ public class CreateNote extends AppCompatActivity {
                 throw new RuntimeException(e);
             }
             Note note = new Note(title, content, timestamp, timeAlarm, 0,false, label, colorBackground);
-            noteViewModel.insertNewNote(note);
-            //set notify
-            if(timeAlarm > 0){
-                Constants.setUpAlarm(this,note,timeAlarm);
-            }
-            //back ve trang main
-            finish();
+            noteViewModel.insertNewNote(note, id -> {
+                note.setId(Math.toIntExact(id));
+                // set notify ở đây!
+                if (timeAlarm > 0) {
+                    Constants.setUpAlarm(this, note, timeAlarm);
+                    if (isRepeat) {
+                        SharePre.getInstance(this).saveTimeRepeat(note.getId(), timeRepeat);
+                    }
+                }
+                // back về main ở đây luôn cho chắc
+                finish();
+            });
         });
 
         //bat focus khi user click
@@ -226,7 +240,7 @@ public class CreateNote extends AppCompatActivity {
             setTime.setText(timeChoose);
             TextView btnSave = viewDialog.findViewById(R.id.acSave);
             TextView btnCancel = viewDialog.findViewById(R.id.acCancel);
-
+            TextView tvAcRepeat = viewDialog.findViewById(R.id.acSetRepeat);
             setTime.setOnClickListener(vw -> showTimePickerAlarm(setTime));
             setDate.setOnClickListener(vw -> showDatePickerAlarm(setDate));
 
@@ -235,11 +249,63 @@ public class CreateNote extends AppCompatActivity {
             });
 
 
+            //khi cai lai time Repeat
+            tvAcRepeat.setOnClickListener(rp->{
+                //logic here
+                isRepeat = !isRepeat;
+                if(isRepeat){
+                    viewDialog.findViewById(R.id.scrollRepeat).setVisibility(View.VISIBLE);
+                    tvAcRepeat.setBackground(ContextCompat.getDrawable(this,R.drawable.custom_bg_click_btn));
+                    tvAcRepeat.setTextColor(Color.WHITE);
+
+                    viewDialog.findViewById(R.id.tv15min).setOnClickListener(click->{
+                        Constants.onBackgroundSelectTimeRepeat(viewDialog,viewDialog.findViewById(R.id.tv15min),timeRepeatSelect->{
+                            timeRepeat = timeRepeatSelect;
+                        });
+                    });
+                    viewDialog.findViewById(R.id.tv30min).setOnClickListener(click->{
+                        Constants.onBackgroundSelectTimeRepeat(viewDialog,viewDialog.findViewById(R.id.tv30min),timeRepeatSelect->{
+                            timeRepeat = timeRepeatSelect;
+                        });
+                    });
+
+                    viewDialog.findViewById(R.id.tv1hour).setOnClickListener(click->{
+                        Constants.onBackgroundSelectTimeRepeat(viewDialog,viewDialog.findViewById(R.id.tv1hour),timeRepeatSelect->{
+                            timeRepeat = timeRepeatSelect;
+                        });
+                    });
+
+                    viewDialog.findViewById(R.id.tv1day).setOnClickListener(click->{
+                        Constants.onBackgroundSelectTimeRepeat(viewDialog,viewDialog.findViewById(R.id.tv1day),timeRepeatSelect->{
+                            timeRepeat = timeRepeatSelect;
+                        });
+                    });
+
+                    viewDialog.findViewById(R.id.tv1week).setOnClickListener(click->{
+                        Constants.onBackgroundSelectTimeRepeat(viewDialog,viewDialog.findViewById(R.id.tv1week),timeRepeatSelect->{
+                            timeRepeat = timeRepeatSelect;
+                        });
+                    });
+
+                    viewDialog.findViewById(R.id.tv1month).setOnClickListener(click->{
+                        Constants.onBackgroundSelectTimeRepeat(viewDialog,viewDialog.findViewById(R.id.tv1month),timeRepeatSelect->{
+                            timeRepeat = timeRepeatSelect;
+                        });
+                    });
+                }
+                else{
+                    viewDialog.findViewById(R.id.scrollRepeat).setVisibility(View.GONE);
+                    tvAcRepeat.setBackground(ContextCompat.getDrawable(this,R.drawable.custom_bg_time_repeat));
+                    tvAcRepeat.setTextColor(Color.GRAY);
+                }
+            });
+
             btnSave.setOnClickListener(click ->{
                 timeAlarm = calendarAlarm.getTimeInMillis();
                 if(timeAlarm < System.currentTimeMillis()){
                     timeAlarm = 0;
                 }
+                Toast.makeText(this, "Dat nhac nho thanh cong", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             });
 
@@ -265,19 +331,27 @@ public class CreateNote extends AppCompatActivity {
             setColorDetail(color);
         });//bat mau
 
-        edtContent.addTextChangedListener(new CustomTextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(isUndoRedoMode) return;//neu dang o trang thai undo hay redo thi khong theo doi thay doi
-                String currText = s.toString();
-                addUndo(currText);
-                redoSt.clear();
-                iconUndoRedo();
+//        edtContent.addTextChangedListener(new CustomTextWatcher() {
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                if(isUndoRedoMode) return;//neu dang o trang thai undo hay redo thi khong theo doi thay doi
+//                String currText = s.toString();
+//                redoSt.clear();
+//                iconUndoRedo();
+//            }
+//        });
+
+        ivb_undo.setOnClickListener(v->{
+            if(helper.getCanUndo()){
+                helper.undo();
             }
         });
 
-        ivb_undo.setOnClickListener(v -> undo());
-        ivb_redo.setOnClickListener(v -> redo());
+        ivb_redo.setOnClickListener(v ->{
+            if(helper.getCanRedo()){
+                helper.redo();
+            }
+        });
 
         //bat su kien click chon nhan
         tv_choose_label.setOnClickListener(v ->{
@@ -352,6 +426,15 @@ public class CreateNote extends AppCompatActivity {
 
         tv_date.setOnClickListener(v ->{
             setDateEdit(tv_date);
+        });
+
+        edtContent.addTextChangedListener(new CustomTextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                super.onTextChanged(s, start, before, count);
+                iconUndoRedo();
+            }
         });
     }
     //set color view
@@ -446,7 +529,8 @@ public class CreateNote extends AppCompatActivity {
                 .setTheme(R.style.CustomDatePicker);
         MaterialDatePicker<Long> picker = builder.build();
 
-        picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<>() {
+
+        picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @SuppressLint("DefaultLocale")
             @Override
             public void onPositiveButtonClick(Long selection) {
@@ -463,6 +547,8 @@ public class CreateNote extends AppCompatActivity {
                 setDate.setText(dayChoose);
             }
         });
+
+
         picker.show(getSupportFragmentManager(),"datePicker");
     }
     private void setDateEdit(TextView tvDate){
@@ -475,20 +561,17 @@ public class CreateNote extends AppCompatActivity {
         int minute = calendar.get(Calendar.MINUTE);
         int second = calendar.get(Calendar.SECOND);
 
-        picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<>() {
-            @SuppressLint("DefaultLocale")
-            @Override
-            public void onPositiveButtonClick(Long selection) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(selection);
-                calendar.setFirstDayOfWeek(Calendar.MONDAY);
-                calendar.set(Calendar.HOUR_OF_DAY,hour);
-                calendar.set(Calendar.MINUTE,minute);
-                calendar.set(Calendar.SECOND,second);
-                dateChoose = sdf.format(calendar.getTime());
+
+        picker.addOnPositiveButtonClickListener(selection -> {
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.setTimeInMillis(selection);
+                calendar1.setFirstDayOfWeek(Calendar.MONDAY);
+                calendar1.set(Calendar.HOUR_OF_DAY,hour);
+                calendar1.set(Calendar.MINUTE,minute);
+                calendar1.set(Calendar.SECOND,second);
+                dateChoose = sdf.format(calendar1.getTime());
                 tvDate.setText(dateChoose);
-            }
-        });
+            });
         picker.show(getSupportFragmentManager(),"datePicker");
     }
     private void initViews() {
@@ -506,8 +589,6 @@ public class CreateNote extends AppCompatActivity {
         sheetColor = new BottomSheetColor();
         ivb_undo = findViewById(R.id.btnUndo);
         ivb_redo = findViewById(R.id.btnRedo);
-        undoSt.addFirst("");//trang thai dau phong khi user undo ve nhu luc chua nhap
-        //trang thai ban dau cua 2 icon undo va redo
         iconUndoRedo();
         //lay ngay hom nay lam ngay mac dinh khi chua sua
         Calendar calendar = Calendar.getInstance();
@@ -531,57 +612,20 @@ public class CreateNote extends AppCompatActivity {
             manager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
         }
     }
-    //method undo
-    private void undo(){
-        if(undoSt.size() <= 1) return;
-        String currentText = undoSt.removeLast();
-        redoSt.addLast(currentText);
-        String previousText = undoSt.peekLast();
-        isUndoRedoMode = true;//bat dau mode undo
-        edtContent.setText(previousText);
-        assert previousText != null;
-        edtContent.setSelection(previousText.length());//dua con tro ve cuoi cau
-        isUndoRedoMode = false;//ket thuc mode undo
-        iconUndoRedo();
-    }
-    //method redo
-    private void redo(){
-        if(redoSt.isEmpty()) return;
-        String currentText = redoSt.removeLast();
-        undoSt.addLast(currentText);
-
-        String nextText = redoSt.peekLast();
-        if(nextText != null) {
-            isUndoRedoMode = true;//bat dau mode redo
-            edtContent.setText(nextText);
-            edtContent.setSelection(nextText.length());//dua con tro ve cuoi cau
-            isUndoRedoMode = false;//ket thuc mode redo
-        }
-        iconUndoRedo();
-    }
-
-    //add vao undoSt -> chi cho undo 100 lan
-    private void addUndo(String text){
-        if(undoSt.size() >= MAX_UNDO){
-            undoSt.removeFirst();//xoa day duoi -> xoa trang thai cu nhat
-        }
-        undoSt.addLast(text);
-    }
-
     private void iconUndoRedo(){
         //icon undo
-        if(undoSt.size() <= 1){
+        if(!helper.getCanUndo()){
             ivb_undo.setImageResource(R.drawable.ic_undo_none);
-            ivb_undo.setEnabled(false);//khong bat su kien click
+            ivb_undo.setEnabled(false);//khong bat su kien click(khong the undo)
         }
         else{
             ivb_undo.setEnabled(true);
             setIconUndoByColorBackground();
         }
         //icon redo
-        if(redoSt.isEmpty()){
+        if(!helper.getCanRedo()){
             ivb_redo.setImageResource(R.drawable.ic_redo_none);
-            ivb_redo.setEnabled(false);//khong bat su kien click
+            ivb_redo.setEnabled(false);//khong bat su kien click(khong the redo)
         }
         else{
             ivb_redo.setEnabled(true);

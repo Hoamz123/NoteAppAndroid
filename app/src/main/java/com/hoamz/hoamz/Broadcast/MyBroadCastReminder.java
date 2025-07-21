@@ -18,25 +18,40 @@ import androidx.core.app.NotificationManagerCompat;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.data.DAO.NoteDao;
 import com.hoamz.hoamz.data.DAO.NoteDatabase;
+import com.hoamz.hoamz.data.local.SharePre;
 import com.hoamz.hoamz.data.model.Note;
 import com.hoamz.hoamz.utils.AlarmUtils;
 import com.hoamz.hoamz.utils.Constants;
+
+import java.security.Key;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MyBroadCastReminder extends BroadcastReceiver {
     private final String ChannelID = "notifyChannel";
     private final String ChannelName = "Notify";
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     @Override
     public void onReceive(Context context, Intent intent) {
-        //xy ly neu nhu can nhac lai(tam thoi thi chua dong den )
-        //bayh minh chi can thong bao la duoc
-        //lay ra noi dung nhac nho tu intent
         if(intent != null){
             Note note = intent.getParcelableExtra(Constants.KEY_NOTE);
             if(note != null){
                 showNotify(context,note);
+                long timeRepeat = SharePre.getInstance(context).getTimeRepeat(note.getId());
+                Log.e("ID",note.getId() + "");
+                Log.e("Time",timeRepeat + "");
+                if(timeRepeat > 0){
+                    //nhac lai
+                    long timeNext = System.currentTimeMillis() + timeRepeat;
+                    Intent intent1 = new Intent(context, MyBroadCastReminder.class);
+                    intent1.putExtra(Constants.KEY_NOTE,note);
+                    AlarmUtils.getInstance().setAlarmNotify(context,intent1,note.getId(),timeNext);
+                }
+                else{
+                    Intent intent1 = new Intent(context, MyBroadCastReminder.class);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context,note.getId(),intent1,
+                            PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                    AlarmUtils.getInstance().setCancelAlarm(context,pendingIntent);
+                }
             }
         }
     }

@@ -19,7 +19,7 @@ public interface NoteDao {
     LiveData<List<Note>> getAllNotes();
     //chen them 1 ban ghi
     @Insert
-    void insertNewNote(Note newNote);
+    long insertNewNote(Note newNote);
     //xoa mot ban ghi
     @Delete
     void deleteNote(Note note);

@@ -10,8 +10,11 @@ import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.Note;
 import com.hoamz.hoamz.data.model.NoteDeleted;
 
+import kotlin.jvm.Volatile;
+
 @Database(entities = {Note.class, Label.class, NoteDeleted.class},version = 7)
 public abstract class NoteDatabase extends RoomDatabase {
+    @Volatile
     private static NoteDatabase instance;
     private static final String name_database = "notes_database";
 
