@@ -64,4 +64,11 @@ public  class SharePre {
     public int getIdBackgroundWidget(int idWidget) {
         return sharedPreferences.getInt(idWidget + "background", 0);
     }
+
+    public void saveTimeRepeat(int idNote,long timeRepeat){
+        sharedPreferences.edit().putLong(idNote + "timeRepeat",timeRepeat).apply();
+    }
+    public long getTimeRepeat(int idNote){
+        return sharedPreferences.getLong(idNote + "timeRepeat",0);
+    }
 }

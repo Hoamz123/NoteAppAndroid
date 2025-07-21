@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 import com.hoamz.hoamz.data.model.NoteDeleted;
 import com.hoamz.hoamz.utils.Constants;
@@ -39,8 +40,11 @@ public class NoteRepo {
     }
 
     //them note
-    public void insertNewNote(Note note){
-        executorService.execute(() -> noteDao.insertNewNote(note));
+    public void insertNewNote(Note note, Consumer<Long> callBack){
+        executorService.execute(() -> {
+            long id = noteDao.insertNewNote(note);
+            callBack.accept(id);
+        });
     }
 
     //xoa 1 note

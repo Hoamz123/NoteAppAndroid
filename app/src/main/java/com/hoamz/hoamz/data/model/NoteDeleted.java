@@ -37,7 +37,7 @@ public class NoteDeleted implements Parcelable {
         timeDeleted = in.readLong();
     }
 
-    public static final Creator<NoteDeleted> CREATOR = new Creator<>() {
+    public static final Creator<NoteDeleted> CREATOR = new Creator<NoteDeleted>() {
         @Override
         public NoteDeleted createFromParcel(Parcel in) {
             return new NoteDeleted(in);

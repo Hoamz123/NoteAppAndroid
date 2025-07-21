@@ -12,6 +12,7 @@ import com.hoamz.hoamz.data.repository.NoteRepo;
 import com.hoamz.hoamz.utils.Constants;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class NoteViewModel extends AndroidViewModel {
     private final NoteRepo noteRepo;
@@ -26,8 +27,8 @@ public class NoteViewModel extends AndroidViewModel {
     }
 
     //them note
-    public void insertNewNote(Note note){
-        noteRepo.insertNewNote(note);
+    public void insertNewNote(Note note, Consumer<Long> callBack){
+        noteRepo.insertNewNote(note,callBack);
     }
 
     //xoa 1 note
