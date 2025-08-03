@@ -36,7 +36,7 @@ Cho phép người dùng tạo, chỉnh sửa, lưu trữ và quản lý các gh
 - Database: Room
 - UI: XML layouts, RecyclerView, ConstraintLayout, Material Design Components, and Animations
 - Lifecycle-Aware Components: LiveData, ViewModel
-- Background Tasks:
+- Background Tasks:  
 🔔 AlarmManager – for scheduling precise notifications and reminders  
 ⚙️ WorkManager – for handling deferrable and guaranteed background work
 
