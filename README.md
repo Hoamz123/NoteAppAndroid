@@ -5,13 +5,21 @@ Cho phép người dùng tạo, chỉnh sửa, lưu trữ và quản lý các gh
 
 ## 📱 Giao diện
 
-<img src="screenshots/home.png" alt="Home" width="250" height="600" />
-<img src="screenshots/edit.png" alt="Edit" width="250" height="600" />
-<img src="screenshots/calendar.png" alt="Calendar" width="250" height="600" />
-<img src="screenshots/more.png" alt="More option" width="250" height="600" />
-<img src="screenshots/reminder.png" alt="Reminder" width="250" height="600" />
-<img src="screenshots/reminder_1.png" alt="Set Reminder" width="250" height="600" />
-<img src="screenshots/color.png" alt="Color Picker" width="250" height="600" />
+<!-- Dòng 1 -->
+<p>
+  <img src="screenshots/home.png" alt="Home" width="250" height="600" />
+  <img src="screenshots/edit.png" alt="Edit" width="250" height="600" />
+  <img src="screenshots/calendar.png" alt="Calendar" width="250" height="600" />
+</p>
+
+<!-- Dòng 2 -->
+<p>
+  <img src="screenshots/more.png" alt="More option" width="250" height="600" />
+  <img src="screenshots/reminder.png" alt="Reminder" width="250" height="600" />
+  <img src="screenshots/reminder_1.png" alt="Set Reminder" width="250" height="600" />
+  <img src="screenshots/color.png" alt="Color Picker" width="250" height="600" />
+</p>
+
 
 
 ## 🚀 Tính năng chính
