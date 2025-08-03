@@ -4,18 +4,43 @@
 Cho phép người dùng tạo, chỉnh sửa, lưu trữ và quản lý các ghi chú một cách hiệu quả.
 
 ## 📱 Giao diện
-<p align="center">
-  <img src="screenshots/home.png" width="300" height="650"/>
-  <img src="screenshots/edit.png" width="300" height="650"/>
-  <img src="screenshots/calendar.png" width="300" height="650"/>
+
+<div align="center">
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="screenshots/home.png" width="250" height="600"/>
+    <figcaption align="center">Home</figcaption>
+  </figure>
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="screenshots/edit.png" width="250" height="600"/>
+    <figcaption align="center">Edit</figcaption>
+  </figure>
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="screenshots/calendar.png" width="250" height="600"/>
+    <figcaption align="center">Calendar</figcaption>
+  </figure>
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="screenshots/set_reminder.png" width="250" height="600"/>
+    <figcaption align="center">Set Reminder</figcaption>
+  </figure>
   <br/>
-  <img src="screenshots/categories.png" width="300" height="650"/>
-  <img src="screenshots/more.png" width="300" height="650"/>
-  <img src="screenshots/color.png" width="300" height="650"/>
-  <br/>
-  <img src="screenshots/set_reminder.png" width="300" height="650"/>
-  <img src="screenshots/reminder.png" width="300" height="650"/>
-</p>
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="screenshots/categories.png" width="250" height="600"/>
+    <figcaption align="center">Categories</figcaption>
+  </figure>
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="screenshots/more.png" width="250" height="600"/>
+    <figcaption align="center">More Options</figcaption>
+  </figure>
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="screenshots/color.png" width="250" height="600"/>
+    <figcaption align="center">Color Picker</figcaption>
+  </figure>
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="screenshots/reminder.png" width="250" height="600"/>
+    <figcaption align="center">Reminder List</figcaption>
+  </figure>
+</div>
+
 
 
 ## 🚀 Tính năng chính
