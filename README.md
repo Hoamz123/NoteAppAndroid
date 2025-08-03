@@ -4,12 +4,6 @@
 Cho phép người dùng tạo, chỉnh sửa, lưu trữ và quản lý các ghi chú một cách hiệu quả.
 
 ## 📱 Giao diện
-<p align="center">
-  <img src="screenshots/home.png" width="150" height="450"/>
-  <img src="screenshots/edit.png" width="150" height="450"/>
-  <img src="screenshots/calendar.png" width="150" height="450"/>
-</p>
-
 
 ## 🚀 Tính năng chính
 - ✍️ Thêm, sửa, xoá ghi chú
