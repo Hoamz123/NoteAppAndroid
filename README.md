@@ -4,14 +4,18 @@
 Cho phép người dùng tạo, chỉnh sửa, lưu trữ và quản lý các ghi chú một cách hiệu quả.
 
 ## 📱 Giao diện
-![Screenshot](screenshots/home.png)
-![Screenshot](screenshots/edit.png)
-![Screenshot](screenshots/calendar.png)
-![Screenshot](screenshots/categories.png)
-![Screenshot](screenshots/more.png)
-![Screenshot](screenshots/color.png)
-![Screenshot](screenshots/set_reminder.png)
-![Screenshot](screenshots/reminder.png)
+<p align="center">
+  <img src="screenshots/home.png" width="300" height="650"/>
+  <img src="screenshots/edit.png" width="300" height="650"/>
+  <img src="screenshots/calendar.png" width="300" height="650"/>
+  <br/>
+  <img src="screenshots/categories.png" width="300" height="650"/>
+  <img src="screenshots/more.png" width="300" height="650"/>
+  <img src="screenshots/color.png" width="300" height="650"/>
+  <br/>
+  <img src="screenshots/set_reminder.png" width="300" height="650"/>
+  <img src="screenshots/reminder.png" width="300" height="650"/>
+</p>
 
 
 ## 🚀 Tính năng chính
