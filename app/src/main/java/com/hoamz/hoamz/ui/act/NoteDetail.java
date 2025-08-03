@@ -206,6 +206,7 @@ public class NoteDetail extends AppCompatActivity {
             //set lai mau -> save lai vao Room
             noteEdit.setColorBgID(colorBackground);
             noteViewModel.updateNote(noteEdit,state ->{});
+            hideKey();
             if(action != null && action.equals("notify")){
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -789,17 +790,23 @@ public class NoteDetail extends AppCompatActivity {
         return new ViewModelProvider(this).get(ReminderViewModel.class);
     }
 
-    private void ShowKey(){
-        //hien thi ban phim ao
-        InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        manager.showSoftInput(edtContent,InputMethodManager.SHOW_IMPLICIT);
+    private void ShowKey() {
+        if (edtContent != null) {
+            edtContent.requestFocus();
+            InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (manager != null) {
+                manager.showSoftInput(edtContent, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }
     }
     private void hideKey() {
         //an ban phim ao
         InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        boolean isOpen = manager.isAcceptingText();//true dang o trang thai mo
-        if (isOpen) {
-            manager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+        if (manager != null && manager.isAcceptingText()) {
+            View currentFocus = getCurrentFocus();
+            if (currentFocus != null) {
+                manager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            }
         }
     }
     private void iconUndoRedo(){

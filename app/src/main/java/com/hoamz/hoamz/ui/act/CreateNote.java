@@ -245,6 +245,7 @@ public class CreateNote extends AppCompatActivity {
                 });
                 updateNote();
             }
+            hideKey();
             finish();
         });
 
@@ -603,19 +604,6 @@ public class CreateNote extends AppCompatActivity {
         binding.rcPhotos.setLayoutManager(new GridLayoutManager(this, 2));//hai cot
         adapterPhoto = new PhotoAdapter();
     }
-    private void ShowKey(){
-        //hien thi ban phim ao
-        InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        manager.showSoftInput(edtContent,InputMethodManager.SHOW_IMPLICIT);
-    }
-    private void hideKey() {
-        //an ban phim ao
-        InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        boolean isOpen = manager.isAcceptingText();
-        if (isOpen) {
-            manager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-        }
-    }
     private void iconUndoRedo(){
         //icon undo
         if(!helper.getCanUndo()){
@@ -662,5 +650,25 @@ public class CreateNote extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void requirePermissionNotify() {
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.POST_NOTIFICATIONS},1);
+    }
+
+    private void ShowKey() {
+        if (edtContent != null) {
+            edtContent.requestFocus();
+            InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (manager != null) {
+                manager.showSoftInput(edtContent, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }
+    }
+    private void hideKey() {
+        //an ban phim ao
+        InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (manager != null && manager.isAcceptingText()) {
+            View currentFocus = getCurrentFocus();
+            if (currentFocus != null) {
+                manager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            }
+        }
     }
 }

@@ -336,7 +336,7 @@ public class DialogUtils {
             //neu da qua thoi gian
             if (reminder.getTrigger() < System.currentTimeMillis() && reminder.getTimeRepeat() == 0) {
                 @SuppressLint("UseCompatLoadingForDrawables") Drawable drawable_Detail = activity.getResources().getDrawable(R.drawable.baseline_arrow_drop_down_24, null);
-                @SuppressLint("UseCompatLoadingForDrawables") Drawable drawable = activity.getResources().getDrawable(R.drawable.outline_alarm_24, null);
+                @SuppressLint("UseCompatLoadingForDrawables") Drawable drawable = activity.getResources().getDrawable(R.drawable.iv_alarm_svg_black, null);
                 tvReminder.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, drawable_Detail, null);
             } else {
                 @SuppressLint("UseCompatLoadingForDrawables") Drawable drawable_Detail = activity.getResources().getDrawable(R.drawable.baseline_arrow_drop_down_24, null);

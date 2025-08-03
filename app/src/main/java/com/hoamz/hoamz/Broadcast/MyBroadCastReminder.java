@@ -75,10 +75,10 @@ public class MyBroadCastReminder extends BroadcastReceiver {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.ChannelID);
             builder.setContentTitle(title)
                     .setContentText(content)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setOngoing(false)
                     .setContentIntent(pendingIntent)
-                    .setSmallIcon(R.drawable.ic_notifiation);
+                    .setSmallIcon(R.drawable.logo_2);
 
             //hien thi notify
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
