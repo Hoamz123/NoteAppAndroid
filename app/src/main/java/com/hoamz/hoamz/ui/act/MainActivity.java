@@ -766,12 +766,6 @@ public class MainActivity extends AppCompatActivity {
 
         //anh xa view thong qua id
         private void initView() {
-            //check permission
-            if(ActivityCompat.checkSelfPermission(this, Arrays.toString(new String[]{Manifest.permission.POST_NOTIFICATIONS})) != PackageManager.PERMISSION_GRANTED){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    requirePermissionNotify();
-                }
-            };
             iv_showSearch = findViewById(R.id.iv_show_search);
             edtSearchView = findViewById(R.id.edtSearch);
             ivShowMoreSetup = findViewById(R.id.ic_show_more_setting);
@@ -844,10 +838,5 @@ public class MainActivity extends AppCompatActivity {
                     showNotes(sortCondition,labelCurrentClick);
                     }, 600);
             });
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-        private void requirePermissionNotify() {
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.POST_NOTIFICATIONS},1);
         }
 }

@@ -1,13 +1,16 @@
 package com.hoamz.hoamz.ui.act;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -21,11 +24,13 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -56,6 +61,7 @@ import com.hoamz.hoamz.viewmodel.ReminderViewModel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -249,6 +255,12 @@ public class CreateNote extends AppCompatActivity {
         });
 
         ivSetAlarm.setOnClickListener(v ->{
+            //check permission
+            if(ActivityCompat.checkSelfPermission(this, Arrays.toString(new String[]{Manifest.permission.POST_NOTIFICATIONS})) != PackageManager.PERMISSION_GRANTED){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requirePermissionNotify();
+                }
+            };
             ivSetAlarm.setEnabled(false);
             if(!isSaved) {
                 saveNote(() -> {
@@ -647,4 +659,8 @@ public class CreateNote extends AppCompatActivity {
         return new ViewModelProvider(this).get(PhotoViewModel.class);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    private void requirePermissionNotify() {
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.POST_NOTIFICATIONS},1);
+    }
 }

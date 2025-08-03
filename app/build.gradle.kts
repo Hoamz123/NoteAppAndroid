@@ -85,4 +85,8 @@ dependencies {
     //photoview
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
 
+
+    //animation
+    implementation("com.airbnb.android:lottie:6.6.7")
+
 }

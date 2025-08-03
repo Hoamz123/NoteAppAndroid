@@ -1,15 +1,18 @@
 package com.hoamz.hoamz.ui.act;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -26,12 +29,14 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.camera.core.processing.SurfaceProcessorNode;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
@@ -71,6 +76,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -501,6 +507,12 @@ public class NoteDetail extends AppCompatActivity {
         tvDate.setOnClickListener(v -> setDateEdit(tvDate));
 
         iv_alarm.setOnClickListener(v ->{
+            //check permission
+            if(ActivityCompat.checkSelfPermission(this, Arrays.toString(new String[]{Manifest.permission.POST_NOTIFICATIONS})) != PackageManager.PERMISSION_GRANTED){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requirePermissionNotify();
+                }
+            };
             iv_alarm.setEnabled(false);
             LiveData<List<Reminder>> listLiveData = getReminderViewModel().getAllRemindersByIdNote(idNote);
             listLiveData.observe(this,list ->{
@@ -514,7 +526,7 @@ public class NoteDetail extends AppCompatActivity {
                 );
                 listLiveData.removeObservers(this);
             });
-            new Handler().postDelayed(() ->{iv_alarm.setEnabled(true);},500);
+            new Handler().postDelayed(() ->{iv_alarm.setEnabled(true);},500);//tranh user nhan lien tuc
         });
 
         photoAdapter.setOnClickPhoto(photo ->{
@@ -908,6 +920,10 @@ public class NoteDetail extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    private void requirePermissionNotify() {
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.POST_NOTIFICATIONS},1);
+    }
 
     // TODO: 7/29/2025 mai them id node vao noteHide
     // TODO: 7/29/2025 nghi cach bam vao image thi show anh nen 

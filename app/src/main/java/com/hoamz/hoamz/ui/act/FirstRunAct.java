@@ -1,10 +1,15 @@
 package com.hoamz.hoamz.ui.act;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.NoCopySpan;
+import android.util.Half;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -14,6 +19,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieCompositionFactory;
+import com.airbnb.lottie.LottieDrawable;
+import com.airbnb.lottie.LottieListener;
 import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.data.local.SharePre;
 import com.hoamz.hoamz.data.model.Label;
@@ -27,6 +36,7 @@ public class FirstRunAct extends AppCompatActivity {
     private Button btnStart;
     private LabelViewModel model;
     private NoteViewModel noteViewModel;
+    private LottieAnimationView lottieAnimationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -45,9 +55,24 @@ public class FirstRunAct extends AppCompatActivity {
         //blablala -> main
         model = new ViewModelProvider(this).get(LabelViewModel.class);
         noteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
+        lottieAnimationView = findViewById(R.id.lottie);
+
+
+        LottieCompositionFactory.fromAsset(this,"splash")
+                .addListener(composition -> {
+            lottieAnimationView.setComposition(composition);
+            lottieAnimationView.setRepeatCount(LottieDrawable.INFINITE);
+            lottieAnimationView.playAnimation();
+        });
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(() ->{
+            btnStart.setAlpha(0f);
+            btnStart.setVisibility(View.VISIBLE);
+            btnStart.animate().alpha(1f).setDuration(500).start();
+        },2500);
 
         //tao cac gia tri mac dinh ban dau khi bat dau dung app
-
         btnStart.setOnClickListener(v ->{
             //neu nhu chay vao dau -> mat lan dau
             //chen mac dinh cho 3 cai nhan
