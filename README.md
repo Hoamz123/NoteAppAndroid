@@ -5,16 +5,9 @@ Cho phép người dùng tạo, chỉnh sửa, lưu trữ và quản lý các gh
 
 ## 📱 Giao diện
 <p align="center">
-  <img src="screenshots/home.png" width="200" height="500"/>
-  <img src="screenshots/edit.png" width="200" height="500"/>
-  <img src="screenshots/calendar.png" width="200" height="500"/>
-  <br/>
-  <img src="screenshots/categories.png" width="200" height="500"/>
-  <img src="screenshots/more.png" width="200" height="500"/>
-  <img src="screenshots/color.png" width="200" height="500"/>
-  <br/>
-  <img src="screenshots/set_reminder.png" width="200" height="500"/>
-  <img src="screenshots/reminder.png" width="200" height="500"/>
+  <img src="screenshots/home.png" width="150" height="450"/>
+  <img src="screenshots/edit.png" width="150" height="450"/>
+  <img src="screenshots/calendar.png" width="150" height="450"/>
 </p>
 
 
@@ -27,11 +20,14 @@ Cho phép người dùng tạo, chỉnh sửa, lưu trữ và quản lý các gh
 - ⏰ Nhắc nhở (Reminders) (tuỳ chọn)
 
 ## 🧱 Kiến trúc & Công nghệ
-- **Language:** Java
-- **Architecture:** MVVM (Model - View - ViewModel)
-- **Database:** Room
-- **UI:** XML, RecyclerView, ConstraintLayout, Material Design Components, Animation
-- **LiveData & ViewModel:** Lifecycle-aware
+- Language: Java
+- Architecture: MVVM (Model - View - ViewModel)
+- Database: Room
+- UI: XML layouts, RecyclerView, ConstraintLayout, Material Design Components, and Animations
+- Lifecycle-Aware Components: LiveData, ViewModel
+- Background Tasks:
+🔔 AlarmManager – for scheduling precise notifications and reminders
+⚙️ WorkManager – for handling deferrable and guaranteed background work
 
 ## 🛠️ Cài đặt & chạy thử
 1. Clone repo:
