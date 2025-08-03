@@ -5,6 +5,15 @@ Cho phép người dùng tạo, chỉnh sửa, lưu trữ và quản lý các gh
 
 ## 📱 Giao diện
 
+<img src="screenshots/home.png" alt="Home" width="250" height="600" />
+<img src="screenshots/edit.png" alt="Edit" width="250" height="600" />
+<img src="screenshots/calendar.png" alt="Calendar" width="250" height="600" />
+<img src="screenshots/more.png" alt="More option" width="250" height="600" />
+<img src="screenshots/reminder.png" alt="Reminder" width="250" height="600" />
+<img src="screenshots/reminder_1.png" alt="Set Reminder" width="250" height="600" />
+<img src="screenshots/color.png" alt="Color Picker" width="250" height="600" />
+
+
 ## 🚀 Tính năng chính
 - ✍️ Thêm, sửa, xoá ghi chú
 - 📌 Ghim ghi chú quan trọng
@@ -20,7 +29,7 @@ Cho phép người dùng tạo, chỉnh sửa, lưu trữ và quản lý các gh
 - UI: XML layouts, RecyclerView, ConstraintLayout, Material Design Components, and Animations
 - Lifecycle-Aware Components: LiveData, ViewModel
 - Background Tasks:
-🔔 AlarmManager – for scheduling precise notifications and reminders
+🔔 AlarmManager – for scheduling precise notifications and reminders  
 ⚙️ WorkManager – for handling deferrable and guaranteed background work
 
 ## 🛠️ Cài đặt & chạy thử
