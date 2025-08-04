@@ -2,6 +2,7 @@ package com.hoamz.hoamz.ui.act;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -39,6 +40,11 @@ public class TakePhoto extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityTakePhotoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        //khoa dung man hinh
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+//        getWindow().setStatusBarColor(getColor(R.color.color_bg));
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         previewView = findViewById(R.id.preViewView);
         requestCameraPermission();

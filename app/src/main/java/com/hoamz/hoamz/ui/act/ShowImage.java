@@ -1,10 +1,12 @@
 package com.hoamz.hoamz.ui.act;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,10 +33,14 @@ public class ShowImage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         EdgeToEdge.enable(this);
         binding = ActivityShowImageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        //khoa dung man hinh
 
+//        getWindow().setStatusBarColor(getColor(R.color.color_bg));
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         bottomSheetPreviewImage = new BottomSheetPreviewImage();
 
         Intent intent = getIntent();

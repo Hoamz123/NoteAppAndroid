@@ -74,7 +74,7 @@ public class MyBroadCastReminder extends BroadcastReceiver {
             //tao noi dung notify
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.ChannelID);
             builder.setContentTitle(title)
-                    .setContentText(content)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setOngoing(false)
                     .setContentIntent(pendingIntent)

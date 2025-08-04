@@ -1,15 +1,17 @@
 package com.hoamz.hoamz.ui.fragment;
 
+import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import com.hoamz.hoamz.R;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.hoamz.hoamz.R;
 import com.hoamz.hoamz.databinding.BtSheetPreviewImageBinding;
 
 public class BottomSheetPreviewImage extends BottomSheetDialogFragment {
@@ -35,6 +37,20 @@ public class BottomSheetPreviewImage extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         onClick();
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+        dialog.setOnShowListener(d -> {
+            View bottomSheet;
+            bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                bottomSheet.setBackgroundColor(Color.TRANSPARENT);
+            }
+        });
+        return dialog;
     }
 
     private void onClick(){
