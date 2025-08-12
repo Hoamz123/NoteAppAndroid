@@ -5,7 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import com.hoamz.hoamz.data.DAO.ReminderDao;
-import com.hoamz.hoamz.data.DAO.ReminderDatabase;
+import com.hoamz.hoamz.data.ReminderDatabase;
 import com.hoamz.hoamz.data.model.Reminder;
 
 import java.util.List;

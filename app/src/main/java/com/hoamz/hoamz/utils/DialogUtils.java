@@ -517,7 +517,9 @@ public class DialogUtils {
         //khi user nhan save -> gui trigger va repeat ve manager reminder
         tcAcSaveReminder.setOnClickListener(v -> {
             long triggerEdit = calendarAlarm.getTimeInMillis();
-            miConsumer.accept(triggerEdit, getTimeRepeat(tvShowTimeRepeat.getText().toString()));
+            if(triggerEdit > System.currentTimeMillis()){
+                miConsumer.accept(triggerEdit, getTimeRepeat(tvShowTimeRepeat.getText().toString()));
+            }
             dialog.dismiss();
         });
 

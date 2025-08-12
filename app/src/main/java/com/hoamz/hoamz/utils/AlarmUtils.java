@@ -6,8 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 public class AlarmUtils {
-    @SuppressLint("StaticFieldLeak")
-    private static AlarmUtils instance;
+    private volatile static AlarmUtils instance;
 
     public static AlarmUtils getInstance(){
         if(instance == null){

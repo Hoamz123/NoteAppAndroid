@@ -29,6 +29,7 @@ import java.util.function.Consumer;
 
 public class CameraUtils {
     private volatile static CameraUtils instance;
+    private ProcessCameraProvider cameraProvider;
     private ImageCapture imageCapture;
     public MutableLiveData<String> error = new MutableLiveData<>();//quan sat loi
 
@@ -53,6 +54,7 @@ public class CameraUtils {
         processCameraProviderListenableFuture.addListener(() -> {
             try {
                 ProcessCameraProvider processCameraProvider = processCameraProviderListenableFuture.get();
+                cameraProvider =  processCameraProvider;
                 //khoi tao preview
                 Preview preview = new Preview.Builder().build();
                 //khoi tao selector
@@ -93,6 +95,13 @@ public class CameraUtils {
         });
     }
 
+    //cancel
+    public void stopCamera() {
+        if (cameraProvider != null) {
+            cameraProvider.unbindAll();
+        }
+    }
+
     private Executor getMainThreadExecutor(Context context) {
         return ContextCompat.getMainExecutor(context);
     }
@@ -116,11 +125,10 @@ public class CameraUtils {
     public File saveBitmapToFile(Bitmap bitmap, Context context) {
         File file = new File(context.getCacheDir(), "temp_image_" + System.currentTimeMillis() + ".jpg");
         try (FileOutputStream out = new FileOutputStream(file)) {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
             out.flush();
             return file;
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
     }

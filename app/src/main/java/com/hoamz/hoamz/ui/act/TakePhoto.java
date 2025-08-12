@@ -83,8 +83,11 @@ public class TakePhoto extends AppCompatActivity {
         });
 
         binding.icExitTakePhoto.setOnClickListener(v ->{
+            CameraUtils.getInstance().stopCamera();
             finish();
         });
+
+
 
         CameraUtils.getInstance().error.observe(this,error ->{
             Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
@@ -107,6 +110,10 @@ public class TakePhoto extends AppCompatActivity {
             binding.acCancelSaveImage.setVisibility(View.INVISIBLE);//an nut cancel
             binding.acSavePicture.setVisibility(View.INVISIBLE);//an nut save
             isTookPhoto = false;
+
+            //restart
+            CameraUtils.getInstance().stopCamera();//bug o day -> cancel xong start lai -> de restart trang thai
+            CameraUtils.getInstance().startCamera(this,this,previewView,isBackCamera);
         });
         binding.acSavePicture.setOnClickListener(v -> {
             if (bitmapSaveTemp != null) {
@@ -123,7 +130,14 @@ public class TakePhoto extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        CameraUtils.getInstance().stopCamera();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        CameraUtils.getInstance().stopCamera();
+        super.onPause();
     }
 
     //request permission camera

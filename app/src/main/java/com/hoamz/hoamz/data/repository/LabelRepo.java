@@ -3,7 +3,7 @@ package com.hoamz.hoamz.data.repository;
 import android.app.Application;
 import androidx.lifecycle.LiveData;
 import com.hoamz.hoamz.data.DAO.LabelDAO;
-import com.hoamz.hoamz.data.DAO.NoteDatabase;
+import com.hoamz.hoamz.data.NoteDatabase;
 import com.hoamz.hoamz.data.model.Label;
 import java.util.List;
 import java.util.concurrent.ExecutorService;

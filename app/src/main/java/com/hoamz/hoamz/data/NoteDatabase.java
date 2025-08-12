@@ -1,10 +1,14 @@
-package com.hoamz.hoamz.data.DAO;
+package com.hoamz.hoamz.data;
 
 import android.content.Context;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+
+import com.hoamz.hoamz.data.DAO.LabelDAO;
+import com.hoamz.hoamz.data.DAO.NoteDao;
+import com.hoamz.hoamz.data.DAO.PhotoDao;
 import com.hoamz.hoamz.data.model.Label;
 import com.hoamz.hoamz.data.model.Note;
 import com.hoamz.hoamz.data.model.Photo;

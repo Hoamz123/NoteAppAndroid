@@ -336,6 +336,8 @@ public class NoteDetail extends AppCompatActivity {
 
         //luu note dang text
         binding.acShowMoreSetupEdit.llSaveTXT.setOnClickListener(v->{
+            binding.constrainMoreOption.setVisibility(View.INVISIBLE);
+            isShowMoreOption = false;
             String sub = edtTitle.getText().toString();
             String content = edtContent.getText().toString();
             FileUtils.writeToFile(getApplicationContext(),content,sub);
@@ -343,6 +345,8 @@ public class NoteDetail extends AppCompatActivity {
 
         //luu note dang image
         binding.acShowMoreSetupEdit.llSaveImage.setOnClickListener(v->{
+            binding.constrainMoreOption.setVisibility(View.INVISIBLE);
+            isShowMoreOption = false;
             String sub = edtTitle.getText().toString();
             String content = edtContent.getText().toString();
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),colorBackground);
