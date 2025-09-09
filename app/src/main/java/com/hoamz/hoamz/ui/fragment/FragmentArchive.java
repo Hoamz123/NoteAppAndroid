@@ -374,6 +374,8 @@ public class FragmentArchive extends BaseFragment {
     public boolean onBackPressed() {
         if(isMultiSelect){
             onNormalSelect();
+            adapter.setClearAllClick();
+            adapter.setCancelMultiSelect();
             isMultiSelect = false;
             return true;//xu ly nut back o day
         }

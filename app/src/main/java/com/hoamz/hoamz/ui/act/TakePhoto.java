@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -69,12 +70,15 @@ public class TakePhoto extends AppCompatActivity {
 
             //sau khi chup xong -< an previewView -> hien thi ivPreview de hien thi anh vua chup
             CameraUtils.getInstance().takePhoto(this, bitmap ->{
-                bitmapSaveTemp = bitmap;
+                if(!isBackCamera){
+                    bitmapSaveTemp = getBitmap(bitmap);
+                }
+                else bitmapSaveTemp = bitmap;
                 runOnUiThread(() ->{
                     binding.preViewView.setVisibility(View.INVISIBLE);//an previewView
                     binding.ivPreviewView.setVisibility(View.VISIBLE);//hien thi ivPreView
                     Glide.with(binding.ivPreviewView.getContext())
-                            .load(bitmap)
+                            .load(bitmapSaveTemp)
                             .into(binding.ivPreviewView);
                     isTookPhoto = true;
                     updateAfterTakePhoto();
@@ -88,11 +92,9 @@ public class TakePhoto extends AppCompatActivity {
         });
 
 
-
         CameraUtils.getInstance().error.observe(this,error ->{
             Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
         });
-
     }
 
     private void updateAfterTakePhoto(){
@@ -161,5 +163,12 @@ public class TakePhoto extends AppCompatActivity {
                 CameraUtils.getInstance().startCamera(getApplicationContext(),this,previewView,isBackCamera);
             }
         }
+    }
+
+    //lat anh
+    public Bitmap getBitmap(Bitmap bitmap){
+        Matrix matrix = new Matrix();
+        matrix.postScale(-1,1);
+        return Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
     }
 }

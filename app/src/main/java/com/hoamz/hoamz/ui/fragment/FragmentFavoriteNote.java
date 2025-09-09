@@ -365,6 +365,8 @@ public class FragmentFavoriteNote extends BaseFragment {
         if(isMultiSelect){
             onNormalSelect();
             isMultiSelect = false;
+            adapter.setClearAllClick();
+            adapter.setCancelMultiSelect();
             return true;//xu ly nut back o day
         }
         return false;//khong xu li de mainAct xu ly

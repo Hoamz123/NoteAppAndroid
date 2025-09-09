@@ -164,35 +164,35 @@ public class MainActivity extends AppCompatActivity {
                         if(handled) return;//neu true tuc la da xu li ben trong fragment
                     }
                 }
-                if(!handled){
-                    //khong fragment nao xu li back tren device
-                    //xu li theo act
-                    if(isMultiSelect){
-                        binding.toolbarSM.setVisibility(View.INVISIBLE);
-                        isMultiSelect = false;
-                        binding.toolbar.setVisibility(View.VISIBLE);//hien toolbar cu
-                        //hien fab add
-                        binding.fabAdd.setVisibility(View.VISIBLE);
-                        //an thanh action
-                        binding.toolbarSelMul.titleMulSel.setText("0 Selected");
-                        binding.constrainActionMulSel.setVisibility(View.INVISIBLE);
-                        return;
+                //khong fragment nao xu li back tren device
+                //xu li theo act
+                if(isMultiSelect){
+                    binding.toolbarSM.setVisibility(View.INVISIBLE);
+                    isMultiSelect = false;
+                    binding.toolbar.setVisibility(View.VISIBLE);//hien toolbar cu
+                    //hien fab add
+                    binding.fabAdd.setVisibility(View.VISIBLE);
+                    //an thanh action
+                    binding.toolbarSelMul.titleMulSel.setText("0 Selected");
+                    binding.constrainActionMulSel.setVisibility(View.INVISIBLE);
+                    noteAdapter.setClearAllClick();
+                    noteAdapter.setCancelMultiSelect();
+                    return;
+                }
+                if(binding.drawerNav.isOpen()){
+                    binding.drawerNav.closeDrawer(GravityCompat.START);
+                }
+                else{
+                    //neu con fragment trong stack-> pop ra
+                    if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+                        getSupportFragmentManager().popBackStack();
                     }
-                    if(binding.drawerNav.isOpen()){
-                        binding.drawerNav.closeDrawer(GravityCompat.START);
-                    }
-                    else{
-                        //neu con fragment trong stack-> pop ra
-                        if(getSupportFragmentManager().getBackStackEntryCount() > 0){
-                            getSupportFragmentManager().popBackStack();
-                        }
-                        else {
-                            if (System.currentTimeMillis() - timeExit > 2000) {
-                                Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
-                                timeExit = System.currentTimeMillis();
-                            } else {
-                                super.onBackPressed();
-                            }
+                    else {
+                        if (System.currentTimeMillis() - timeExit > 2000) {
+                            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+                            timeExit = System.currentTimeMillis();
+                        } else {
+                            super.onBackPressed();
                         }
                     }
                 }
