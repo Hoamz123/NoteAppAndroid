@@ -48,6 +48,10 @@ Cho phép người dùng tạo, chỉnh sửa, lưu trữ và quản lý các gh
 - 👤 [hoamz](https://github.com/Hoamz123)
 - 📧 Email: hoamzdev@gmail.com
 
+
+## Demo
+Youtube : https://www.youtube.com/watch?v=f-ewuX4RIOA&t=2s
+
 ## 💡 Góp ý & Đóng góp
 Mọi đóng góp đều được hoan nghênh!  
 👉 Bạn có thể tạo [Issue tại đây](https://github.com/Hoamz123/NoteAppAndroid/issues)
